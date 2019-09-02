@@ -4,7 +4,7 @@ webhookUri = "52.89.214.238";
  
 slack = new Slack();
 slack.setWebhook(webhookUri);
- 
+
 slack.webhook({
   channel: "#general",
   username: "webhookbot",
