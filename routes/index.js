@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('api/webhook',function(req,res, next){
+router.post('/api/webhook',function(req,res, next){
   console.log("req.body : " + req.body);
   res.send({});
 });
