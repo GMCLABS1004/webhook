@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 router.post('/api/webhook',function(req,res){
   var date = new Date().getTime() + (1000 * 60 * 60 * 9);
   console.log("kkkk");
-  console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body) );
+  console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body.text) );
   res.send({});
 });
 
