@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/api/webhook',function(req,res, next){
   var date = new Date();
-  console.log("[" + date.toISOString() + "] : " + JSON.stringify(req));
+  console.log("[" + date.toISOString() + "] : " + req.body);
   res.send({});
 });
 
