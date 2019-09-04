@@ -22,7 +22,7 @@ router.post('/api/webhook',function(req,res){
 });
 
 
-router.post('/api/bitmex',function(req,res){
+router.post('/api/bitmex', function(req,res){
   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
   var symbol = "XBTUSD";
@@ -30,38 +30,78 @@ router.post('/api/bitmex',function(req,res){
   var apiSecret = "FGld8-AgZKK10ph7uu_n39PQ8CJm0gxkzPJdmjfUeKoQay6_"
   async.waterfall([
     function init(cb){
-      var data ={
-        ticker : 0
-      }
-      cb(null, data);
+        var data ={
+            ticker : 0, //현재가
+            walletBalance : 0, //지갑잔고
+            marginBalance : 0, //마진 밸런스
+            availableMargin : 0, // 사용가능잔고
+            leverage : 1,
+            margin : 0.1,
+        }
+        cb(null, data);
     },
-    function ticker(data,cb){
-      var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','trade','symbol='+symbol+'&count=1'+'&reverse='+true);//'currency=XBt'
-      request(requestOptions, function(err,response,body){
-          if(err){
-              console.log("ticker : "+err);
-              res.send(err);
+    function ticker(data,cb){ //현재가 조회
+        var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','trade','symbol='+symbol+'&count=1'+'&reverse='+true);//'currency=XBt'
+        request(requestOptions, function(error,response,body){
+            if(error) {
+                console.log("error : " +error);
+                res.send(error);
+                return;
+            }
+            var json = JSON.parse(body);
+            data.ticker = json[0].price;
+            cb(null, data);
+        });
+    },
+    function getUserMargin(data, cb){ //잔액조회
+        var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
+        request(requestOptions, function(error, response, body){
+            if(error){
+                console.log(error);
+                res.send(error);
+                return;
+            }
+            var json = JSON.parse(body);
+            data.walletBalance = json.walletBalance / 100000000;
+            data.marginBalance = json.marginBalance / 100000000;
+            data.availableMargin = json.availableMargin / 100000000;
+            //console.log("margin : " + body);
+            cb(null, data);
+        });
+    }
+
+  ],function(error, data){
+      if(error){
+          console.log("waterfall error : " + error);
+          res.send(error);
+          return;
+      }
+
+      console.log(data);
+      var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
+      if(orderQty < 0){
+          console.log("amount minus : " + amount);
+          res.send({});
+          return;
+      }
+
+      console.log("orderQty : "+ orderQty);
+      var side = req.body.side;
+      var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
+                  {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
+      
+      request(requestHeader, function(error, response, body){
+          if(error){
+              console.log(error)    
+              res.send(error);
               return;
           }
-          var json = JSON.parse(body);
-          console.log("ticker : "+ body);
-          //console.log(json[0])
-          cb(null, data);
+          else{
+              console.log(body);
+              //var resBody = JSON.parse(body);
+              res.send({});
+          }
       });
-    }
-  ],function(error, results){
-    if(error){
-      console.log("waterfall error : " + error);
-      res.send(error);
-      return;
-    }
-    //console.log(results);
-    if(req.body.side === 'Buy'){
-      console.log("buy");
-    }else if(req.body.side === 'Sell'){
-      console.log("sell");
-    }
-    res.send({});
   });
 });
 
