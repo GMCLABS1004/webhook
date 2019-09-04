@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+var async = require('async');
 var bitmexURL = "https://testnet.bitmex.com"
 var crypto = require("crypto");
 var request = require("request");
