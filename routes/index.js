@@ -57,13 +57,12 @@ router.post('/api/bitmex',function(req,res){
     }
     //console.log(results);
     if(req.body.side === 'Buy'){
-
+      console.log("buy");
     }else if(req.body.side === 'Sell'){
-  
+      console.log("sell");
     }
+    res.send({});
   });
-
-  res.send({});
 });
 
 
