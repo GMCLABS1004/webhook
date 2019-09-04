@@ -118,20 +118,11 @@ router.post('/api/bitmex', function(req,res){
 
 
 
-/**
- * 
- * @param {*} apiKey 유저의 apiKey
- * @param {*} apiSecret 유저의 apiSecret
- * @param {*} verb Post or Get
- * @param {*} endpoint 
- * @param {*} data 
- * 
- */
 function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
   path = '/api/v1/'+ endpoint;
   expires = new Date().getTime() + (60 * 1000); // 1 min in the future
   var requestOptions;
-  //if(verb === 'POST'){  //GET은 안됨
+  if(verb === 'POST' || verb === 'PUT'){
       var postBody = JSON.stringify(data);
       var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
       var headers = {
@@ -148,7 +139,23 @@ function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
           method: verb,
           body: postBody
       };
-  //}
+  }else{ //'GET'
+      var query = '?'+ data;
+      var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + query + expires).digest('hex');
+      var headers = {
+        'content-type' : 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'api-expires': expires,
+        'api-key': apiKey,
+        'api-signature': signature
+      };
+      requestOptions = {
+          headers: headers,
+          url: bitmexURL+path + query,
+          method: verb
+      };
+  }
   return requestOptions;
 }
 
