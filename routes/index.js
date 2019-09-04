@@ -29,7 +29,6 @@ router.post('/api/webhook',function(req,res){
 router.post('/api/bitmex', function(req,res){
   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-
   async.waterfall([
     function init(cb){
         var data ={
@@ -37,11 +36,14 @@ router.post('/api/bitmex', function(req,res){
             walletBalance : 0, //지갑잔고
             marginBalance : 0, //마진 밸런스
             availableMargin : 0, // 사용가능잔고
-            leverage : 1,
-            margin : 0.1,
+            leverage : 1, //setting값 
+            margin : 0.1, //setting값
+            openingQty : 0, // 들어가 있는 수량
+            isSide : 'none', //들어가 있는 side// Sell or Buy
         }
         cb(null, data);
     },
+    
     function ticker(data,cb){ //현재가 조회
         var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','trade','symbol='+symbol+'&count=1'+'&reverse='+true);//'currency=XBt'
         request(requestOptions, function(error,response,body){
@@ -56,39 +58,76 @@ router.post('/api/bitmex', function(req,res){
             cb(null, data);
         });
     },
-    function getUserMargin(data, cb){ //잔액조회
-        var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
-        request(requestOptions, function(error, response, body){
+    function position(data, cb){
+      var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','position','');//'currency=XBt'
+      request(requestOptions, function(err,response,body){
+          if(err) {
+              console.log(err);
+              return;
+          }
+          //console.log(body);
+          var json = JSON.parse(body);
+          //console.log(json);
+          for(i=0; i<json.length; i++){
+              if(json[i].currentQty > 0 && json[i].symbol==='XBTUSD'){
+                  console.log("매수");
+                  data.openingQty = json[i].currentQty;
+                  data.isSide = "Buy";
+              }else if(json[i].currentQty < 0 && json[i].symbol==='XBTUSD'){
+                  console.log("매도");
+                  data.openingQty = json[i].currentQty;
+                  data.isSide = "Sell";
+              }
+          }
+          cb(null, data);
+      });
+    },
+    function order1(data, cb){ //주문1
+      //요청한 포지션과 진입해있는 포지션은 서로 달라야 함 ex) 매수면 매도, 매도면 매수
+      if(req.body.side === data.isSide){
+        console.log("첫주문은 서로 다른 포지션이야 합니다.");
+        res.send({});
+        return;
+      }
+      //현재 진입한 포지션이 있는지 확인
+      if(data.isSide === 'none' ){ //진입한 포지션이 없으면 첫번째 주문 생략
+        cb(null, data); 
+      }else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션이 있으면 주문
+        var side = req.body.side;
+        var orderQty =  Math.abs(data.openingQty); //진입해 있는 수량 그대로 반대side로 주문
+        console.log("orderQty111 : "+ orderQty);
+        var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
+                    {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
+        
+        request(requestHeader, function(error, response, body){
             if(error){
-                console.log(error);
+                console.log(error)    
                 res.send(error);
                 return;
             }
-            var json = JSON.parse(body);
-            data.walletBalance = json.walletBalance / 100000000;
-            data.marginBalance = json.marginBalance / 100000000;
-            data.availableMargin = json.availableMargin / 100000000;
-            //console.log("margin : " + body);
+            console.log("주문1 : " + body);
             cb(null, data);
         });
-    }
-
-  ],function(error, data){
-      if(error){
-          console.log("waterfall error : " + error);
-          res.send(error);
-          return;
       }
-
-      console.log(data);
+    },
+    function getUserMargin(data, cb){ //잔액조회
+      var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
+      request(requestOptions, function(error, response, body){
+          if(error){
+              console.log(error);
+              res.send(error);
+              return;
+          }
+          var json = JSON.parse(body);
+          data.walletBalance = json.walletBalance / 100000000;
+          data.marginBalance = json.marginBalance / 100000000;
+          data.availableMargin = json.availableMargin / 100000000;
+          //console.log("margin : " + body);
+          cb(null, data);
+      });
+    },
+    function order2(data, cb){
       var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
-      if(orderQty < 0){
-          console.log("amount minus : " + amount);
-          res.send({});
-          return;
-      }
-
-      console.log("orderQty : "+ orderQty);
       var side = req.body.side;
       var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
                   {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
@@ -99,12 +138,20 @@ router.post('/api/bitmex', function(req,res){
               res.send(error);
               return;
           }
-          else{
-              console.log(body);
-              //var resBody = JSON.parse(body);
-              res.send({});
-          }
+          console.log("주문2 : " + body);
+          //var resBody = JSON.parse(body);
+          cb(null, data);
       });
+    }
+
+  ],function(error, data){
+      if(error){
+          console.log("waterfall error : " + error);
+          res.send(error);
+          return;
+      }
+      
+      res.send({});
   });
 });
 
