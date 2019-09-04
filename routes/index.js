@@ -3,8 +3,11 @@ var router = express.Router();
 var async = require('async');
 var bitmexURL = "https://testnet.bitmex.com"
 var symbol = "XBTUSD";
-var apiKeyId = "KM2K3Y_DJsHKG3R_3dKW8GqF"
-var apiSecret = "FGld8-AgZKK10ph7uu_n39PQ8CJm0gxkzPJdmjfUeKoQay6_"
+// var apiKeyId = "KM2K3Y_DJsHKG3R_3dKW8GqF"
+// var apiSecret = "FGld8-AgZKK10ph7uu_n39PQ8CJm0gxkzPJdmjfUeKoQay6_"
+var apiKeyId = "-2YJMJOGLRMvUgaBD1_KzbLt"; //bitmex API key
+var apiSecret = "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"; //bitmex API Secret
+
 
 var crypto = require("crypto");
 var request = require("request");
@@ -154,15 +157,6 @@ router.post('/api/bitmex', function(req,res){
       res.send({});
   });
 });
-
-
-
-
-
-
-
-
-
 
 
 function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
