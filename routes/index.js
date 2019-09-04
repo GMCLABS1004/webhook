@@ -39,7 +39,7 @@ router.post('/api/bitmex',function(req,res){
       var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','trade','symbol='+symbol+'&count=1'+'&reverse='+true);//'currency=XBt'
       request(requestOptions, function(err,response,body){
           if(err){
-              console.log(err);
+              console.log("ticker : "+err);
               res.send(err);
               return;
           }
@@ -48,11 +48,11 @@ router.post('/api/bitmex',function(req,res){
           //console.log(json[0])
           cb(null, data);
       });
-    },
+    }
   ],function(error, results){
     if(error){
-      console.log(err);
-      res.send(err);
+      console.log("waterfall error : " + error);
+      res.send(error);
       return;
     }
     //console.log(results);
