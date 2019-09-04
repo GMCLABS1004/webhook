@@ -49,6 +49,7 @@ router.post('/api/bitmex', function(req,res){
                 return;
             }
             var json = JSON.parse(body);
+            console.log(body);
             data.ticker = json[0].price;
             cb(null, data);
         });
