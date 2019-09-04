@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var bitmexURL = "https://testnet.bitmex.com"
+var symbol = "XBTUSD";
+var apiKeyId = "KM2K3Y_DJsHKG3R_3dKW8GqF"
+var apiSecret = "FGld8-AgZKK10ph7uu_n39PQ8CJm0gxkzPJdmjfUeKoQay6_"
+
 var crypto = require("crypto");
 var request = require("request");
 
@@ -25,9 +29,7 @@ router.post('/api/webhook',function(req,res){
 router.post('/api/bitmex', function(req,res){
   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-  var symbol = "XBTUSD";
-  var apiKeyId = "KM2K3Y_DJsHKG3R_3dKW8GqF"
-  var apiSecret = "FGld8-AgZKK10ph7uu_n39PQ8CJm0gxkzPJdmjfUeKoQay6_"
+
   async.waterfall([
     function init(cb){
         var data ={
