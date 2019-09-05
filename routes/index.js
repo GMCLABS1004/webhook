@@ -207,7 +207,7 @@ router.post('/api/upbit', function(req,res){
 
     function orderbook_upbit(data, callback){ //업비트 매수/매도 조회
       //3.업비트
-      upbit.orderbook('KRW-ANKR', function(error, response, body){
+      upbit.orderbook('KRW-BTC', function(error, response, body){
           if(error){
               console.log("업비트 매수/매도 조회 error1 : " + error);
               return;
@@ -233,7 +233,7 @@ router.post('/api/upbit', function(req,res){
   },
   function order1(data, cb){ //주문1
     var amount = Number((1200 / data.price).toFixed(4));
-    upbit.order("KRW-ANKR", data.side, data.price, amount, function(error, response, body){
+    upbit.order("KRW-BTC", data.side, data.price, amount, function(error, response, body){
       if(error){
         console.log(error);
         return;
