@@ -399,9 +399,9 @@ router.post('/api/bithumb', function(req,res){
       console.log("amount : "+amount);
       var revSide = '';
       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
-      var amount = Number((1200 / data[revSide].price).toFixed(4));
+      var amount = Number((1500 / data[revSide].price).toFixed(4));
       var rgParams = {
-        order_currency : "BTC",
+        order_currency : 'BTC',
         payment_currency : 'KRW',
         price : data[revSide].price,
         type : data.side,
