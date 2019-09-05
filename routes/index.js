@@ -453,7 +453,7 @@ router.post('/api/bithumb', function(req,res){
               console.log("빗썸 주문에러 조회 error3 : " + body);
               return;
           }
-          console.log("[" + msg + "] : " + JSON.stringify(body));
+          console.log(JSON.stringify(body));
           cb(null,data);
       });
     }
