@@ -407,12 +407,12 @@ router.post('/api/bithumb', function(req,res){
         try{
             var json = JSON.parse(body);
         }catch(error){
-            logger.error("빗썸 balance 값 조회 error1 : " + error);
+          console.log("빗썸 balance 값 조회 error1 : " + error);
             return;
         }
 
         if(json.status !== "0000"){
-            logger.error("빗썸 balance 값 조회 error2 : " + body);
+          console.log("빗썸 balance 값 조회 error2 : " + body);
             return;
         }
         console.log(body);
