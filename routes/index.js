@@ -429,9 +429,9 @@ router.post('/api/bithumb', function(req,res){
       var rgParams = {
         order_currency : 'BTC',
         payment_currency : 'KRW',
-        price : data[revSide].price,
-        type : data.side,
-        units : amount
+        price : 12600000,//data[revSide].price,
+        type : 'bid',//data.side,
+        units : 0.0004//amount
       };
       console.log(rgParams);
       bithumb.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
