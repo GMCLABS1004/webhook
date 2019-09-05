@@ -210,7 +210,7 @@ router.post('/api/upbit', function(req,res){
       cb(null, data);
     },
 
-    function orderbook_upbit(data, callback){ //업비트 매수/매도 조회
+    function orderbook_upbit(data, cb){ //업비트 매수/매도 조회
       //3.업비트
       upbit.orderbook('KRW-BTC', function(error, response, body){
           if(error){
