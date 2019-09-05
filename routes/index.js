@@ -372,7 +372,7 @@ router.post('/api/bithumb', function(req,res){
       cb(null, data);
     },
     function orderbook_bithumb(data, cb){ //빗썸 매수/매도 조회
-      bithumb.orderbook("BTC",function(error,response, body){
+      bithumAPI.orderbook("BTC",function(error,response, body){
         if(error){
             console.log("빗썸 매수/매도 값 조회 error1 : " + error);
             return;
