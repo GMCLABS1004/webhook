@@ -94,7 +94,7 @@ router.post('/api/bitmex', function(req,res){
         return;
       }
      
-      if(data.isSide === 'none' ){ //진입한 포지션이 없으면 첫번째 주문 생략
+      if(data.isSide === 'none' && (data.isSide === 'Buy' || data.isSide === 'Sell')){ //진입한 포지션이 없으면 첫번째 주문 생략
         data.execOrder2 = true; //두번째 주문만 실행
         cb(null, data); 
       }else if(data.isSide === 'Buy' || data.isSide === 'Sell' || req.body.side === 'exit'){ //진입한 포지션O && Buy or Sell or exit 
