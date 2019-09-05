@@ -199,8 +199,6 @@ router.post('/api/upbit', function(req,res){
       var data = {
         side : '',
         ordType : 'Limit',
-        price : 0,
-        amount : 0,
         ask : [],
         bid : []
       }
@@ -231,8 +229,8 @@ router.post('/api/upbit', function(req,res){
           }
           
           var obj = parse('upbit', json);
-          data.bid = {price : obj.bids[0].price, amount : obj.bids[0].amount};
-          data.ask = {price : obj.asks[0].price, amount : obj.asks[0].amount};
+          data.ask = {price : obj.bids[0].price, amount : obj.bids[0].amount};
+          data.bid = {price : obj.asks[0].price, amount : obj.asks[0].amount};
           cb(null, data);
       });
   },
@@ -240,7 +238,9 @@ router.post('/api/upbit', function(req,res){
     var amount = Number((1200 / data[data.side].price).toFixed(4));
     console.log(data);
     console.log("amount : "+amount);
-    upbit.order("KRW-BTC", data.side, data[data.side].price, amount, function(error, response, body){
+    var revSide = ''
+    (data.side === 'bid')? revSide = 'ask' : revSide = 'bid'
+    upbit.order("KRW-BTC", data.side, data[revSide].price, amount, function(error, response, body){
       if(error){
         console.log(error);
         return;
