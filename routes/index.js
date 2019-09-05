@@ -21,9 +21,9 @@ var upbitAPI = require('../API/upbitAPI.js');
 // coinone = new coinoneAPI("21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0","ec06eb68-a65a-442b-8257-c850a9242a09");
 // upbit = new upbitAPI("tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB","mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv");
 
-bithumb = new BithumAPI("12c3a6f3a01c91602cb5ad0f6e576be3", "0be7924f477b4af728321fd629faf436");
-coinone = new coinoneAPI("0d246678-06c0-4b44-9eb6-bd8ef507fc5a","dfb81257-4f3d-4beb-bafe-81dc122aae75");
-upbit = new upbitAPI("DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4","HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7");
+var bithumb = new BithumAPI("12c3a6f3a01c91602cb5ad0f6e576be3", "0be7924f477b4af728321fd629faf436");
+var coinone = new coinoneAPI("0d246678-06c0-4b44-9eb6-bd8ef507fc5a","dfb81257-4f3d-4beb-bafe-81dc122aae75");
+var upbit = new upbitAPI("DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4","HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7");
 
 
 /* GET home page. */
@@ -375,6 +375,7 @@ router.post('/api/bithumb', function(req,res){
             console.log("빗썸 매수/매도 값 조회 error1 : " + error);
             return;
         }
+
         try{
             var json = JSON.parse(body);
         }catch(error){
@@ -393,11 +394,12 @@ router.post('/api/bithumb', function(req,res){
       });
     },
     function order1(data, cb){ //주문1
-      var amount = Number((1200 / data[data.side].price).toFixed(4));
+      
       console.log(data);
       console.log("amount : "+amount);
       var revSide = '';
       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
+      var amount = Number((1200 / data[revSide].price).toFixed(4));
       var rgParams = {
         order_currency : "BTC",
         payment_currency : 'KRW',
@@ -405,6 +407,7 @@ router.post('/api/bithumb', function(req,res){
         type : data.side,
         units : amount
       };
+      console.log(rgParams);
       bithumb.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
           if(error){
               console.log("빗썸 주문에러 error1 : " + error);
