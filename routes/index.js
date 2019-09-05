@@ -94,13 +94,18 @@ router.post('/api/bitmex', function(req,res){
         return;
       }
      
-      if(data.isSide === 'none' && (data.isSide === 'Buy' || data.isSide === 'Sell')){ //진입한 포지션이 없으면 첫번째 주문 생략
-        data.execOrder2 = true; //두번째 주문만 실행
-        cb(null, data); 
-      }else if(data.isSide === 'Buy' || data.isSide === 'Sell' || req.body.side === 'exit'){ //진입한 포지션O && Buy or Sell or exit 
-        var side = ''
-        (data.isSide === 'Buy')? side = 'Sell' : side = 'Buy'; //진입했던 포지션과 반대로 
-        (req.body.side === 'exit')? data.execOrder2 = false : data.execOrder2 = true; // exit => 1번만 주문, Sell, Buy 2번주문 
+      if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
+        cb(null, data);
+      }else if(data.isSide === 'Exit'){ //포지션종료
+        console.log("포지션 종료"); //로직종료
+        var requestClearHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order/closePosition', {symbol : symbol});
+        request(requestClearHeader, function(err, res, body) {
+          res.send({}); 
+          return;
+        });
+      }
+      else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션O && Buy or Sell
+        var side = req.body.side;
         var orderQty =  Math.abs(data.openingQty); //기존 수량 그대로 주문
         var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
           {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
@@ -117,45 +122,37 @@ router.post('/api/bitmex', function(req,res){
       }
     },
     function getUserMargin(data, cb){ //잔액조회
-      if(data.execOrder2 === true){
-        var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
-        request(requestOptions, function(error, response, body){
-            if(error){
-                console.log(error);
-                res.send(error);
-                return;
-            }
-            var json = JSON.parse(body);
-            data.walletBalance = json.walletBalance / 100000000;
-            data.marginBalance = json.marginBalance / 100000000;
-            data.availableMargin = json.availableMargin / 100000000;
-            //console.log("margin : " + body);
-            cb(null, data);
-        });
-      }else{
-        cb(null, data);
-      }
+      var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
+      request(requestOptions, function(error, response, body){
+          if(error){
+              console.log(error);
+              res.send(error);
+              return;
+          }
+          var json = JSON.parse(body);
+          data.walletBalance = json.walletBalance / 100000000;
+          data.marginBalance = json.marginBalance / 100000000;
+          data.availableMargin = json.availableMargin / 100000000;
+          //console.log("margin : " + body);
+          cb(null, data);
+      });
     },
     function order2(data, cb){
-      if(data.execOrder2 === true){
-        var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
-        var side = req.body.side;
-        var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
-                    {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
-        
-        request(requestHeader, function(error, response, body){
-            if(error){
-                console.log(error)    
-                res.send(error);
-                return;
-            }
-            console.log("주문2 : " + body);
-            //var resBody = JSON.parse(body);
-            cb(null, data);
-        });
-      }else{
-        cb(null, data);
-      }
+      var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
+      var side = req.body.side;
+      var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
+                  {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
+      
+      request(requestHeader, function(error, response, body){
+          if(error){
+              console.log(error)    
+              res.send(error);
+              return;
+          }
+          console.log("주문2 : " + body);
+          //var resBody = JSON.parse(body);
+          cb(null, data);
+      });
     }
   ],function(error, data){
       if(error){
