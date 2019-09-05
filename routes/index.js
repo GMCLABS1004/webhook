@@ -293,4 +293,4 @@ function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
   return requestOptions;
 }
 
-// module.exports = router;
+ module.exports = router;
