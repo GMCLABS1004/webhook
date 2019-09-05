@@ -405,7 +405,7 @@ router.post('/api/bithumb', function(req,res){
         type : data.side,
         units : amount
       };
-      bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
+      bithumb.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
           if(error){
               console.log("빗썸 주문에러 error1 : " + error);
               return;
