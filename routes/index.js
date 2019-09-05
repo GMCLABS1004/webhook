@@ -399,7 +399,7 @@ router.post('/api/bithumb', function(req,res){
         currency : "BTC"
       };
     
-      bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
+      bithumb.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
         if(error){
             console.log("빗썸 balance 값 조회 error1 : " + error);
             return;
