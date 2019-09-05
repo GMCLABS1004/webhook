@@ -231,8 +231,8 @@ router.post('/api/upbit', function(req,res){
           }
           
           var obj = parse('upbit', json);
-          data.bids = {price : obj.bids[0].price, amount : obj.bids[0].amount};
-          data.asks = {price : obj.asks[0].price, amount : obj.asks[0].amount};
+          data.bid = {price : obj.bids[0].price, amount : obj.bids[0].amount};
+          data.ask = {price : obj.asks[0].price, amount : obj.asks[0].amount};
           cb(null, data);
       });
   },
