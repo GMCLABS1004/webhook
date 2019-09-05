@@ -43,7 +43,6 @@ router.post('/api/bitmex', function(req,res){
             margin : 0.1, //setting값
             openingQty : 0, // 들어가 있는 수량
             isSide : 'none', //들어가 있는 side// Sell or Buy
-            execOrder2 : false
         }
         cb(null, data);
     },
@@ -96,7 +95,8 @@ router.post('/api/bitmex', function(req,res){
      
       if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
         cb(null, data);
-      }else if(data.isSide === 'Exit'){ //포지션종료
+      }
+      else if(req.body.side === 'Exit'){ //포지션종료
         console.log("포지션 종료"); //로직종료
         var requestClearHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order/closePosition', {symbol : symbol});
         request(requestClearHeader, function(err, res, body) {
@@ -144,7 +144,7 @@ router.post('/api/bitmex', function(req,res){
       if(req.body.side === 'exit'){
         return cb(null, data);
       }
-      
+
       var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
       var side = req.body.side;
       var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
