@@ -298,4 +298,29 @@ function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
   return requestOptions;
 }
 
+
+function parse(site, json){
+  if(site === 'upbit'){
+      var upbit = {
+          bids : new Array(),
+          asks: new Array()
+      }
+      json[0].orderbook_units.forEach(element => {
+          var askObj = new Object({
+              price : element.ask_price,
+              amount : element.ask_size,
+          });
+
+          var bidObj = new Object({
+              price : element.bid_price,
+              amount : element.bid_size,
+          });
+          upbit.asks.push(askObj);
+          upbit.bids.push(bidObj);
+      });
+
+      return upbit;
+  }
+}
+
  module.exports = router;
