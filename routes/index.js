@@ -94,7 +94,9 @@ router.post('/api/bitmex', function(req,res){
       }
       //현재 진입한 포지션이 있는지 확인
       if(data.isSide === 'none' ){ //진입한 포지션이 없으면 첫번째 주문 생략
-        cb(null, data); 
+        cb(null, data);
+      }else if(req.body.side === 'exit'){
+        cb(null, data);
       }else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션이 있으면 주문
         var side = req.body.side;
         var orderQty =  Math.abs(data.openingQty); //진입해 있는 수량 그대로 반대side로 주문
