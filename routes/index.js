@@ -12,6 +12,15 @@ var apiSecret = "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"; //bitmex API
 var crypto = require("crypto");
 var request = require("request");
 
+var BithumAPI = require('./API/bithumbAPI');
+var coinoneAPI = require('./API/coinoneAPI.js');
+var upbitAPI = require('./API/upbitAPI.js');
+
+bithumb = new BithumAPI("223985a94a23a587e7aee533b82f7a4e", "4f76cce9768fbdc7f90c6b1fb7021846");
+coinone = new coinoneAPI("21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0","ec06eb68-a65a-442b-8257-c850a9242a09");
+upbit = new upbitAPI("tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB","mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv");
+
+
 /* GET home page. */
 router.get('/', function(req, res, next){
   var date = new Date();
@@ -45,8 +54,7 @@ router.post('/api/bitmex', function(req,res){
             isSide : 'none', //들어가 있는 side// Sell or Buy
         }
         cb(null, data);
-    },
-    
+    },    
     function ticker(data,cb){ //현재가 조회
         var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','trade','symbol='+symbol+'&count=1'+'&reverse='+true);//'currency=XBt'
         request(requestOptions, function(error,response,body){
@@ -130,6 +138,7 @@ router.post('/api/bitmex', function(req,res){
       if(req.body.side === 'Exit'){
         return cb(null, data);
       }
+      
       var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
       request(requestOptions, function(error, response, body){
           if(error){
@@ -168,7 +177,7 @@ router.post('/api/bitmex', function(req,res){
     }
   ],function(error, data){
       if(error){
-          console.log("waterfall error : " + error);
+          console.log("bitmex waterfall error : " + error);
           res.send(error);
           return;
       }
@@ -176,6 +185,72 @@ router.post('/api/bitmex', function(req,res){
   });
 });
 
+
+router.post('/api/upbit', function(req,res){
+  var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
+  console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
+  async.waterfall([
+    function init(cb){
+      var data = {
+        side : side,
+        ordType : 'Limit',
+        price : 0,
+        amount : 0,
+        ask : [],
+        bid : []
+      }
+
+      (req.body.side === 'Buy')? data.side = 'bid' : data.side = 'ask';
+      
+      cb(null, data);
+    },
+
+    function orderbook_upbit(data, callback){ //업비트 매수/매도 조회
+      //3.업비트
+      upbit.orderbook('KRW-ANKR', function(error, response, body){
+          if(error){
+              console.log("업비트 매수/매도 조회 error1 : " + error);
+              return;
+          }
+
+          try{
+              var json = JSON.parse(body);
+          }catch(error){
+              console.log("업비트 매수/매도 조회 error2 : " + error);
+              return;
+          }
+
+          if(typeof(json["error"]) === 'object'){
+              console.log("업비트 잔액조회 조회 error1 : " + body);
+              return;
+          }
+          
+          var obj = parse('upbit', json);
+          data.bids = {price : obj.bids[0].price, amount : obj.bids[0].amount};
+          data.asks = {price : obj.asks[0].price, amount : obj.asks[0].amount};
+          cb(null, data);
+      });
+  },
+  function order1(data, cb){ //주문1
+    var amount = Number((1200 / data.price).toFixed(4));
+    upbit.order("KRW-ANKR", data.side, data.price, amount, function(error, response, body){
+      if(error){
+        console.log(error);
+        return;
+      }
+      console.log(body);
+      cb(null,data);
+    });
+  }
+  ],function(error, data){
+      if(error){
+          console.log("waterfall error : " + error);
+          res.send(error);
+          return;
+      }
+      res.send({});
+  });
+});
 
 function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
   path = '/api/v1/'+ endpoint;
@@ -218,4 +293,4 @@ function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
   return requestOptions;
 }
 
-module.exports = router;
+// module.exports = router;
