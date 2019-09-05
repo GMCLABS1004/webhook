@@ -396,7 +396,7 @@ router.post('/api/bithumb', function(req,res){
 
     function balance_bithumb(data,cb){
       var rgParams = {
-        currency : order_currency
+        currency : "BTC"
       };
     
       bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
