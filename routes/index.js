@@ -193,279 +193,279 @@ router.post('/api/bitmex', function(req,res){
 });
 
 
-router.post('/api/upbit', function(req,res){
-  var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-  console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-  async.waterfall([
-    function init(cb){
-      var data = {
-        side : '',
-        ordType : 'Limit',
-        ask : [],
-        bid : []
-      }
-      var side = req.body.side;
-      (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
+// router.post('/api/upbit', function(req,res){
+//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
+//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
+//   async.waterfall([
+//     function init(cb){
+//       var data = {
+//         side : '',
+//         ordType : 'Limit',
+//         ask : [],
+//         bid : []
+//       }
+//       var side = req.body.side;
+//       (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
       
-      cb(null, data);
-    },
-    function orderbook_upbit(data, cb){ //업비트 매수/매도 조회
-      //3.업비트
-      upbit.orderbook('KRW-BTC', function(error, response, body){
-          if(error){
-              console.log("업비트 매수/매도 조회 error1 : " + error);
-              return;
-          }
+//       cb(null, data);
+//     },
+//     function orderbook_upbit(data, cb){ //업비트 매수/매도 조회
+//       //3.업비트
+//       upbit.orderbook('KRW-BTC', function(error, response, body){
+//           if(error){
+//               console.log("업비트 매수/매도 조회 error1 : " + error);
+//               return;
+//           }
 
-          try{
-              var json = JSON.parse(body);
-          }catch(error){
-              console.log("업비트 매수/매도 조회 error2 : " + error);
-              return;
-          }
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               console.log("업비트 매수/매도 조회 error2 : " + error);
+//               return;
+//           }
 
-          if(typeof(json["error"]) === 'object'){
-              console.log("업비트 잔액조회 조회 error1 : " + body);
-              return;
-          }
+//           if(typeof(json["error"]) === 'object'){
+//               console.log("업비트 잔액조회 조회 error1 : " + body);
+//               return;
+//           }
           
-          var obj = parse('upbit', json);
-          data.ask = {price : obj.asks[0].price, amount : obj.asks[0].amount};
-          data.bid = {price : obj.bids[0].price, amount : obj.bids[0].amount};
-          cb(null, data);
-      });
-    },
-    function order1(data, cb){ //주문1
-      var amount = Number((1200 / data[data.side].price).toFixed(4));
-      console.log(data);
-      console.log("amount : "+amount);
-      var revSide = '';
-      (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
-      upbit.order("KRW-BTC", data.side, data[revSide].price, amount, function(error, response, body){
-        if(error){
-          console.log(error);
-          return;
-        }
-        console.log(body);
-        cb(null,data);
-      });
-    }
-  ],function(error, data){
-      if(error){
-          console.log("waterfall error : " + error);
-          res.send(error);
-          return;
-      }
-      res.send({});
-  });
-});
+//           var obj = parse('upbit', json);
+//           data.ask = {price : obj.asks[0].price, amount : obj.asks[0].amount};
+//           data.bid = {price : obj.bids[0].price, amount : obj.bids[0].amount};
+//           cb(null, data);
+//       });
+//     },
+//     function order1(data, cb){ //주문1
+//       var amount = Number((1200 / data[data.side].price).toFixed(4));
+//       console.log(data);
+//       console.log("amount : "+amount);
+//       var revSide = '';
+//       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
+//       upbit.order("KRW-BTC", data.side, data[revSide].price, amount, function(error, response, body){
+//         if(error){
+//           console.log(error);
+//           return;
+//         }
+//         console.log(body);
+//         cb(null,data);
+//       });
+//     }
+//   ],function(error, data){
+//       if(error){
+//           console.log("waterfall error : " + error);
+//           res.send(error);
+//           return;
+//       }
+//       res.send({});
+//   });
+// });
 
 
-router.post('/api/coinone', function(req,res){
-  var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-  console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-  async.waterfall([
-    function init(cb){
-      var data = {
-        side : '',
-        ask : [],
-        bid : []
-      }
-      var side = req.body.side;
-      (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
-      cb(null, data);
-    },
-    function orderbook_coinone(data, cb){ //업비트 매수/매도 조회
-      //3.업비트
-      coinone.orderbook("BTC", function(error, response, body){
-        if(error){
-            logger.error("코인원 매수/매도 값 조회 error1 : " + error);
-            return;
-        }
+// router.post('/api/coinone', function(req,res){
+//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
+//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
+//   async.waterfall([
+//     function init(cb){
+//       var data = {
+//         side : '',
+//         ask : [],
+//         bid : []
+//       }
+//       var side = req.body.side;
+//       (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
+//       cb(null, data);
+//     },
+//     function orderbook_coinone(data, cb){ //업비트 매수/매도 조회
+//       //3.업비트
+//       coinone.orderbook("BTC", function(error, response, body){
+//         if(error){
+//             logger.error("코인원 매수/매도 값 조회 error1 : " + error);
+//             return;
+//         }
         
-        try{
-            var json = JSON.parse(body);
-        }catch(error){
-            logger.error("코인원 매수/매도 값 조회 error1 : " + error);
-            return;
-        }
+//         try{
+//             var json = JSON.parse(body);
+//         }catch(error){
+//             logger.error("코인원 매수/매도 값 조회 error1 : " + error);
+//             return;
+//         }
         
-        if(json.errorCode !== "0"){
-            logger.error("코인원 매수/매도 값 조회 error2 : " + body);
-            return;
-        }else{
-            //console.log("2.코인원 매수/매도 조회 성공");
-            data.ask = {price : Number(json.ask[0].price), amount : Number(json.ask[0].qty) };
-            data.bid = {price : Number(json.bid[0].price), amount : Number(json.bid[0].qty) };
-            cb(null, data);
-        }
-      });
-    },
-    function order1(data, cb){ //주문1
-      var amount = Number((1200 / data[data.side].price).toFixed(4));
-      console.log(data);
-      console.log("amount : "+amount);
-      var revSide = '';
-      (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
-      if(data.side === 'bid'){
-        coinone.limitBuy("BTC", data[revSide].price, amount, function(error, response, body){
-          if(error){
-              console.log("코인원 주문에러 : "+error);
-              return;
-          }
-          try{
-              var json = JSON.parse(body);
-          }catch(error){
-            console("코인원 주문에러 error1 : " + error);
-            return;
-          }
-          if(json.errorCode !== "0"){
-            console("코인원 주문에러 error2 : " + body);
-            return;
-          }
-          console.log(body);
-          cb(null, data);
-        });
-      }else if(data.side === 'ask'){
-        coinone.limitSell("BTC", data[revSide].price, amount, function(error, response, body){
-          if(error){
-              console.log("코인원 주문에러 : "+error);
-              return;
-          }
-          try{
-              var json = JSON.parse(body);
-          }catch(error){
-            console("코인원 주문에러 error1 : " + error);
-            return;
-          }
-          if(json.errorCode !== "0"){
-            console("코인원 주문에러 error2 : " + body);
-            return;
-          }
-          console.log(body);
-          cb(null, data);
-        });
-      }
-    }
-  ],function(error, data){
-      if(error){
-          console.log("waterfall error : " + error);
-          res.send(error);
-          return;
-      }
-      res.send({});
-  });
-});
+//         if(json.errorCode !== "0"){
+//             logger.error("코인원 매수/매도 값 조회 error2 : " + body);
+//             return;
+//         }else{
+//             //console.log("2.코인원 매수/매도 조회 성공");
+//             data.ask = {price : Number(json.ask[0].price), amount : Number(json.ask[0].qty) };
+//             data.bid = {price : Number(json.bid[0].price), amount : Number(json.bid[0].qty) };
+//             cb(null, data);
+//         }
+//       });
+//     },
+//     function order1(data, cb){ //주문1
+//       var amount = Number((1200 / data[data.side].price).toFixed(4));
+//       console.log(data);
+//       console.log("amount : "+amount);
+//       var revSide = '';
+//       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
+//       if(data.side === 'bid'){
+//         coinone.limitBuy("BTC", data[revSide].price, amount, function(error, response, body){
+//           if(error){
+//               console.log("코인원 주문에러 : "+error);
+//               return;
+//           }
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//             console("코인원 주문에러 error1 : " + error);
+//             return;
+//           }
+//           if(json.errorCode !== "0"){
+//             console("코인원 주문에러 error2 : " + body);
+//             return;
+//           }
+//           console.log(body);
+//           cb(null, data);
+//         });
+//       }else if(data.side === 'ask'){
+//         coinone.limitSell("BTC", data[revSide].price, amount, function(error, response, body){
+//           if(error){
+//               console.log("코인원 주문에러 : "+error);
+//               return;
+//           }
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//             console("코인원 주문에러 error1 : " + error);
+//             return;
+//           }
+//           if(json.errorCode !== "0"){
+//             console("코인원 주문에러 error2 : " + body);
+//             return;
+//           }
+//           console.log(body);
+//           cb(null, data);
+//         });
+//       }
+//     }
+//   ],function(error, data){
+//       if(error){
+//           console.log("waterfall error : " + error);
+//           res.send(error);
+//           return;
+//       }
+//       res.send({});
+//   });
+// });
 
-router.post('/api/bithumb', function(req,res){
-  var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-  console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-  async.waterfall([
-    function init(cb){
-      var data = {
-        side : '',
-        ask : [],
-        bid : []
-      }
-      var side = req.body.side;
-      (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
-      cb(null, data);
-    },
-    function orderbook_bithumb(data, cb){ //빗썸 매수/매도 조회
-      bithumAPI.orderbook("BTC",function(error,response, body){
-        if(error){
-            console.log("빗썸 매수/매도 값 조회 error1 : " + error);
-            return;
-        }
+// router.post('/api/bithumb', function(req,res){
+//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
+//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
+//   async.waterfall([
+//     function init(cb){
+//       var data = {
+//         side : '',
+//         ask : [],
+//         bid : []
+//       }
+//       var side = req.body.side;
+//       (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
+//       cb(null, data);
+//     },
+//     function orderbook_bithumb(data, cb){ //빗썸 매수/매도 조회
+//       bithumAPI.orderbook("BTC",function(error,response, body){
+//         if(error){
+//             console.log("빗썸 매수/매도 값 조회 error1 : " + error);
+//             return;
+//         }
 
-        try{
-            var json = JSON.parse(body);
-        }catch(error){
-            console.log("빗썸 매수/매도 값 조회 error1 : " + error);
-            return;
-        }
+//         try{
+//             var json = JSON.parse(body);
+//         }catch(error){
+//             console.log("빗썸 매수/매도 값 조회 error1 : " + error);
+//             return;
+//         }
 
-        if(json.status !== "0000"){
-            console.log("빗썸 매수/매도 값 조회 error2 : " + body);
-            return;
-        }
+//         if(json.status !== "0000"){
+//             console.log("빗썸 매수/매도 값 조회 error2 : " + body);
+//             return;
+//         }
         
-        data.ask = {price : Number(json.data.asks[0].price), amount : Number(json.data.asks[0].quantity) };
-        data.bid = {price : Number(json.data.bids[0].price), amount : Number(json.data.bids[0].quantity) };
-        cb(null, data);
-      });
-    },
+//         data.ask = {price : Number(json.data.asks[0].price), amount : Number(json.data.asks[0].quantity) };
+//         data.bid = {price : Number(json.data.bids[0].price), amount : Number(json.data.bids[0].quantity) };
+//         cb(null, data);
+//       });
+//     },
 
-    function balance_bithumb(data,cb){
-      var rgParams = {
-        currency : "BTC"
-      };
+//     function balance_bithumb(data,cb){
+//       var rgParams = {
+//         currency : "BTC"
+//       };
     
-      bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
-        if(error){
-            console.log("빗썸 balance 값 조회 error1 : " + error);
-            return;
-        }
-        try{
-            var json = JSON.parse(body);
-        }catch(error){
-          console.log("빗썸 balance 값 조회 error1 : " + error);
-            return;
-        }
+//       bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
+//         if(error){
+//             console.log("빗썸 balance 값 조회 error1 : " + error);
+//             return;
+//         }
+//         try{
+//             var json = JSON.parse(body);
+//         }catch(error){
+//           console.log("빗썸 balance 값 조회 error1 : " + error);
+//             return;
+//         }
 
-        if(json.status !== "0000"){
-          console.log("빗썸 balance 값 조회 error2 : " + body);
-            return;
-        }
-        console.log(body);
-        cb(null,data);
-      });
-    },
-    function order1(data, cb){ //주문1
+//         if(json.status !== "0000"){
+//           console.log("빗썸 balance 값 조회 error2 : " + body);
+//             return;
+//         }
+//         console.log(body);
+//         cb(null,data);
+//       });
+//     },
+//     function order1(data, cb){ //주문1
       
-      console.log(data);
-      console.log("amount : "+amount);
-      var revSide = '';
-      (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
-      var amount = Number((10000 / data[revSide].price).toFixed(4));
-      var rgParams = {
-        order_currency : 'BTC',
-        payment_currency : 'KRW',
-        price : data[revSide].price,
-        type : data.side,
-        units : amount
-      };
-      console.log(rgParams);
-      bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
-          if(error){
-              console.log("빗썸 주문에러 error1 : " + error);
-              return;
-          }
+//       console.log(data);
+//       console.log("amount : "+amount);
+//       var revSide = '';
+//       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
+//       var amount = Number((10000 / data[revSide].price).toFixed(4));
+//       var rgParams = {
+//         order_currency : 'BTC',
+//         payment_currency : 'KRW',
+//         price : data[revSide].price,
+//         type : data.side,
+//         units : amount
+//       };
+//       console.log(rgParams);
+//       bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
+//           if(error){
+//               console.log("빗썸 주문에러 error1 : " + error);
+//               return;
+//           }
 
-          try{
-              var json = JSON.parse(body);
-          }catch(error){
-              console.log("빗썸 주문에러 error2 : " + error);
-              return;
-          }
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               console.log("빗썸 주문에러 error2 : " + error);
+//               return;
+//           }
 
-          if(json.status !== "0000"){
-              console.log("빗썸 주문에러 조회 error3 : " + body);
-              return;
-          }
-          console.log(JSON.stringify(body));
-          cb(null,data);
-      });
-    }
-  ],function(error, data){
-      if(error){
-          console.log("waterfall error : " + error);
-          res.send(error);
-          return;
-      }
-      res.send({});
-  });
-});
+//           if(json.status !== "0000"){
+//               console.log("빗썸 주문에러 조회 error3 : " + body);
+//               return;
+//           }
+//           console.log(JSON.stringify(body));
+//           cb(null,data);
+//       });
+//     }
+//   ],function(error, data){
+//       if(error){
+//           console.log("waterfall error : " + error);
+//           res.send(error);
+//           return;
+//       }
+//       res.send({});
+//   });
+// });
 
 function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
   path = '/api/v1/'+ endpoint;
@@ -533,30 +533,30 @@ function parse(site, json){
   }
 }
 
-router.post('/api/bithumb2',function(req,res){
-  var rgParams = {
-    currency : "BTC"
-  };
+// router.post('/api/bithumb2',function(req,res){
+//   var rgParams = {
+//     currency : "BTC"
+//   };
 
-  bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
-    if(error){
-        console.log("빗썸 balance 값 조회 error1 : " + error);
-        return;
-    }
-    try{
-        var json = JSON.parse(body);
-    }catch(error){
-        console.log("빗썸 balance 값 조회 error1 : " + error);
-        return;
-    }
+//   bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
+//     if(error){
+//         console.log("빗썸 balance 값 조회 error1 : " + error);
+//         return;
+//     }
+//     try{
+//         var json = JSON.parse(body);
+//     }catch(error){
+//         console.log("빗썸 balance 값 조회 error1 : " + error);
+//         return;
+//     }
 
-    if(json.status !== "0000"){
-        console.log("빗썸 balance 값 조회 error2 : " + body);
-        return;
-    }
-    console.log(body);
+//     if(json.status !== "0000"){
+//         console.log("빗썸 balance 값 조회 error2 : " + body);
+//         return;
+//     }
+//     console.log(body);
 
-  });
-});
+//   });
+// });
 
  module.exports = router;
