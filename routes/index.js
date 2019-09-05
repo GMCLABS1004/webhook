@@ -393,6 +393,32 @@ router.post('/api/bithumb', function(req,res){
         cb(null, data);
       });
     },
+
+    function balance_bithumb(data,cb){
+      var rgParams = {
+        currency : order_currency
+      };
+    
+      bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
+        if(error){
+            console.log("빗썸 balance 값 조회 error1 : " + error);
+            return;
+        }
+        try{
+            var json = JSON.parse(body);
+        }catch(error){
+            logger.error("빗썸 balance 값 조회 error1 : " + error);
+            return;
+        }
+
+        if(json.status !== "0000"){
+            logger.error("빗썸 balance 값 조회 error2 : " + body);
+            return;
+        }
+        console.log(body);
+        cb(null,data);
+      });
+    },
     function order1(data, cb){ //주문1
       
       console.log(data);
