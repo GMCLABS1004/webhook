@@ -12,9 +12,9 @@ var apiSecret = "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"; //bitmex API
 var crypto = require("crypto");
 var request = require("request");
 
-var BithumAPI = require('./API/bithumbAPI');
-var coinoneAPI = require('./API/coinoneAPI.js');
-var upbitAPI = require('./API/upbitAPI.js');
+var BithumAPI = require('../API/bithumbAPI');
+var coinoneAPI = require('../API/coinoneAPI.js');
+var upbitAPI = require('../API/upbitAPI.js');
 
 bithumb = new BithumAPI("223985a94a23a587e7aee533b82f7a4e", "4f76cce9768fbdc7f90c6b1fb7021846");
 coinone = new coinoneAPI("21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0","ec06eb68-a65a-442b-8257-c850a9242a09");
