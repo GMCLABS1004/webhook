@@ -369,8 +369,7 @@ router.post('/api/bithumb', function(req,res){
       (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
       cb(null, data);
     },
-    function orderbook_bithumb(data, cb){ //업비트 매수/매도 조회
-      //3.업비트
+    function orderbook_bithumb(data, cb){ //빗썸 매수/매도 조회
       bithumb.orderbook("BTC",function(error,response, body){
         if(error){
             console.log("빗썸 매수/매도 값 조회 error1 : " + error);
@@ -387,8 +386,7 @@ router.post('/api/bithumb', function(req,res){
             console.log("빗썸 매수/매도 값 조회 error2 : " + body);
             return;
         }
-        //console.log("1.빗썸 매수/매도 조회 성공");
-        depth["bithumb"] = new Object(json);
+        
         data.ask = {price : Number(json.data.asks[0].price), amount : Number(json.data.asks[0].quantity) };
         data.bid = {price : Number(json.data.bids[0].price), amount : Number(json.data.bids[0].quantity) };
         cb(null, data);
@@ -412,7 +410,7 @@ router.post('/api/bithumb', function(req,res){
               console.log("빗썸 주문에러 error1 : " + error);
               return;
           }
-          
+
           try{
               var json = JSON.parse(body);
           }catch(error){
