@@ -237,10 +237,10 @@ router.post('/api/upbit', function(req,res){
       });
   },
   function order1(data, cb){ //주문1
-    var amount = Number((1200 / data.price).toFixed(4));
+    var amount = Number((1200 / data[data.side].price).toFixed(4));
     console.log(data);
     console.log("amount : "+amount);
-    upbit.order("KRW-BTC", data.side, data.price, amount, function(error, response, body){
+    upbit.order("KRW-BTC", data.side, data[data.side].price, amount, function(error, response, body){
       if(error){
         console.log(error);
         return;
