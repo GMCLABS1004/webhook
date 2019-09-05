@@ -17,11 +17,13 @@ var BithumAPI = require('../API/bithumbAPI');
 var coinoneAPI = require('../API/coinoneAPI.js');
 var upbitAPI = require('../API/upbitAPI.js');
 
-// bithumb = new BithumAPI("223985a94a23a587e7aee533b82f7a4e", "4f76cce9768fbdc7f90c6b1fb7021846");
+
+bithumb = new BithumAPI("223985a94a23a587e7aee533b82f7a4e", "4f76cce9768fbdc7f90c6b1fb7021846");
 // coinone = new coinoneAPI("21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0","ec06eb68-a65a-442b-8257-c850a9242a09");
 // upbit = new upbitAPI("tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB","mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv");
 
-var bithumb = new BithumAPI("7446cc38540523fe9a0a04b033414ab5", "50684360909e128d413356721be9b614");
+
+//var bithumb = new BithumAPI("7446cc38540523fe9a0a04b033414ab5", "50684360909e128d413356721be9b614");
 var coinone = new coinoneAPI("0d246678-06c0-4b44-9eb6-bd8ef507fc5a","dfb81257-4f3d-4beb-bafe-81dc122aae75");
 var upbit = new upbitAPI("DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4","HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7");
 
