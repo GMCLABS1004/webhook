@@ -204,8 +204,8 @@ router.post('/api/upbit', function(req,res){
         ask : [],
         bid : []
       }
-
-      (req.body.side === 'Buy')? data.side = 'bid' : data.side = 'ask';
+      var side = req.body.side;
+      (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
       
       cb(null, data);
     },
