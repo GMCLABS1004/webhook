@@ -197,7 +197,7 @@ router.post('/api/upbit', function(req,res){
   async.waterfall([
     function init(cb){
       var data = {
-        side : side,
+        side : '',
         ordType : 'Limit',
         price : 0,
         amount : 0,
