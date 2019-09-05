@@ -122,6 +122,9 @@ router.post('/api/bitmex', function(req,res){
       }
     },
     function getUserMargin(data, cb){ //잔액조회
+      if(req.body.side === 'exit'){
+        return cb(null, data);
+      }
       var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
       request(requestOptions, function(error, response, body){
           if(error){
@@ -138,6 +141,10 @@ router.post('/api/bitmex', function(req,res){
       });
     },
     function order2(data, cb){
+      if(req.body.side === 'exit'){
+        return cb(null, data);
+      }
+      
       var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
       var side = req.body.side;
       var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
