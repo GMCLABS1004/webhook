@@ -238,8 +238,8 @@ router.post('/api/upbit', function(req,res){
     var amount = Number((1200 / data[data.side].price).toFixed(4));
     console.log(data);
     console.log("amount : "+amount);
-    var revSide = ''
-    (data.side === 'bid')? revSide = 'ask' : revSide = 'bid'
+    var revSide = '';
+    (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
     upbit.order("KRW-BTC", data.side, data[revSide].price, amount, function(error, response, body){
       if(error){
         console.log(error);
