@@ -99,7 +99,12 @@ router.post('/api/bitmex', function(req,res){
       else if(req.body.side === 'Exit'){ //포지션종료
         console.log("포지션 종료"); //로직종료
         var requestClearHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order/closePosition', {symbol : symbol});
-        request(requestClearHeader, function(err, res, body) {
+        request(requestClearHeader, function(error, response, body) {
+          if(error){
+            console.log(error)    
+            res.send(error);
+            return;
+          }
           res.send({}); 
           return;
         });
