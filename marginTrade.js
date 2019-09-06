@@ -244,7 +244,7 @@ function trade_bithumb(_signal){
           type : data.side,
           units : amount
         };
-        
+        console.log(rgParams);
         //수량 : 마진, 레버리지
         //둘다 : 최소수량 check
         //매도 : 코인수량 check
