@@ -51,7 +51,7 @@ mongoose.connect(webSetting.dbPath, function(error){
           apiKey : "-2YJMJOGLRMvUgaBD1_KzbLt",
           secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd",
           leverage : 1,
-          margin : 5,
+          margin : 10,
           scriptNo : 1
         },
         {
@@ -60,8 +60,8 @@ mongoose.connect(webSetting.dbPath, function(error){
           symbol : "BTC",
           apiKey : "7446cc38540523fe9a0a04b033414ab5", //"223985a94a23a587e7aee533b82f7a4e"
           secreteKey : "50684360909e128d413356721be9b614",//"4f76cce9768fbdc7f90c6b1fb7021846"
-          leverage : 1,
-          margin : 5,
+          leverage : 2,
+          margin : 10,
           scriptNo : 2
         },
         {
@@ -80,8 +80,8 @@ mongoose.connect(webSetting.dbPath, function(error){
           symbol : "KRW-BTC",
           apiKey : "DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4", //"tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB"
           secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7", //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
-          leverage : 1,
-          margin : 5,
+          leverage : 2,
+          margin : 10,
           scriptNo : 2
         }
       ]
