@@ -17,12 +17,13 @@ router.post('/api/marginTrade', function(req,res){
     log : req.body.log,
     timestamp : new Date().getTime() + (1000 * 60 * 60 * 9)
   }
-  signal.insertMany(sigData, function(error, res){
+  signal.insertMany(sigData, function(error, data){
     if(error){
       console.log(error);
       res.send(error);
       return;
     }
+    console.log(data);
     res.send({});
   });
 });
