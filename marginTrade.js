@@ -280,7 +280,7 @@ function trade_bithumb(_signal){
           console.log(rgParams);
         }
 
-        cb(null,data);
+        //cb(null,data);
       }
     ],function(error, data){
         if(error){
@@ -447,7 +447,7 @@ function trade_coinone(_signal){
           }
         }
         
-        cb(null, data);
+        //cb(null, data);
       }
     ],function(error, data){
         if(error){
@@ -591,7 +591,7 @@ function trade_upbit(_signal){
           console.log("amount : "+amount);
           console.log("side : "+data.side);
         }
-        cb(null,data);
+        //cb(null,data);
       }
     ],function(error, data){
         if(error){
