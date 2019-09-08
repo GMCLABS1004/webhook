@@ -67,7 +67,7 @@ mongoose.connect(webSetting.dbPath, function(error){
           apiKey : "7446cc38540523fe9a0a04b033414ab5", //"223985a94a23a587e7aee533b82f7a4e"
           secreteKey : "50684360909e128d413356721be9b614",//"4f76cce9768fbdc7f90c6b1fb7021846"
           leverage : 2,
-          margin : 10,
+          margin : 20,
           scriptNo : 2
         },
         {
@@ -77,7 +77,7 @@ mongoose.connect(webSetting.dbPath, function(error){
           apiKey : "0d246678-06c0-4b44-9eb6-bd8ef507fc5a", //"21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0"
           secreteKey : "dfb81257-4f3d-4beb-bafe-81dc122aae75", //"ec06eb68-a65a-442b-8257-c850a9242a09"
           leverage : 2,
-          margin : 10,
+          margin : 20,
           scriptNo : 2
         },
         {
@@ -87,7 +87,7 @@ mongoose.connect(webSetting.dbPath, function(error){
           apiKey : "DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4", //"tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB"
           secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7", //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
           leverage : 2,
-          margin : 10,
+          margin : 20,
           scriptNo : 2
         }
       ]
