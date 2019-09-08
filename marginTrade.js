@@ -8,6 +8,12 @@ var upbitAPI = require('./API/upbitAPI.js');
 var signal = require("./models/signal");
 var settings = require("./models/setting");
 var webSetting = require('./webSetting.json');
+function fixed4(num){
+  var str = new String(num);
+  var arr = str.split(".");
+  var str2 = arr[1].slice(0,4);
+  return Number(arr[0] + '.' + str2);
+}
 mongoose.connect(webSetting.dbPath, function(error){
   if(error){
     console.log(error);
@@ -106,6 +112,8 @@ function marginTrade(){
         return;
       }
       if(res.length > 0){
+        console.log("");
+        console.log("");
         console.log("-----신호목록-----");
         //console.log(res);
         for(i=0; i<res.length; i++){
@@ -122,8 +130,6 @@ function marginTrade(){
             }
           });
         }
-      }else{
-        console.log("신호 없음");
       }
     });
   }
@@ -230,12 +236,15 @@ function trade_bithumb(_signal){
         var revSide = '';
         (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
         if(data.side === 'bid'){
-          var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
         }else if(data.side === 'ask'){
-          var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
         if(amount > data.avail_coin){
-          amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
         var rgParams = {
           order_currency : 'BTC',
@@ -390,12 +399,16 @@ function trade_coinone(_signal){
         (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
         //var amount = Number(((((data.avail_coin * data.margin) * data.leverage) * data[revSide].price) - 0.00014999).toFixed(4));
         if(data.side === 'bid'){
-          var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
+
         }else if(data.side === 'ask'){
-          var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
         if(amount > data.avail_coin){
-          amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
+          //amount = Number((data.avail_coin - 0.00014999).toFixed(4));
         }
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "coinone");
         if(flag === true){
@@ -497,7 +510,6 @@ function trade_upbit(_signal){
           data.symbol = res[0].symbol;
           data.margin = res[0].margin * 0.01;
           data.leverage = res[0].leverage;
-          data.margin = res[0].margin * 0.01;
           cb(null, data);
         });
       },
@@ -567,12 +579,16 @@ function trade_upbit(_signal){
         var revSide = '';
         (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
         if(data.side === 'bid'){
-          var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
+
         }else if(data.side === 'ask'){
-          var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
         if(amount > data.avail_coin){
-          amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "upbit");
         if(flag === true){
