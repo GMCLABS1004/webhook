@@ -1,3 +1,8 @@
+//소스코드 설정에 bitmex url, apikey, secretekey 수정
+//mongodb에 setting값 삭제
+//소스 실행 
+//트레이딩뷰 1시간 얼러트 켜기;
+
 var async = require('async');
 var crypto = require("crypto");
 var request = require("request");
@@ -46,13 +51,13 @@ mongoose.connect(webSetting.dbPath, function(error){
     if(err){
         console.log(err);
         return;
-    }
+    }       
 
     if(res.length === 0){ //없으면 환경설정 생성
       var obj = [
         {
           site : "bitmex", 
-          url : "https://testnet.bitmex.com", 
+          url : "https://testnet.bitmex.com", //"https://www.bitmex.com"
           symbol : "XBTUSD",
           apiKey : "zHh9wqSyjVewYLgRR5c6NfE0",
           secreteKey : "KvgXXBof4SrLtnVpigVMFSl6IJlMduV1KqgSMsvCUxYtLH_o",
