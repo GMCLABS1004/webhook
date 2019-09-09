@@ -292,7 +292,7 @@ function trade_bithumb(_signal){
           console.log(rgParams);
         }
 
-        //cb(null,data);
+        cb(null,data);
       }
     ],function(error, data){
         if(error){
@@ -463,7 +463,7 @@ function trade_coinone(_signal){
           // }
         }
         
-        //cb(null, data);
+        cb(null, data);
       }
     ],function(error, data){
         if(error){
@@ -603,14 +603,14 @@ function trade_upbit(_signal){
         //     console.log(body);
         //     cb(null,data);
         //   });
-          console.log("-----업비트 주문실행-------");
-          console.log("avail krw : " + data.avail_pay);
-          console.log("avail coin : " + data.avail_coin);
-          console.log("price : "+data[revSide].price);
-          console.log("amount : "+amount);
-          console.log("side : "+data.side);
-        }
-        //cb(null,data);
+        //   console.log("-----업비트 주문실행-------");
+        //   console.log("avail krw : " + data.avail_pay);
+        //   console.log("avail coin : " + data.avail_coin);
+        //   console.log("price : "+data[revSide].price);
+        //   console.log("amount : "+amount);
+        //   console.log("side : "+data.side);
+        // }
+        cb(null,data);
       }
     ],function(error, data){
         if(error){
