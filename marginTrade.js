@@ -245,7 +245,7 @@ function trade_bithumb(_signal){
         if(data.side === 'bid'){
           //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
           var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
-          console.log()
+          
         }else if(data.side === 'ask'){
           //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
           var amount = fixed4(data.avail_coin);
@@ -411,10 +411,7 @@ function trade_coinone(_signal){
           //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
           var amount = fixed4(data.avail_coin);
         }
-        if(amount > data.avail_coin){
-          var amount = fixed4(data.avail_coin);
-          //amount = Number((data.avail_coin - 0.00014999).toFixed(4));
-        }
+        
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "coinone");
         if(flag === true){
           console.log("----코인원 주문실행----");
@@ -591,10 +588,7 @@ function trade_upbit(_signal){
           //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
           var amount = fixed4(data.avail_coin);
         }
-        if(amount > data.avail_coin){
-          //amount = Number((data.avail_coin - 0.00014999).toFixed(4));
-          var amount = fixed4(data.avail_coin);
-        }
+     
         // var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "upbit");
         // if(flag === true){
         //   upbit.order(data.symbol, data.side, data[revSide].price, amount, function(error, response, body){
