@@ -232,12 +232,14 @@ function trade_bithumb(_signal){
       },
       function order1(data, cb){ //주문1
         //console.log(data);
+
+       
+        var revSide = '';
+        (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
         console.log("avail_pay : "+ data.avail_pay);
         console.log("margin : "+ data.margin);
         console.log("leverage : "+ data.leverage);
         console.log("price : " + data[revSide].price);
-        var revSide = '';
-        (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
         if(data.side === 'bid'){
           //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
           var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
