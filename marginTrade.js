@@ -245,14 +245,12 @@ function trade_bithumb(_signal){
         if(data.side === 'bid'){
           //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
           var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
+          console.log()
         }else if(data.side === 'ask'){
           //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
           var amount = fixed4(data.avail_coin);
         }
-        if(amount > data.avail_coin){
-          //amount = Number((data.avail_coin - 0.00014999).toFixed(4));
-          var amount = fixed4(data.avail_coin);
-        }
+
         var rgParams = {
           order_currency : 'BTC',
           payment_currency : 'KRW',
