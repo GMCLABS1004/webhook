@@ -236,6 +236,8 @@ function trade_bithumb(_signal){
        
         var revSide = '';
         (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
+        console.log("side : " + data.side );
+        console.log("revSide : " + revSide );
         console.log("avail_pay : "+ data.avail_pay);
         console.log("margin : "+ data.margin);
         console.log("leverage : "+ data.leverage);
