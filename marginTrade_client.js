@@ -54,8 +54,8 @@ mongoose.connect(webSetting.dbPath, function(error){
           site : "bitmex", 
           url : "https://testnet.bitmex.com", 
           symbol : "XBTUSD",
-          apiKey : "-2YJMJOGLRMvUgaBD1_KzbLt",
-          secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd",
+          apiKey : "zHh9wqSyjVewYLgRR5c6NfE0",
+          secreteKey : "KvgXXBof4SrLtnVpigVMFSl6IJlMduV1KqgSMsvCUxYtLH_o",
           leverage : 1,
           margin : 10,
           scriptNo : 1
