@@ -1,11 +1,120 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <title>GMC DefenceBot - 설정</title>
+    <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../Content/sub.css">
+    <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
+</head>
+<body style="min-width:1280px;">
+    <div class="setting">
+        <h2>마진거래 설정</h2>
+        <div class="box">
+            <div class="setting_box">
+                <div class="setting_1">
+                    <h3>봇</h3>
+                    <!-- <a class="btn btn-outline-secondary btn-sm mgR10" href="coinisKRWBotDetailSet" role="button" target="_self">세부설정</a> -->
+                    <a class="btn btn-outline-dark btn-sm mgR10" href="coinisKRWLog?name=krwBot.log" role="button" target="_self">로그</a>
+                    <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check"<%=isMargin.execBot%> />
+                </div>
+                <form class="setting_1_1">
+                    <div class="row" style="margin-left:0;">
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비트멕스</label>
+                        <div class="setting_onoff col-sm-10">
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="bitmex_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex%> />
+                        </div>
+                    </div>
+                </form>
+                <form class="setting_1_2">
+                    <div class="row" style="margin-left:0;">
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">빗썸</label>
+                        <div class="setting_onoff col-sm-10">
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bithumb" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="bithumb_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bithumb%>/>
+                        </div>
+                    </div>
+                </form>
+                <form class="setting_1_2">
+                    <div class="row" style="margin-left:0;">
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">코인원</label>
+                        <div class="setting_onoff col-sm-10">
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=coinone" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="coinone_execFlag" name="func" class="lcs_check" <%=isMargin.exec_coinone%> />
+                        </div>
+                    </div>
+                </form>
+                <form class="setting_1_2">
+                    <div class="row" style="margin-left:0;">
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">업비트</label>
+                        <div class="setting_onoff col-sm-10">
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=upbit" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="upbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_upbit%>/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+             
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('.lcs_check').lc_switch();
+
+            $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+                var askType = $(this).attr('name');
+                if(askType === 'bot'){ //봇 on/off
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    obj["id"] = $(this).attr('id');
+                    (status === "checked") ?  obj["flag"] = "start" : obj["flag"] = "stop";
+                    $.ajax({
+                        type: "POST",
+                        url: "api/botOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body) {
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }else if(askType === 'func'){ // 기능 on/off 
+                    console.log("기능 On/Off");
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    var arr = $(this).attr('id').split("_");
+                    obj["site"] = arr[0]; //bitmex
+                    (status === "checked") ?  obj["execFlag"] = 1 : obj["execFlag"] = 0;
+                    console.log(JSON.stringify(obj));
+                    $.ajax({
+                        type: "POST",
+                        url: "api/siteOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body){
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
 </html>
+

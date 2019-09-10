@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <title>GMC DefenceBot - 세부설정</title>
+
+    <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="../Content/sub_1.css">
+
+    <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
+
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
+
+</head>
+
+<body style="min-width:1280px;">
+
+    <div class="setting">
+
+        <div class="m_txt">
+
+            <h4><%=site%> 마진거래 설정</h4>
+
+            <div class="button_box">
+
+                <button type="button" id="storeSet" class="btn btn-primary btn-md">저장</button>
+
+                <button type="button" id="closeWindow" class="btn btn-secondary btn-md">취소</button>
+
+            </div>
+        </div>
+
+        <div class="box box_1">
+
+            <form class="box_1_form">
+
+                <div class="">
+
+                    <label for="apiKey" class="key_label col-form-label">apikey</label>
+
+                    <div class="">
+                        <input type="hidden" class="form-control" id="site" value='<%=site%>' placeholder="">
+    
+                        <input type="hidden" class="form-control" id="symbol" value='<%=symbol%>' placeholder="">
+                        
+                        <input type="text" class="form-control" id="apiKey" value='<%=apiKey%>' placeholder="">
+
+                    </div>
+                </div>
+
+                <div class="">
+
+                    <label for="secreteKey" class="key_label col-form-label">secreteKey</label>
+
+                    <div class="">
+
+                        <input type="text" class="form-control" id="secreteKey" value='<%=secreteKey%>' placeholder="">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                        <label for="scriptNo" class="key_label col-form-label">스크립트 번호</label>
+    
+                        <div class="">
+                           
+                            <input type="text" class="form-control" id="scriptNo" value='<%=scriptNo%>' placeholder="">
+    
+                        </div>
+                </div>
+
+                <div class="">
+
+                    <label for="leverage" class="key_label col-form-label">레버리지</label>
+
+                    <div class="">
+
+                        <input type="text" class="form-control" id="leverage" value='<%=leverage%>' placeholder="~배">
+
+                    </div>
+                </div>
+
+                <div class="">
+
+                    <label for="margin" class="key_label col-form-label">마진</label>
+
+                    <div class="">
+
+                        <input type="text" class="form-control" id="margin" value='<%=margin%>' placeholder="%">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                    <label for="margin" class="key_label col-form-label">주문최소금액</label>
+
+                    <div class="">
+
+                        <input type="text" class="form-control" id="minOrdCost" value='<%=minOrdCost%>' placeholder="원">
+                    </div>
+                </div>
+
+                <div class="">
+                    <label for="ordInterval" class="key_label col-form-label">주문 인터벌</label>
+                    <div class="">
+                        <input type="text" class="form-control" id="ordInterval" value='<%=ordInterval%>' placeholder="초">
+                    </div>
+                </div>
+
+                <div class="">
+                    <label for="minOrdRate" class="key_label col-form-label">최소주문비율</label>
+                    <div class="">
+                        <input type="text" class="form-control" id="minOrdRate" value='<%=minOrdRate%>' placeholder="%">
+                    </div>
+                </div>
+                <div class="">
+                    <label for="maxOrdRate" class="key_label col-form-label">최대주문비율</label>
+                    <div class="">
+                        <input type="text" class="form-control" id="maxOrdRate" value='<%=maxOrdRate%>' placeholder="%">
+                    </div>
+                </div>       
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function (e) {
+
+            $('.lcs_check').lc_switch();
+            $("#closeWindow").click(function(){
+                //window.close();
+                history.back();
+            });
+            $("#storeSet").click(function(){
+                var obj={
+                    site : $("#site").val(),
+                    symbol : $("#symbol").val(),
+                    apiKey : $("#apiKey").val(),
+                    secreteKey : $("#secreteKey").val(),
+                    scriptNo : $("#scriptNo").val(),
+                    leverage : $("#leverage").val(),
+                    margin : $("#margin").val(),
+                    minOrdCost : $("#minOrdCost").val(),
+                    ordInterval : $("#ordInterval").val(),
+                    minOrdRate : $("#minOrdRate").val(),
+                    maxOrdRate : $("#maxOrdRate").val()
+                }
+                console.log(JSON.stringify(obj));
+                $.ajax({
+                    type: "POST",
+                    url: "api/setting",
+                    dataType: "json",
+                    data : obj,
+                    success: function(body) {
+                        if(body){
+                            alert(body.msg);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

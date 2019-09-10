@@ -55,40 +55,28 @@ mongoose.connect(webSetting.dbPath, function(error){
           url : "https://testnet.bitmex.com", //ex)  "ANKR"
           symbol : "XBTUSD",
           apiKey : "-2YJMJOGLRMvUgaBD1_KzbLt",
-          secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd",
-          leverage : 1,
-          margin : 10,
-          scriptNo : 1
+          secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"
         },
         {
           site : "bithumb", // ex) "ANKR_KRW"
           url : "https://api.bithumb.com", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "7446cc38540523fe9a0a04b033414ab5", //"223985a94a23a587e7aee533b82f7a4e"
-          secreteKey : "50684360909e128d413356721be9b614",//"4f76cce9768fbdc7f90c6b1fb7021846"
-          leverage : 2,
-          margin : 20,
-          scriptNo : 2
+          secreteKey : "50684360909e128d413356721be9b614"//"4f76cce9768fbdc7f90c6b1fb7021846"
         },
         {
           site : "coinone", // ex) "ANKR_KRW"
           url : "https://api.coinone.co.kr", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "0d246678-06c0-4b44-9eb6-bd8ef507fc5a", //"21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0"
-          secreteKey : "dfb81257-4f3d-4beb-bafe-81dc122aae75", //"ec06eb68-a65a-442b-8257-c850a9242a09"
-          leverage : 2,
-          margin : 20,
-          scriptNo : 2
+          secreteKey : "dfb81257-4f3d-4beb-bafe-81dc122aae75" //"ec06eb68-a65a-442b-8257-c850a9242a09"
         },
         {
           site : "upbit", // ex) "ANKR_KRW"
           url : "https://api.upbit.com", //ex)  "ANKR"
           symbol : "KRW-BTC",
           apiKey : "DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4", //"tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB"
-          secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7", //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
-          leverage : 2,
-          margin : 20,
-          scriptNo : 2
+          secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7" //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
         }
       ]
       settings.insertMany(obj,function(err, res){ //DB에 환경설정 insert
@@ -150,6 +138,7 @@ function trade_bithumb(_signal){
           ask : [],
           bid : []
         }
+
         var side = _signal.side;
         (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
         cb(null, data);
@@ -161,10 +150,17 @@ function trade_bithumb(_signal){
             return;
           }
           
+          if(res[0].execFlag === false){
+            console.log("빗썸 off");
+            return;
+          }
+
+
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("빗썸 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; 
           }
+
           // console.log(res);
           // console.log(res[0].apiKey);
           // console.log(res[0].secreteKey);
@@ -172,6 +168,10 @@ function trade_bithumb(_signal){
           data.symbol = res[0].symbol;
           data.leverage = res[0].leverage;
           data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
@@ -333,6 +333,11 @@ function trade_coinone(_signal){
             return;
           }
           
+          if(res[0].execFlag === false){
+            console.log("코인원 off");
+            return;
+          }
+
           if(res[0].scriptNo !== _signal.scriptNo){ //설정한 신호 !== 받은 신호
             console.log("코인원 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; //로직종료
@@ -342,6 +347,10 @@ function trade_coinone(_signal){
           data.symbol = res[0].symbol;   
           data.leverage = res[0].leverage;
           data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
@@ -504,14 +513,23 @@ function trade_upbit(_signal){
             return;
           }
          
+          if(res[0].execFlag === false){
+            console.log("업비트 off");
+            return;
+          }
+
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("업비트 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return;
           }
           upbit = new upbitAPI(res[0].apiKey, res[0].secreteKey);
           data.symbol = res[0].symbol;
-          data.margin = res[0].margin * 0.01;
           data.leverage = res[0].leverage;
+          data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
@@ -648,6 +666,11 @@ function trade_bitmex(_signal){
             return;
           }
           
+          if(res[0].execFlag === false){
+            console.log("비트멕스 off");
+            return;
+          }
+
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("비트멕스 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; 
@@ -659,6 +682,10 @@ function trade_bitmex(_signal){
           data.secreteKey = res[0].secreteKey;
           data.leverage = res[0].leverage;
           data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
