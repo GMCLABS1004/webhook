@@ -21,7 +21,7 @@ setInterval(alert(), 5000);
 
 function alert(){
     return function(){
-        orderDB.find({isSend : true}).sort({timestamp : "desc"}).exec(function(error, res){
+        orderDB.find({isSend : false}).sort({timestamp : "desc"}).exec(function(error, res){
             if(error){
                 console.log(error);
                 return;
@@ -31,7 +31,7 @@ function alert(){
                 var dateArr = new Date( res[i].timestamp.getTime()).toISOString().split("T");
                 var msg = 
                 "거래소 : " + res[i].site + "\n" +
-                "타입 : " +  convert_side(res[i].side) + "\n" +
+                "타입 : " +  res[i].side + "\n" +
                 "가격 : " +  price_comma(res[i].price) + "\n" +
                 "수량 : " +  amount_comma(res[i].amount) + "\n" +
                 "날짜 : " +  dateArr[0] + "\n" + 
