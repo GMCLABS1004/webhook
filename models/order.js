@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var orderSchema = new Schema({
-    site : {type:String, default : "bitmex", unique : true, required : true},
+    site : {type:String, default : "bitmex", required : true},
     url : {type:String, default : ""},
     symbol : {type:String, default : ""},       
     side : {type:String, default : 1}, //스크립트 넘버
@@ -10,5 +10,5 @@ var orderSchema = new Schema({
     timestamp : {type : Date, default : Date.now},
     isSend : {type:Boolean, default : false} //telegram 전송여부
 });
-
+orderSchema.index({ site :1, timestamp : 1});
 module.exports = mongoose.model('order', orderSchema,'order');
