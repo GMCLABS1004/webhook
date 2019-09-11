@@ -54,13 +54,13 @@ function alert(){
 
 
 function price_comma(num){
-    var price = 0
-    if(res[i].price < 100){ //가격이 100원보다 작으면 ',' 표시 안하고 그대로 출력
-        price = res[i].price;
+    var price = Number(num)
+    if(price < 100){ //가격이 100원보다 작으면 ',' 표시 안하고 그대로 출력
+        return price;
     }else{ //가격이 100원보다 크면 ',' 표시 
-        price = numeral(res[i].price).format( '₩0,0' )
+        return numeral(res[i].price).format( '₩0,0' )
     }
-    return price;
+    
 }
 
 function amount_comma(num){
