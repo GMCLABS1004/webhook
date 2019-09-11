@@ -787,7 +787,7 @@ function trade_bitmex(_signal){
             }
             console.log("주문1 : " + body);
             var json = JSON.parse(body);
-            logger.info("site : bitmex " + "/ side : " + json[0].side + "/ price : " + json[0].price + "/ amount : "+ json[0].orderQty);
+            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + json.price + "/ amount : "+ json.orderQty);
             cb(null, data);
           });
         }
@@ -830,7 +830,7 @@ function trade_bitmex(_signal){
             }
             console.log("주문2 : " + body);
             var json = JSON.parse(body);
-            logger.info("site : bitmex " + "/ side : " + json[0].side + "/ price : " + json[0].price + "/ amount : "+ json[0].orderQty);
+            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + json.price + "/ amount : "+ json.orderQty);
             cb(null, data);
         });
       }
