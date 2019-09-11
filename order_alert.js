@@ -28,7 +28,7 @@ function alert(){
             }
             console.log(res);
             for(i=0; i<res.length; i++){
-                var dateArr = new Date( res[i].timestamp.getTime() + (1000 * 60 *60 *9)).toISOString().split("T");
+                var dateArr = new Date( res[i].timestamp.getTime()).toISOString().split("T");
                 var msg = 
                 "거래소 : " + res[i].site + "\n" +
                 "타입 : " +  res[i].side + "\n" +
