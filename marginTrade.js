@@ -299,7 +299,7 @@ function trade_bithumb(_signal){
                   console.log("빗썸 주문에러 조회 error3 : " + body);
                   return;
               }
-              logger.info("site : bithumb " + "/ side : " + rgParams.type + "/ price : " +rgParams.price + "/ amount : "+ rgParams.units);
+              logger.info("site : bithumb " + "/ side : " + rgParams.type + "/ price : " + price_comma(rgParams.price) + "/ amount : "+ amount_comma(rgParams.units) );
               var history = {
                 site : "bithumb",
                 side : rgParams.type,
@@ -475,7 +475,7 @@ function trade_coinone(_signal){
                 return;
               }
               console.log(body);
-              logger.info("site : coinone " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
+              logger.info("site : coinone " + "/ side : " + data.side + "/ price : " + price_comma(data[revSide].price) + "/ amount : "+ amount_comma(amount) );
               var history = {
                 site : "coinone",
                 side : data.side,
@@ -659,7 +659,7 @@ function trade_upbit(_signal){
               return;
             }
             console.log(body);
-            logger.info("site : upbit " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
+            logger.info("site : upbit " + "/ side : " + data.side + "/ price : " + price_comma(data[revSide].price) + "/ amount : "+ amount_comma(amount) );
             var history = {
               site : "upbit",
               side : data.side,
@@ -809,7 +809,7 @@ function trade_bitmex(_signal){
             //res.send({}); 
             var json= JSON.parse(body);
             
-            logger.info("site : bitmex " + "/ Exit " + "/ side : "+json.side + " / price : "+json.price + " / amount : " + json.orderQty);
+            logger.info("site : bitmex " + "/ Exit " + "/ side : "+json.side + " / price : "+ price_comma(json.price) + " / amount : " + amount_comma(json.orderQty) );
             var history = {
               site : "bitmex",
               side : json.side,
@@ -841,7 +841,7 @@ function trade_bitmex(_signal){
             }
             console.log("주문1 : " + body);
             var json = JSON.parse(body);
-            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + json.price + "/ amount : "+ json.orderQty);
+            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + price_comma(json.price) + "/ amount : "+ amount_comma(json.orderQty) );
             var history = {
               site : "bitmex",
               side : json.side,
@@ -897,7 +897,7 @@ function trade_bitmex(_signal){
             }
             console.log("주문2 : " + body);
             var json = JSON.parse(body);
-            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + json.price + "/ amount : "+ json.orderQty);
+            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + price_comma(json.price) + "/ amount : "+ amount_comma(json.orderQty) );
             var history = {
               site : "bitmex",
               side : json.side,
@@ -1059,6 +1059,26 @@ function create_logger(logfileName1, logfileName2, callback){
           })
       ]
   });
+
+  function price_comma(num){
+    var price = Number(num)
+    if(price < 100){ //가격이 100원보다 작으면 ',' 표시 안하고 그대로 출력
+        return price;
+    }else{ //가격이 100원보다 크면 ',' 표시 
+        return numeral(price).format( '₩0,0' )
+    }  
+  }
+
+  function amount_comma(num){
+    var coin = Number(num);
+    if(coin >= 0.000001){
+        return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+    }else{
+        return coin.toFixed(4); // 0.00000078 -> 0.00000078
+    }
+  }
+
+
 
   callback(handle);
 }
