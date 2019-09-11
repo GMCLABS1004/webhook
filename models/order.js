@@ -4,7 +4,7 @@ var orderSchema = new Schema({
     site : {type:String, default : "bitmex", unique : true, required : true},
     url : {type:String, default : ""},
     symbol : {type:String, default : ""},       
-    side : {type:Number, default : 1}, //스크립트 넘버
+    side : {type:String, default : 1}, //스크립트 넘버
     price : {type:Number, default : 1}, //레버리지
     amount : {type:Number, default : 10}, //마진
     timestamp : {type : Date, default : Date.now},
