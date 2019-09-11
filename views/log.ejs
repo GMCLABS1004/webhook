@@ -1,0 +1,66 @@
+<html>
+<head>
+<script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+<script>
+$(document).ready(function(){
+        // var today = new Date().toISOString().slice(0,10); //현재날짜 계산
+        // $("#logDate").val(today); 
+        // today = today.replace(/-/gi,'');
+        var today = new Date();
+        //today.setHours(today.getHours() + 9);
+        var month = today.getMonth() +1;
+        if(1<= month && month <= 9 ){
+                month = "0"+ month;
+        }
+
+        var day = today.getDate();
+        if(1<= day && day <= 9 ){
+                day = "0"+ day;
+        }
+        
+        today = today.getFullYear().toString() + "-" + month + "-" + day;
+        $("#logDate").val(today);
+        
+        //today = today.replace(/-/gi,'');
+        console.log("today : " + today);
+        getLog(today);
+        $("#logSearch").click(function(){
+                console.log($("#logDate").val());
+                var date = $("#logDate").val();
+                //date = date.replace(/-/gi,'');
+                console.log("today : " + today);
+                $("#logTitle").html('');
+                $("#logData").html('');
+                getLog(date);
+        });
+
+        function getLog(date){
+            $.ajax({
+                type: "GET",
+                url: "api/log?logDate="+date,
+                success: function(body) {
+                    if(body){
+                            if(body.existedLog === true){
+                                    $("#logTitle").html(body.title);
+                                    $("#logData").html(body.log);
+                            }else{
+                                    console.log(body.err);
+                                    $("#logData").html(body.err);
+                            }
+                            
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log("error : " + error);
+                }
+            });
+        }
+});
+</script>
+</head>
+<body>
+        일자 : <input type='date' id="logDate"/> <input type="button" id="logSearch" value="조회"/><br>
+        <div id="logTitle"></div>
+        <div id="logData"> </div>
+</body>
+</html>

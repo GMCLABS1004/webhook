@@ -1,7 +1,8 @@
 #LoSgs
 logs
 *.log
-
+./log
+log/
 # Runtime data
 pids
 *.pid

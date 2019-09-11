@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 var signal = require("../models/signal");
 var setting = require("../models/setting");
 var webSetting = require("../webSetting");
@@ -168,5 +169,33 @@ router.post('/api/siteOnOff',function(req,res){
     res.send({});
   });
 });
+
+router.get('/log',function(req, res){
+  res.render('log');
+});
+
+router.get('/api/log', function(req,res){
+  var logDate = req.query.logDate;
+  var logFileName = "./log/marginTrade" +".log." + logDate;  
+  console.log("logFileName : "+logFileName);
+  try {
+    if (fs.existsSync(logFileName)) {
+      //file exists
+      fs.readFile(logFileName, (err, data) => {  
+        if (err) throw err;
+        var obj = {title : "<h2>마진거래 로그" + "</h2>", log : String(data).replace(/\n/g, "<br />"), existedLog : true, err : "" }
+        res.send(obj);
+      });
+    }else{
+      var obj = {existedLog : false, title : "", log : "", err : "파일이 존재하지 않습니다"}  
+      res.send(obj);
+    }
+  }catch(err){
+    var obj = {existedLog : false, title : "", log : "", err : "파일이 존재하지 않습니다"}
+    res.send(obj);
+  }
+});
+
+
 
  module.exports = router;

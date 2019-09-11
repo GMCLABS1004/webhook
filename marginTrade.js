@@ -2,12 +2,21 @@ var async = require('async');
 var crypto = require("crypto");
 var request = require("request");
 var mongoose = require('mongoose');
+const winston = require('winston');
+require('winston-daily-rotate-file');
+require('date-utils');
 var BithumAPI = require('./API/bithumbAPI');
 var coinoneAPI = require('./API/coinoneAPI.js');
 var upbitAPI = require('./API/upbitAPI.js');
 var signal = require("./models/signal");
 var settings = require("./models/setting");
 var webSetting = require('./webSetting.json');
+var logger;
+var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
+var logfileName2 = './log/marginTrade' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName1, logfileName2, function(loggerHandle){ logger = loggerHandle}); //logger 생성
+
+
 function fixed4(num){
   var str = new String(num);
   var arr = str.split(".");
@@ -94,6 +103,7 @@ mongoose.connect(webSetting.dbPath, function(error){
 setInterval(marginTrade(), 3000);
 
 function marginTrade(){
+  
   return function(){
     signal.find({},function(error, res){
       if(error){
@@ -268,7 +278,10 @@ function trade_bithumb(_signal){
         //매수 : 사용가능금액 check 
         
         var flag = isOrder(rgParams.type, rgParams.price, rgParams.units, 2000, data.avail_pay, data.avail_coin, rgParams.order_currency, "bithumb" );
+        
         if(flag === true){
+          logger.info("site : bithumb " + "/ side : " + rgParams.type + "/ price : " +rgParams.price + "/ amount : "+ rgParams.amount);
+          
           bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
               if(error){
                   console.log("빗썸 주문에러 error1 : " + error);
@@ -286,6 +299,7 @@ function trade_bithumb(_signal){
                   console.log("빗썸 주문에러 조회 error3 : " + body);
                   return;
               }
+              
               console.log(JSON.stringify(body));
               cb(null,data);
           });
@@ -424,12 +438,14 @@ function trade_coinone(_signal){
         
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "coinone");
         if(flag === true){
-          console.log("----코인원 주문실행----");
-          console.log("avail krw : " + data.avail_pay);
-          console.log("avail coin : " + data.avail_coin);
-          console.log("price : "+data[revSide].price);
-          console.log("amount : "+amount);
-          console.log("side : "+data.side);
+          // console.log("----코인원 주문실행----");
+          // console.log("avail krw : " + data.avail_pay);
+          // console.log("avail coin : " + data.avail_coin);
+          // console.log("price : "+data[revSide].price);
+          // console.log("amount : "+amount);
+          // console.log("side : "+data.side);
+          logger.info("site : coinone " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
+
           if(data.side === 'bid'){
             coinone.limitBuy(data.symbol, data[revSide].price, amount, function(error, response, body){
               if(error){
@@ -610,6 +626,8 @@ function trade_upbit(_signal){
      
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "upbit");
         if(flag === true){
+          logger.info("site : upbit " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
+
           upbit.order(data.symbol, data.side, data[revSide].price, amount, function(error, response, body){
             if(error){
               console.log(error);
@@ -618,12 +636,12 @@ function trade_upbit(_signal){
             console.log(body);
             cb(null,data);
           });
-          console.log("-----업비트 주문실행-------");
-          console.log("avail krw : " + data.avail_pay);
-          console.log("avail coin : " + data.avail_coin);
-          console.log("price : "+data[revSide].price);
-          console.log("amount : "+amount);
-          console.log("side : "+data.side);
+          // console.log("-----업비트 주문실행-------");
+          // console.log("avail krw : " + data.avail_pay);
+          // console.log("avail coin : " + data.avail_coin);
+          // console.log("price : "+data[revSide].price);
+          // console.log("amount : "+amount);
+          // console.log("side : "+data.side);
         }
         //cb(null,data);
       }
@@ -749,6 +767,8 @@ function trade_bitmex(_signal){
               return;
             }
             //res.send({}); 
+            logger.info("site : bitmex " + "/ side : Exit");
+
             return;
           });
         }
@@ -758,7 +778,7 @@ function trade_bitmex(_signal){
           var orderQty =  Math.abs(data.openingQty); //기존 수량 그대로 주문
           var requestHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order',
             {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
-  
+          
           request(requestHeader, function(error, response, body){
               if(error){
               console.log(error)    
@@ -766,6 +786,8 @@ function trade_bitmex(_signal){
               return;
             }
             console.log("주문1 : " + body);
+            var json = JSON.parse(body);
+            logger.info("site : bitmex " + "/ side : " + json[0].side + "/ price : " + json[0].price + "/ amount : "+ json[0].orderQty);
             cb(null, data);
           });
         }
@@ -807,7 +829,8 @@ function trade_bitmex(_signal){
                 return;
             }
             console.log("주문2 : " + body);
-            //var resBody = JSON.parse(body);
+            var json = JSON.parse(body);
+            logger.info("site : bitmex " + "/ side : " + json[0].side + "/ price : " + json[0].price + "/ amount : "+ json[0].orderQty);
             cb(null, data);
         });
       }
@@ -921,4 +944,41 @@ function isOrder(side, price, amount, orderMinCost, balance_krw, balance_coin, c
       }
       return true;
   }
+}
+
+/**
+ * 
+ * @param {String} info 레벨 로그 logfileName1 
+ * @param {String} debug 레벨 로그 logfileName2 
+ */
+function create_logger(logfileName1, logfileName2, callback){
+  var handle =  winston.createLogger({
+      level: 'debug', // 최소 레벨
+      // 파일저장
+      transports: [
+          new winston.transports.DailyRotateFile({
+              level : 'info',
+              filename : logfileName1, // log 폴더에 system.log 이름으로 저장
+              zippedArchive: false, // 압축여부
+              maxFiles: '14d',
+              format: winston.format.printf(
+                  info => `${new Date().toFormat('YYYY-MM-DD HH24:MI:SS')} [${info.level.toUpperCase()}] - ${info.message}`)
+          }),
+  
+          new winston.transports.DailyRotateFile({
+              filename : logfileName2, // log 폴더에 system.log 이름으로 저장
+              zippedArchive: false, // 압축여부
+              maxFiles: '14d',
+              format: winston.format.printf(
+                  info => `${new Date().toFormat('YYYY-MM-DD HH24:MI:SS')} [${info.level.toUpperCase()}] - ${info.message}`)
+          }),
+          // 콘솔 출력
+          new winston.transports.Console({
+              format: winston.format.printf(
+                  info => `${new Date().toFormat('YYYY-MM-DD HH24:MI:SS')} [${info.level.toUpperCase()}] - ${info.message}`)
+          })
+      ]
+  });
+
+  callback(handle);
 }

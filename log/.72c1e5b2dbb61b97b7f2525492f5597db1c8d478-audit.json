@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "log/.72c1e5b2dbb61b97b7f2525492f5597db1c8d478-audit.json",
+    "files": [
+        {
+            "date": 1568166241224,
+            "name": "log/marginTrade.debug.log.2019-09-11",
+            "hash": "021617784134c7f283f374ebb284b290"
+        }
+    ]
+}
