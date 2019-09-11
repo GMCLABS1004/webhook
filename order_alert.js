@@ -21,7 +21,7 @@ setInterval(alert(), 5000);
 
 function alert(){
     return function(){
-        orderDB.find({isSend : false}).sort({timestamp : "desc"}).exec(function(error, res){
+        orderDB.find({isSend : true}).sort({timestamp : "desc"}).exec(function(error, res){
             if(error){
                 console.log(error);
                 return;
