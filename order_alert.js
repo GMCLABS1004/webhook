@@ -59,7 +59,7 @@ function price_comma(num){
     if(price < 100){ //가격이 100원보다 작으면 ',' 표시 안하고 그대로 출력
         return price;
     }else{ //가격이 100원보다 크면 ',' 표시 
-        return numeral(res[i].price).format( '₩0,0' )
+        return numeral(price).format( '₩0,0' )
     }
     
 }
