@@ -40,12 +40,12 @@ function alert(){
                 // bot.sendMessage(728701781, msg); //수식형님
                 bot.sendMessage(888129309, msg); //주태경
                 //console.log("msg : " + msg);
-                orderDB.findByIdAndUpdate(res[i]._id, {$set :{isSend : true}},function(err, res){
+                orderDB.findByIdAndUpdate(res[i]._id, {$set :{isSend : true}},function(err, body){
                     if(err){
                         console.log(err);
                         return;
                     }
-                    console.log(res);
+                    console.log(body);
                 });
             }
         });
