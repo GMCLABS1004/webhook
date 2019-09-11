@@ -31,14 +31,14 @@ function alert(){
                 var dateArr = new Date( res[i].timestamp.getTime()).toISOString().split("T");
                 var msg = 
                 "거래소 : " + res[i].site + "\n" +
-                "타입 : " +  res[i].side + "\n" +
+                "타입 : " +  convert_side(res[i].side) + "\n" +
                 "가격 : " +  price_comma(res[i].price) + "\n" +
                 "수량 : " +  amount_comma(res[i].amount) + "\n" +
                 "날짜 : " +  dateArr[0] + "\n" + 
                 "시간 : " +  dateArr[1].split("Z")[0];
-                // bot.sendMessage(487119052, msg); //대표님
-                // bot.sendMessage(803791407, msg); //연호형님
-                // bot.sendMessage(728701781, msg); //수식형님
+                bot.sendMessage(487119052, msg); //대표님
+                bot.sendMessage(803791407, msg); //연호형님
+                bot.sendMessage(728701781, msg); //수식형님
                 bot.sendMessage(888129309, msg); //주태경
                 //console.log("msg : " + msg);
                 orderDB.findByIdAndUpdate(res[i]._id, {$set :{isSend : true}},function(err, body){
@@ -53,6 +53,15 @@ function alert(){
     }
 }
 
+
+function convert_side(side){
+    if(side === 'bid'){
+        return "Buy"
+    }else if(side==='ask'){
+        return "Sell"
+    }
+    return side;
+}
 
 function price_comma(num){
     var price = Number(num)
