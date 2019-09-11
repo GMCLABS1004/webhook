@@ -1060,25 +1060,24 @@ function create_logger(logfileName1, logfileName2, callback){
       ]
   });
 
-  function price_comma(num){
-    var price = Number(num)
-    if(price < 100){ //가격이 100원보다 작으면 ',' 표시 안하고 그대로 출력
-        return price;
-    }else{ //가격이 100원보다 크면 ',' 표시 
-        return numeral(price).format( '₩0,0' )
-    }  
-  }
-
-  function amount_comma(num){
-    var coin = Number(num);
-    if(coin >= 0.000001){
-        return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
-    }else{
-        return coin.toFixed(4); // 0.00000078 -> 0.00000078
-    }
-  }
-
-
-
   callback(handle);
+}
+
+
+function price_comma(num){
+  var price = Number(num)
+  if(price < 100){ //가격이 100원보다 작으면 ',' 표시 안하고 그대로 출력
+      return price;
+  }else{ //가격이 100원보다 크면 ',' 표시 
+      return numeral(price).format( '₩0,0' )
+  }  
+}
+
+function amount_comma(num){
+  var coin = Number(num);
+  if(coin >= 0.000001){
+      return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+  }else{
+      return coin.toFixed(4); // 0.00000078 -> 0.00000078
+  }
 }
