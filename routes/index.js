@@ -56,7 +56,6 @@ router.get('/', function(req, res, next){
 });
 
 
-
 router.post('/api/marginTrade', function(req,res){
   var sigData = {
     scriptNo : Number(req.body.scriptNo),

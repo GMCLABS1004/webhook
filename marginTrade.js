@@ -14,6 +14,7 @@ function fixed4(num){
   var str2 = arr[1].slice(0,4);
   return Number(arr[0] + '.' + str2);
 }
+
 mongoose.connect(webSetting.dbPath, function(error){
   if(error){
     console.log(error);
