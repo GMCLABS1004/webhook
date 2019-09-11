@@ -661,7 +661,7 @@ function trade_upbit(_signal){
             console.log(body);
             logger.info("site : upbit " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
             var history = {
-              site : "coinone",
+              site : "upbit",
               side : data.side,
               price : data[revSide].price,
               amount : amount,
