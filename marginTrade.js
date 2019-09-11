@@ -10,6 +10,7 @@ var coinoneAPI = require('./API/coinoneAPI.js');
 var upbitAPI = require('./API/upbitAPI.js');
 var signal = require("./models/signal");
 var settings = require("./models/setting");
+var orderDB = require('./models/order');
 var webSetting = require('./webSetting.json');
 var logger;
 var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
@@ -280,7 +281,6 @@ function trade_bithumb(_signal){
         var flag = isOrder(rgParams.type, rgParams.price, rgParams.units, 2000, data.avail_pay, data.avail_coin, rgParams.order_currency, "bithumb" );
         
         if(flag === true){
-          logger.info("site : bithumb " + "/ side : " + rgParams.type + "/ price : " +rgParams.price + "/ amount : "+ rgParams.amount);
           
           bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
               if(error){
@@ -299,7 +299,20 @@ function trade_bithumb(_signal){
                   console.log("빗썸 주문에러 조회 error3 : " + body);
                   return;
               }
-              
+              logger.info("site : bithumb " + "/ side : " + rgParams.type + "/ price : " +rgParams.price + "/ amount : "+ rgParams.units);
+              var history = {
+                site : "bithumb",
+                side : rgParams.type,
+                price : rgParams.price,
+                amount : rgParams.units,
+                timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+              } 
+              orderDB.insertMany(history,function(error,res){
+                if(error){
+                  console.log(error);
+                  return;
+                }
+              });
               console.log(JSON.stringify(body));
               cb(null,data);
           });
@@ -444,7 +457,6 @@ function trade_coinone(_signal){
           // console.log("price : "+data[revSide].price);
           // console.log("amount : "+amount);
           // console.log("side : "+data.side);
-          logger.info("site : coinone " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
 
           if(data.side === 'bid'){
             coinone.limitBuy(data.symbol, data[revSide].price, amount, function(error, response, body){
@@ -463,6 +475,20 @@ function trade_coinone(_signal){
                 return;
               }
               console.log(body);
+              logger.info("site : coinone " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
+              var history = {
+                site : "coinone",
+                side : data.side,
+                price : data[revSide].price,
+                amount : amount,
+                timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+              } 
+              orderDB.insertMany(history,function(error,res){
+                if(error){
+                  console.log(error);
+                  return;
+                }
+              });
               cb(null, data);
             });
           }else if(data.side === 'ask'){
@@ -626,7 +652,6 @@ function trade_upbit(_signal){
      
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "upbit");
         if(flag === true){
-          logger.info("site : upbit " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
 
           upbit.order(data.symbol, data.side, data[revSide].price, amount, function(error, response, body){
             if(error){
@@ -634,6 +659,21 @@ function trade_upbit(_signal){
               return;
             }
             console.log(body);
+            logger.info("site : upbit " + "/ side : " + data.side + "/ price : " + data[revSide].price + "/ amount : "+ amount);
+            var history = {
+              site : "coinone",
+              side : data.side,
+              price : data[revSide].price,
+              amount : amount,
+              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+            } 
+            orderDB.insertMany(history,function(error,res){
+              if(error){
+                console.log(error);
+                return;
+              }
+            });
+            
             cb(null,data);
           });
           // console.log("-----업비트 주문실행-------");
@@ -767,8 +807,22 @@ function trade_bitmex(_signal){
               return;
             }
             //res.send({}); 
-            logger.info("site : bitmex " + "/ side : Exit");
-
+            var json= JSON.parse(body);
+            
+            logger.info("site : bitmex " + "/ Exit " + "/ side : "+json.side + " / price : "+json.price + " / amount : " + json.orderQty);
+            var history = {
+              site : "bitmex",
+              side : json.side,
+              price : json.price,
+              amount : json.orderQty,
+              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+            } 
+            orderDB.insertMany(history,function(error,res){
+              if(error){
+                console.log(error);
+                return;
+              }
+            });
             return;
           });
         }
@@ -788,6 +842,19 @@ function trade_bitmex(_signal){
             console.log("주문1 : " + body);
             var json = JSON.parse(body);
             logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + json.price + "/ amount : "+ json.orderQty);
+            var history = {
+              site : "bitmex",
+              side : json.side,
+              price : json.price,
+              amount : json.orderQty,
+              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+            } 
+            orderDB.insertMany(history,function(error,res){
+              if(error){
+                console.log(error);
+                return;
+              }
+            });
             cb(null, data);
           });
         }
@@ -831,6 +898,19 @@ function trade_bitmex(_signal){
             console.log("주문2 : " + body);
             var json = JSON.parse(body);
             logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + json.price + "/ amount : "+ json.orderQty);
+            var history = {
+              site : "bitmex",
+              side : json.side,
+              price : json.price,
+              amount : json.orderQty,
+              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+            } 
+            orderDB.insertMany(history,function(error,res){
+              if(error){
+                console.log(error);
+                return;
+              }
+            });
             cb(null, data);
         });
       }
