@@ -1,5 +1,6 @@
 var orderDB = require('./models/order');
 var mongoose = require('mongoose');
+var numeral = require('numeral');
 const TelegramBot = require('node-telegram-bot-api');
 // replace the value below with the Telegram token you receive from @BotFather
 const token = '923302959:AAHKTAgloEI67wS7YxGlZp4jZi9DJOt8350';
