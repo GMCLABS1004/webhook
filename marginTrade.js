@@ -3,6 +3,7 @@ var crypto = require("crypto");
 var request = require("request");
 var mongoose = require('mongoose');
 const winston = require('winston');
+var numeral = require('numeral');
 require('winston-daily-rotate-file');
 require('date-utils');
 var BithumAPI = require('./API/bithumbAPI');
