@@ -3,6 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 var signal = require("../models/signal");
 var setting = require("../models/setting");
+var order = require("../models/order");
 var webSetting = require("../webSetting");
 var moment = require('moment');
 var forever = require('forever');
@@ -260,17 +261,24 @@ router.get('/api/log', isAuthenticated, function(req,res){
   }
 });
 
-router.get('/api/order',isAuthenticated, function(req, res){
+router.get('/orderHistory', isAuthenticated, function(req, res){
+  res.render('orderHistory');
+});
+
+router.get('/api/orderHistory',isAuthenticated, function(req, res){
+  console.log("/api/orderHistory 실행");
   var site = req.query.site;
   var logDate = req.query.logDate;
   if(logDate === undefined){
     logDate = new Date().toISOString().slice(0,10);
   }
-//    financialKRWHistory.find({fund_alert_flag2 : false, "timestamp" : {"$gte": new Date(logDate+"T00:00:00.000Z"),"$lte": new Date(logDate+"T23:59:59.000Z")}}).sort({timestamp : "desc"}).exec(function(err, result){
-
-  order.find({},function(error,results){
-    console.log(results);
-    res.send({});
+  order.find({site : site, "timestamp" : {"$gte": new Date(logDate+"T00:00:00.000Z"),"$lte": new Date(logDate+"T23:59:59.000Z")}}).sort({timestamp : "desc"}).exec(function(error, result){
+    if(error){
+      console.log(error);
+      res.send(error);
+    }
+    console.log(result);
+    res.send(result);
   });
 });
 

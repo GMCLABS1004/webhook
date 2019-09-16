@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        $(document).ready(function(){
+            var today = new Date().toISOString().slice(0,10);
+            
+            $.ajax({
+                type : "GET",
+                url : 'api/orderHistory?logDate='+today+"&site="+"bitmex",
+                success : function(body){
+                    if(body){
+                        console.log(body);
+                    }
+                },
+                error : function(request, status, error){
+                    console.log("error : "+error);
+                }
+            });
+        });
+    </script>
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>날짜</td>
+            <td>시간</td>
+            <td>사이트</td>
+            <td>타입</td>
+        </tr>
+        <tbody>
+        </tbody>
+    </table>
+</body>
+</html>
