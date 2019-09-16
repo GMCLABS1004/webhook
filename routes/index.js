@@ -6,8 +6,72 @@ var setting = require("../models/setting");
 var webSetting = require("../webSetting");
 var moment = require('moment');
 var forever = require('forever');
+var passport = require('passport');
+const Users = require('../models/users');
+var LocalStrategy = require('passport-local').Strategy;
+passport.serializeUser(function (user, done) {
+  done(null, user)
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.use(new LocalStrategy({
+  usernameField: 'username',
+  passwordField: 'password',
+  passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
+}, function (req, username, password, done) {
+  Users.findOne({id : username}, function(error, res){
+    if (error) return done(error); // 서버 에러 처리
+    if (!res) return done(null, false, { message: '존재하지 않는 아이디입니다' }); // 임의 에러 처리
+    if(username === res.id && password === res.pw){
+      return done(null, {
+        'user_id': res.id,
+      });
+    }else{
+      return done(false, null)
+    }
+  });
+}));
+
+var isAuthenticated = function(req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+  res.redirect('/login');
+};
+
+router.get('/login', function(req, res) {
+  res.render('login');
+});
+
+
+
+  router.post('/login', passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}), // 인증 실패 시 401 리턴, {} -> 인증 스트레티지
+  function (req, res) {
+    res.redirect('/manage');
+  });
+
+router.get('/logout', function (req, res) {
+  req.logout();
+  res.redirect('/login');
+});
+
+router.get('/changePW', isAuthenticated, function(req, res) {
+  res.render('changePW');
+});
+
+
 /* GET home page. */
-router.get('/', function(req, res, next){
+router.get('/', isAuthenticated, function(req, res){
+  res.redirect('manage');
+});
+
+// router.get('/main', isAuthenticated, function(req, res, next){
+//   res.render('main', {user_info : req.user});
+// });
+
+router.get('/manage', isAuthenticated, function(req, res, next){
   var date = new Date();
   console.log("[" + date.toISOString() + "] : " + req.body);
   var status = {
@@ -51,13 +115,13 @@ router.get('/', function(req, res, next){
       status["isMargin"]["execBot"] = botArr[0].isExec;
   
       console.log("status2 호출 : " + JSON.stringify(status));
-      res.render('index',status);
+      res.render('manage',status);
     });
   });
 });
 
 
-router.post('/api/marginTrade', function(req,res){
+router.post('/api/marginTrade', isAuthenticated, function(req,res){
   var sigData = {
     scriptNo : Number(req.body.scriptNo),
     side : req.body.side,
@@ -75,7 +139,7 @@ router.post('/api/marginTrade', function(req,res){
   });
 });
 
-router.get('/setting',function(req,res){
+router.get('/setting',isAuthenticated, function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
     if(error){
@@ -87,7 +151,7 @@ router.get('/setting',function(req,res){
   })
 });
 
-router.post('/api/setting', function(req,res){
+router.post('/api/setting', isAuthenticated, function(req,res){
   var json = new Object(req.body);
   var obj = {
     apiKey : json.apiKey,
@@ -109,7 +173,7 @@ router.post('/api/setting', function(req,res){
   });
 });
 
-router.post('/api/botOnOff', function(req,res){
+router.post('/api/botOnOff', isAuthenticated, function(req,res){
     //var botName = "/home/gmc/GMC_DefenceBot/" + req.body.id + ".js"; //봇이름
     var botPath = webSetting.botPath;
     var botName = botPath + req.body.id + ".js"; //봇이름
@@ -155,7 +219,7 @@ router.post('/api/botOnOff', function(req,res){
 });
 
 
-router.post('/api/siteOnOff',function(req,res){
+router.post('/api/siteOnOff',isAuthenticated, function(req,res){
   var site = req.body.site;
   var execFlag = Boolean(Number(req.body.execFlag));
   console.log("site : " + site);
@@ -174,7 +238,7 @@ router.get('/log',function(req, res){
   res.render('log');
 });
 
-router.get('/api/log', function(req,res){
+router.get('/api/log', isAuthenticated, function(req,res){
   var logDate = req.query.logDate;
   var logFileName = "./log/marginTrade" +".log." + logDate;  
   console.log("logFileName : "+logFileName);
