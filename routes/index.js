@@ -122,7 +122,7 @@ router.get('/manage', isAuthenticated, function(req, res, next){
 });
 
 
-router.post('/api/marginTrade', isAuthenticated, function(req,res){
+router.post('/api/marginTrade', function(req,res){
   var sigData = {
     scriptNo : Number(req.body.scriptNo),
     side : req.body.side,

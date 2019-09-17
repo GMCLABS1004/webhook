@@ -6,32 +6,59 @@
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script>
-        $(document).ready(function(){
-            var today = new Date().toISOString().slice(0,10);
-            
+        function getHistory(date, site){
             $.ajax({
                 type : "GET",
-                url : 'api/orderHistory?logDate='+today+"&site="+"bitmex",
-                success : function(body){
-                    if(body){
-                        console.log(body);
+                url : 'api/orderHistory?logDate='+date+"&site="+site,
+                success : function(json){
+                    if(json){
+                        console.log(json);
+                        $("#mytable > tbody:last").empty();
+                        for(i=0; i<json.length; i++){
+                            var time = json[i].timestamp.split("T")[1].split(":")
+                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td>" + (i+1) + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td>" + json[i].timestamp.split("T")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td>" + time[0] + ":" + time[1] + ":" + time[2].split(".")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td>" + json[i].site + "</td>");
+                                    $("#mytable > tbody:last").append("<td>" + json[i].side + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td>" + json[i].price + "</td>");
+                                    $("#mytable > tbody:last").append("<td>" + json[i].amount + "</td>");  
+                            $("#mytable > tbody:last").append("<tr>");
+                        }
                     }
                 },
                 error : function(request, status, error){
                     console.log("error : "+error);
                 }
             });
+        }
+        $(document).ready(function(){
+            var today = new Date().toISOString().slice(0,10);
+            var site = $("#site").val();
+            getHistory(today, site);
+
+            $("#logSearch").click(function(){
+                var date = $("#logDate").val();
+            });
         });
     </script>
     <title>Document</title>
 </head>
 <body>
-    <table>
+    <input type="hidden" id="site" value='<%=site%>' >
+    일자 : <input type='date' id="logDate"/> <input type="button" id="logSearch" value="조회"/><br>
+
+    <h2>한국거래소 재정거래 내역</h2>
+    <table id="mytable" border="1px">
         <tr>
+            <td>no</td>
             <td>날짜</td>
             <td>시간</td>
             <td>사이트</td>
             <td>타입</td>
+            <td>가격</td>
+            <td>수량</td>
         </tr>
         <tbody>
         </tbody>
