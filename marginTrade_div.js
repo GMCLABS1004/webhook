@@ -20,7 +20,6 @@ var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
 var logfileName2 = './log/marginTrade' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName1, logfileName2, function(loggerHandle){ logger = loggerHandle}); //logger 생성
 
-
 function fixed4(num){
   var str = new String(num);
   var arr = str.split(".");
