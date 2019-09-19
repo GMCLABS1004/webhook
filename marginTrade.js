@@ -885,7 +885,7 @@ function trade_bitmex(_signal){
           return cb(null, data);
         }
         var symbol = data.symbol;
-        var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
+        var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker)));
         var side = _signal.side;
         var requestHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order',
                     {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});

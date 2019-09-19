@@ -9,6 +9,16 @@
             "date": 1568166320140,
             "name": "log/marginTrade.debug.log.2019-09-11",
             "hash": "9cfe526d49aecab2ce983d1845b1e042"
+        },
+        {
+            "date": 1568774117262,
+            "name": "log/marginTrade.debug.log.2019-09-18",
+            "hash": "44dbb483f6b8d2653d54164a2da34614"
+        },
+        {
+            "date": 1568861274172,
+            "name": "log/marginTrade.debug.log.2019-09-19",
+            "hash": "00646968135c5249e7b4e4431764aa51"
         }
     ]
 }

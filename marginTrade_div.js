@@ -2,12 +2,32 @@ var async = require('async');
 var crypto = require("crypto");
 var request = require("request");
 var mongoose = require('mongoose');
+const winston = require('winston');
+var numeral = require('numeral');
+require('winston-daily-rotate-file');
+require('date-utils');
+var div_exit_bitmex = require('./lib/div_exit_bitmex');
+var div_entry_bitmex = require('./lib/div_entry_bitmex');
 var BithumAPI = require('./API/bithumbAPI');
 var coinoneAPI = require('./API/coinoneAPI.js');
 var upbitAPI = require('./API/upbitAPI.js');
 var signal = require("./models/signal");
 var settings = require("./models/setting");
+var orderDB = require('./models/order');
 var webSetting = require('./webSetting.json');
+var logger;
+var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
+var logfileName2 = './log/marginTrade' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName1, logfileName2, function(loggerHandle){ logger = loggerHandle}); //logger 생성
+
+
+function fixed4(num){
+  var str = new String(num);
+  var arr = str.split(".");
+  var str2 = arr[1].slice(0,4);
+  return Number(arr[0] + '.' + str2);
+}
+
 mongoose.connect(webSetting.dbPath, function(error){
   if(error){
     console.log(error);
@@ -49,40 +69,28 @@ mongoose.connect(webSetting.dbPath, function(error){
           url : "https://testnet.bitmex.com", //ex)  "ANKR"
           symbol : "XBTUSD",
           apiKey : "-2YJMJOGLRMvUgaBD1_KzbLt",
-          secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd",
-          leverage : 1,
-          margin : 10,
-          scriptNo : 1
+          secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"
         },
         {
           site : "bithumb", // ex) "ANKR_KRW"
           url : "https://api.bithumb.com", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "7446cc38540523fe9a0a04b033414ab5", //"223985a94a23a587e7aee533b82f7a4e"
-          secreteKey : "50684360909e128d413356721be9b614",//"4f76cce9768fbdc7f90c6b1fb7021846"
-          leverage : 2,
-          margin : 10,
-          scriptNo : 2
+          secreteKey : "50684360909e128d413356721be9b614"//"4f76cce9768fbdc7f90c6b1fb7021846"
         },
         {
           site : "coinone", // ex) "ANKR_KRW"
           url : "https://api.coinone.co.kr", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "0d246678-06c0-4b44-9eb6-bd8ef507fc5a", //"21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0"
-          secreteKey : "dfb81257-4f3d-4beb-bafe-81dc122aae75", //"ec06eb68-a65a-442b-8257-c850a9242a09"
-          leverage : 2,
-          margin : 10,
-          scriptNo : 2
+          secreteKey : "dfb81257-4f3d-4beb-bafe-81dc122aae75" //"ec06eb68-a65a-442b-8257-c850a9242a09"
         },
         {
           site : "upbit", // ex) "ANKR_KRW"
           url : "https://api.upbit.com", //ex)  "ANKR"
           symbol : "KRW-BTC",
           apiKey : "DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4", //"tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB"
-          secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7", //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
-          leverage : 2,
-          margin : 10,
-          scriptNo : 2
+          secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7" //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
         }
       ]
       settings.insertMany(obj,function(err, res){ //DB에 환경설정 insert
@@ -99,6 +107,7 @@ mongoose.connect(webSetting.dbPath, function(error){
 setInterval(marginTrade(), 3000);
 
 function marginTrade(){
+  
   return function(){
     signal.find({},function(error, res){
       if(error){
@@ -106,6 +115,8 @@ function marginTrade(){
         return;
       }
       if(res.length > 0){
+        console.log("");
+        console.log("");
         console.log("-----신호목록-----");
         //console.log(res);
         for(i=0; i<res.length; i++){
@@ -122,8 +133,6 @@ function marginTrade(){
             }
           });
         }
-      }else{
-        console.log("신호 없음");
       }
     });
   }
@@ -144,6 +153,7 @@ function trade_bithumb(_signal){
           ask : [],
           bid : []
         }
+
         var side = _signal.side;
         (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
         cb(null, data);
@@ -155,10 +165,17 @@ function trade_bithumb(_signal){
             return;
           }
           
+          if(res[0].execFlag === false){
+            console.log("빗썸 off");
+            return;
+          }
+
+
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("빗썸 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; 
           }
+
           // console.log(res);
           // console.log(res[0].apiKey);
           // console.log(res[0].secreteKey);
@@ -166,6 +183,10 @@ function trade_bithumb(_signal){
           data.symbol = res[0].symbol;
           data.leverage = res[0].leverage;
           data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
@@ -226,17 +247,25 @@ function trade_bithumb(_signal){
       },
       function order1(data, cb){ //주문1
         //console.log(data);
-        
+
+       
         var revSide = '';
         (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
+        console.log("side : " + data.side );
+        console.log("revSide : " + revSide );
+        console.log("avail_pay : "+ data.avail_pay);
+        console.log("margin : "+ data.margin);
+        console.log("leverage : "+ data.leverage);
+        console.log("price : " + data[revSide].price);
         if(data.side === 'bid'){
-          var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
+          
         }else if(data.side === 'ask'){
-          var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
-        if(amount > data.avail_coin){
-          amount = Number((data.avail_coin - 0.00014999).toFixed(4));
-        }
+
         var rgParams = {
           order_currency : 'BTC',
           payment_currency : 'KRW',
@@ -253,7 +282,9 @@ function trade_bithumb(_signal){
         //매수 : 사용가능금액 check 
         
         var flag = isOrder(rgParams.type, rgParams.price, rgParams.units, 2000, data.avail_pay, data.avail_coin, rgParams.order_currency, "bithumb" );
+        
         if(flag === true){
+          
           bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
               if(error){
                   console.log("빗썸 주문에러 error1 : " + error);
@@ -271,6 +302,20 @@ function trade_bithumb(_signal){
                   console.log("빗썸 주문에러 조회 error3 : " + body);
                   return;
               }
+              logger.info("site : bithumb " + "/ side : " + rgParams.type + "/ price : " + price_comma(rgParams.price) + "/ amount : "+ amount_comma(rgParams.units) );
+              var history = {
+                site : "bithumb",
+                side : rgParams.type,
+                price : rgParams.price,
+                amount : rgParams.units,
+                timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+              } 
+              orderDB.insertMany(history,function(error,res){
+                if(error){
+                  console.log(error);
+                  return;
+                }
+              });
               console.log(JSON.stringify(body));
               cb(null,data);
           });
@@ -319,6 +364,11 @@ function trade_coinone(_signal){
             return;
           }
           
+          if(res[0].execFlag === false){
+            console.log("코인원 off");
+            return;
+          }
+
           if(res[0].scriptNo !== _signal.scriptNo){ //설정한 신호 !== 받은 신호
             console.log("코인원 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; //로직종료
@@ -328,6 +378,10 @@ function trade_coinone(_signal){
           data.symbol = res[0].symbol;   
           data.leverage = res[0].leverage;
           data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
@@ -390,21 +444,23 @@ function trade_coinone(_signal){
         (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
         //var amount = Number(((((data.avail_coin * data.margin) * data.leverage) * data[revSide].price) - 0.00014999).toFixed(4));
         if(data.side === 'bid'){
-          var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
+
         }else if(data.side === 'ask'){
-          var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
-        if(amount > data.avail_coin){
-          amount = Number((data.avail_coin - 0.00014999).toFixed(4));
-        }
+        
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "coinone");
         if(flag === true){
-          console.log("----코인원 주문실행----");
-          console.log("avail krw : " + data.avail_pay);
-          console.log("avail coin : " + data.avail_coin);
-          console.log("price : "+data[revSide].price);
-          console.log("amount : "+amount);
-          console.log("side : "+data.side);
+          // console.log("----코인원 주문실행----");
+          // console.log("avail krw : " + data.avail_pay);
+          // console.log("avail coin : " + data.avail_coin);
+          // console.log("price : "+data[revSide].price);
+          // console.log("amount : "+amount);
+          // console.log("side : "+data.side);
+
           if(data.side === 'bid'){
             coinone.limitBuy(data.symbol, data[revSide].price, amount, function(error, response, body){
               if(error){
@@ -422,6 +478,20 @@ function trade_coinone(_signal){
                 return;
               }
               console.log(body);
+              logger.info("site : coinone " + "/ side : " + data.side + "/ price : " + price_comma(data[revSide].price) + "/ amount : "+ amount_comma(amount) );
+              var history = {
+                site : "coinone",
+                side : data.side,
+                price : data[revSide].price,
+                amount : amount,
+                timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+              } 
+              orderDB.insertMany(history,function(error,res){
+                if(error){
+                  console.log(error);
+                  return;
+                }
+              });
               cb(null, data);
             });
           }else if(data.side === 'ask'){
@@ -489,15 +559,23 @@ function trade_upbit(_signal){
             return;
           }
          
+          if(res[0].execFlag === false){
+            console.log("업비트 off");
+            return;
+          }
+
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("업비트 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return;
           }
           upbit = new upbitAPI(res[0].apiKey, res[0].secreteKey);
           data.symbol = res[0].symbol;
-          data.margin = res[0].margin * 0.01;
           data.leverage = res[0].leverage;
           data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
@@ -567,29 +645,46 @@ function trade_upbit(_signal){
         var revSide = '';
         (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
         if(data.side === 'bid'){
-          var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
+
         }else if(data.side === 'ask'){
-          var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
-        if(amount > data.avail_coin){
-          amount = Number((data.avail_coin - 0.00014999).toFixed(4));
-        }
+     
         var flag = isOrder(data.side, data[revSide].price, amount, 2000, data.avail_pay, data.avail_coin, data.symbol, "upbit");
         if(flag === true){
+
           upbit.order(data.symbol, data.side, data[revSide].price, amount, function(error, response, body){
             if(error){
               console.log(error);
               return;
             }
             console.log(body);
+            logger.info("site : upbit " + "/ side : " + data.side + "/ price : " + price_comma(data[revSide].price) + "/ amount : "+ amount_comma(amount) );
+            var history = {
+              site : "upbit",
+              side : data.side,
+              price : data[revSide].price,
+              amount : amount,
+              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+            } 
+            orderDB.insertMany(history,function(error,res){
+              if(error){
+                console.log(error);
+                return;
+              }
+            });
+            
             cb(null,data);
           });
-          console.log("-----업비트 주문실행-------");
-          console.log("avail krw : " + data.avail_pay);
-          console.log("avail coin : " + data.avail_coin);
-          console.log("price : "+data[revSide].price);
-          console.log("amount : "+amount);
-          console.log("side : "+data.side);
+          // console.log("-----업비트 주문실행-------");
+          // console.log("avail krw : " + data.avail_pay);
+          // console.log("avail coin : " + data.avail_coin);
+          // console.log("price : "+data[revSide].price);
+          // console.log("amount : "+amount);
+          // console.log("side : "+data.side);
         }
         //cb(null,data);
       }
@@ -623,6 +718,7 @@ function trade_bitmex(_signal){
               margin : 0.1, //setting값
               openingQty : 0, // 들어가 있는 수량
               isSide : 'none', //들어가 있는 side// Sell or Buy
+              
           }
           cb(null, data);
       },
@@ -633,8 +729,19 @@ function trade_bitmex(_signal){
             return;
           }
           
+          if(res[0].execFlag === false){
+            console.log("비트멕스 off");
+            return;
+          }
+
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("비트멕스 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
+            return; 
+          }
+
+          //탈출중이거나 진입중이면 신호무시
+          if(res[0].isExiting === true || res[0].isEntering === true){
+            console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
 
@@ -644,6 +751,10 @@ function trade_bitmex(_signal){
           data.secreteKey = res[0].secreteKey;
           data.leverage = res[0].leverage;
           data.margin = res[0].margin * 0.01;
+          data.minOrdCost = res[0].minOrdCost;
+          data.ordInterval = res[0].ordInterval * 1000;
+          data.minOrdRate = res[0].minOrdRate * 0.01;
+          data.maxOrdRate = res[0].maxOrdRate * 0.01;
           cb(null, data);
         });
       },
@@ -694,37 +805,50 @@ function trade_bitmex(_signal){
         }
        
         if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
-          cb(null, data);
+            cb(null, data);
         }
         else if(_signal.side === 'Exit'){ //포지션종료
-          console.log("포지션 종료"); //로직종료
-          var requestClearHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order/closePosition', {symbol : data.symbol});
-          request(requestClearHeader, function(error, response, body) {
-            if(error){
-              console.log(error)    
-              //res.send(error);
-              return;
+            console.log("포지션 종료"); //로직종료
+        
+            var obj = {
+                idx : 1,
+                url : data.url,
+                apiKey : data.apiKey,
+                secreteKey : data.secreteKey,
+                symbol : data.symbol,
+                goalAmt : 0,
+                totalOrdAmt : 0,
+                openingQty : 0, //진입한 포지션 수량 
+                side : "",
+                minAmtRate : data.minOrdRate, //최소주문비율  
+                maxAmtRate : data.minOrdRate, //최대주문비율 
+                isOrdered : false, //주문시도 여부
+                isSuccess : false, //주문성공 여부
+                isContinue : false, //주문분할 계속할지 여부
             }
-            //res.send({}); 
+            setTimeout(div_exit_bitmex(obj), 0);
             return;
-          });
         }
         else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션O && Buy or Sell
-          var symbol = data.symbol;
-          var side = _signal.side;
-          var orderQty =  Math.abs(data.openingQty); //기존 수량 그대로 주문
-          var requestHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order',
-            {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
-  
-          request(requestHeader, function(error, response, body){
-              if(error){
-              console.log(error)    
-              //res.send(error);
-              return;
+            console.log("포지션 종료"); //로직종료
+            var obj = {
+                idx : 1,
+                url : data.url,
+                apiKey : data.apiKey,
+                secreteKey : data.secreteKey,
+                symbol : data.symbol,
+                goalAmt : 0,
+                totalOrdAmt : 0,
+                openingQty : 0, //진입한 포지션 수량 
+                side : "",
+                minAmtRate : data.minOrdRate, //최소주문비율  
+                maxAmtRate : data.minOrdRate, //최대주문비율 
+                isOrdered : false, //주문시도 여부
+                isSuccess : false, //주문성공 여부
+                isContinue : false, //주문분할 계속할지 여부
             }
-            console.log("주문1 : " + body);
+            setTimeout(div_exit_bitmex(obj), 0);
             cb(null, data);
-          });
         }
       },
       function getUserMargin(data, cb){ //잔액조회
@@ -751,22 +875,27 @@ function trade_bitmex(_signal){
         if(_signal.side === 'Exit'){
           return cb(null, data);
         }
-        var symbol = data.symbol;
-        var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
-        var side = _signal.side;
-        var requestHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order',
-                    {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
+        //진입주문
+        var obj = {
+            idx : 1,
+            url : data.url,
+            apiKey : data.apiKey,
+            secreteKey : data.secreteKey,
+            symbol : data.symbol,
+            firstMargin : 0,
+            totalRemainAmt : 0, //미체결 수량
+            totalRemainVal : 0, //미체결 가치
+            goalValue : Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker))), //주문 목표 금액
+            totalOrdValue : 0, //주문넣은 가치 합산
+            side : _signal.side, //주문 타입
+            minValueRate : data.minOrdRate, //최소주문비율
+            maxValueRate : data.minOrdRate, //최대주문비율
+            orderID : "", //주문id'
+            msg : "div1"
+        }
         
-        request(requestHeader, function(error, response, body){
-            if(error){
-                console.log(error)    
-                //res.send(error);
-                return;
-            }
-            console.log("주문2 : " + body);
-            //var resBody = JSON.parse(body);
-            cb(null, data);
-        });
+        setTimeout(div_entry_bitmex(obj), 10000);
+        cb(null, data);
       }
     ],function(error, data){
         if(error){
@@ -877,5 +1006,61 @@ function isOrder(side, price, amount, orderMinCost, balance_krw, balance_coin, c
           return false;
       }
       return true;
+  }
+}
+
+/**
+ * 
+ * @param {String} info 레벨 로그 logfileName1 
+ * @param {String} debug 레벨 로그 logfileName2 
+ */
+function create_logger(logfileName1, logfileName2, callback){
+  var handle =  winston.createLogger({
+      level: 'debug', // 최소 레벨
+      // 파일저장
+      transports: [
+          new winston.transports.DailyRotateFile({
+              level : 'info',
+              filename : logfileName1, // log 폴더에 system.log 이름으로 저장
+              zippedArchive: false, // 압축여부
+              maxFiles: '14d',
+              format: winston.format.printf(
+                  info => `${new Date().toFormat('YYYY-MM-DD HH24:MI:SS')} [${info.level.toUpperCase()}] - ${info.message}`)
+          }),
+  
+          new winston.transports.DailyRotateFile({
+              filename : logfileName2, // log 폴더에 system.log 이름으로 저장
+              zippedArchive: false, // 압축여부
+              maxFiles: '14d',
+              format: winston.format.printf(
+                  info => `${new Date().toFormat('YYYY-MM-DD HH24:MI:SS')} [${info.level.toUpperCase()}] - ${info.message}`)
+          }),
+          // 콘솔 출력
+          new winston.transports.Console({
+              format: winston.format.printf(
+                  info => `${new Date().toFormat('YYYY-MM-DD HH24:MI:SS')} [${info.level.toUpperCase()}] - ${info.message}`)
+          })
+      ]
+  });
+
+  callback(handle);
+}
+
+
+function price_comma(num){
+  var price = Number(num)
+  if(price < 100){ //가격이 100원보다 작으면 ',' 표시 안하고 그대로 출력
+      return price;
+  }else{ //가격이 100원보다 크면 ',' 표시 
+      return numeral(price).format( '₩0,0' )
+  }  
+}
+
+function amount_comma(num){
+  var coin = Number(num);
+  if(coin >= 0.000001){
+      return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+  }else{
+      return coin.toFixed(4); // 0.00000078 -> 0.00000078
   }
 }
