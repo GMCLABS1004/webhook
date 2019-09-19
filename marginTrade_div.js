@@ -100,6 +100,14 @@ mongoose.connect(webSetting.dbPath, function(error){
           }
           //console.log(res);
       });
+    }else{
+        settings.updateMany({}, {$set : {isEntering : false, isExiting : false}},function(err, res){ //DB에 환경설정 insert
+            if(err){
+                console.log(err);
+                return;
+            }
+            //console.log(res);
+        });
     }
   });
 });
@@ -893,7 +901,7 @@ function trade_bitmex(_signal){
             orderID : "", //주문id'
             msg : "div1"
         }
-        
+
         setTimeout(div_entry_bitmex(obj), 10000);
         cb(null, data);
       }
