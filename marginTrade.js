@@ -6,6 +6,8 @@ const winston = require('winston');
 var numeral = require('numeral');
 require('winston-daily-rotate-file');
 require('date-utils');
+var div_exit_bitmex = require('./lib/div_exit_bitmex');
+var div_entry_bitmex = require('./lib/div_entry_bitmex');
 var BithumAPI = require('./API/bithumbAPI');
 var coinoneAPI = require('./API/coinoneAPI.js');
 var upbitAPI = require('./API/upbitAPI.js');
@@ -17,7 +19,6 @@ var logger;
 var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
 var logfileName2 = './log/marginTrade' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName1, logfileName2, function(loggerHandle){ logger = loggerHandle}); //logger 생성
-
 
 function fixed4(num){
   var str = new String(num);
@@ -98,6 +99,14 @@ mongoose.connect(webSetting.dbPath, function(error){
           }
           //console.log(res);
       });
+    }else{
+        settings.updateMany({}, {$set : {isEntering : false, isExiting : false}},function(err, res){ //DB에 환경설정 insert
+            if(err){
+                console.log(err);
+                return;
+            }
+            //console.log(res);
+        });
     }
   });
 });
@@ -716,6 +725,7 @@ function trade_bitmex(_signal){
               margin : 0.1, //setting값
               openingQty : 0, // 들어가 있는 수량
               isSide : 'none', //들어가 있는 side// Sell or Buy
+              
           }
           cb(null, data);
       },
@@ -733,6 +743,12 @@ function trade_bitmex(_signal){
 
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("비트멕스 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
+            return; 
+          }
+
+          //탈출중이거나 진입중이면 신호무시
+          if(res[0].isExiting === true || res[0].isEntering === true){
+            console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
 
@@ -796,68 +812,50 @@ function trade_bitmex(_signal){
         }
        
         if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
-          cb(null, data);
+            cb(null, data);
         }
         else if(_signal.side === 'Exit'){ //포지션종료
-          console.log("포지션 종료"); //로직종료
-          var requestClearHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order/closePosition', {symbol : data.symbol});
-          request(requestClearHeader, function(error, response, body) {
-            if(error){
-              console.log(error)    
-              //res.send(error);
-              return;
+            console.log("포지션 종료"); //로직종료
+        
+            var obj = {
+                idx : 1,
+                url : data.url,
+                apiKey : data.apiKey,
+                secreteKey : data.secreteKey,
+                symbol : data.symbol,
+                goalAmt : 0,
+                totalOrdAmt : 0,
+                openingQty : 0, //진입한 포지션 수량 
+                side : "",
+                minAmtRate : data.minOrdRate, //최소주문비율  
+                maxAmtRate : data.minOrdRate, //최대주문비율 
+                isOrdered : false, //주문시도 여부
+                isSuccess : false, //주문성공 여부
+                isContinue : false, //주문분할 계속할지 여부
             }
-            //res.send({}); 
-            var json= JSON.parse(body);
-            
-            logger.info("site : bitmex " + "/ Exit " + "/ side : "+json.side + " / price : "+ price_comma(json.price) + " / amount : " + amount_comma(json.orderQty) );
-            var history = {
-              site : "bitmex",
-              side : json.side,
-              price : json.price,
-              amount : json.orderQty,
-              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
-            } 
-            orderDB.insertMany(history,function(error,res){
-              if(error){
-                console.log(error);
-                return;
-              }
-            });
+            setTimeout(div_exit_bitmex(obj), 0);
             return;
-          });
         }
         else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션O && Buy or Sell
-          var symbol = data.symbol;
-          var side = _signal.side;
-          var orderQty =  Math.abs(data.openingQty); //기존 수량 그대로 주문
-          var requestHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order',
-            {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
-          
-          request(requestHeader, function(error, response, body){
-              if(error){
-              console.log(error)    
-              //res.send(error);
-              return;
+            console.log("포지션 종료"); //로직종료
+            var obj = {
+                idx : 1,
+                url : data.url,
+                apiKey : data.apiKey,
+                secreteKey : data.secreteKey,
+                symbol : data.symbol,
+                goalAmt : 0,
+                totalOrdAmt : 0,
+                openingQty : 0, //진입한 포지션 수량 
+                side : "",
+                minAmtRate : data.minOrdRate, //최소주문비율  
+                maxAmtRate : data.minOrdRate, //최대주문비율 
+                isOrdered : false, //주문시도 여부
+                isSuccess : false, //주문성공 여부
+                isContinue : false, //주문분할 계속할지 여부
             }
-            console.log("주문1 : " + body);
-            var json = JSON.parse(body);
-            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + price_comma(json.price) + "/ amount : "+ amount_comma(json.orderQty) );
-            var history = {
-              site : "bitmex",
-              side : json.side,
-              price : json.price,
-              amount : json.orderQty,
-              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
-            } 
-            orderDB.insertMany(history,function(error,res){
-              if(error){
-                console.log(error);
-                return;
-              }
-            });
+            setTimeout(div_exit_bitmex(obj), 0);
             cb(null, data);
-          });
         }
       },
       function getUserMargin(data, cb){ //잔액조회
@@ -884,36 +882,27 @@ function trade_bitmex(_signal){
         if(_signal.side === 'Exit'){
           return cb(null, data);
         }
-        var symbol = data.symbol;
-        var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker)));
-        var side = _signal.side;
-        var requestHeader = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'POST','order',
-                    {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
-        
-        request(requestHeader, function(error, response, body){
-            if(error){
-                console.log(error)    
-                //res.send(error);
-                return;
-            }
-            console.log("주문2 : " + body);
-            var json = JSON.parse(body);
-            logger.info("site : bitmex " + "/ side : " + json.side + "/ price : " + price_comma(json.price) + "/ amount : "+ amount_comma(json.orderQty) );
-            var history = {
-              site : "bitmex",
-              side : json.side,
-              price : json.price,
-              amount : json.orderQty,
-              timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
-            } 
-            orderDB.insertMany(history,function(error,res){
-              if(error){
-                console.log(error);
-                return;
-              }
-            });
-            cb(null, data);
-        });
+        //진입주문
+        var obj = {
+            idx : 1,
+            url : data.url,
+            apiKey : data.apiKey,
+            secreteKey : data.secreteKey,
+            symbol : data.symbol,
+            firstMargin : 0,
+            totalRemainAmt : 0, //미체결 수량
+            totalRemainVal : 0, //미체결 가치
+            goalValue : Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker))), //주문 목표 금액
+            totalOrdValue : 0, //주문넣은 가치 합산
+            side : _signal.side, //주문 타입
+            minValueRate : data.minOrdRate, //최소주문비율
+            maxValueRate : data.minOrdRate, //최대주문비율
+            orderID : "", //주문id'
+            msg : "div1"
+        }
+
+        setTimeout(div_entry_bitmex(obj), 10000);
+        cb(null, data);
       }
     ],function(error, data){
         if(error){
