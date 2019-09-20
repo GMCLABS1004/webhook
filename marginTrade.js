@@ -915,7 +915,7 @@ function trade_bitmex(_signal){
             apiKey : data.apiKey,
             secreteKey : data.secreteKey,
             symbol : data.symbol,
-            minOrdAmt : data.minOrdCost,
+            minOrdAmt : data.minOrdAmt,
             ordInterval : data.ordInterval,
             firstMargin : 0,
             totalRemainAmt : 0, //미체결 수량
