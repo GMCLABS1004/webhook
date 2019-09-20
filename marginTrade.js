@@ -328,6 +328,7 @@ function trade_bithumb(_signal){
         else if(_signal.side === 'Exit' && data.isSide === 'Buy'){ //현재포지션 -> 매수 and 신호 -> 탈출
           //탈출
           //빗썸탈출
+          console.log("빗썸탈출");
           var data = {
             idx : 1,
             apiKey : data.apiKey,
