@@ -847,7 +847,7 @@ function trade_bitmex(_signal){
                 apiKey : data.apiKey,
                 secreteKey : data.secreteKey,
                 symbol : data.symbol,
-                ordInterval = data.ordInterval,
+                ordInterval : data.ordInterval,
                 goalAmt : 0,
                 totalOrdAmt : 0,
                 openingQty : 0, //진입한 포지션 수량 
@@ -873,7 +873,7 @@ function trade_bitmex(_signal){
                 totalOrdAmt : 0,
                 openingQty : 0, //진입한 포지션 수량 
                 side : "",
-                ordInterval = data.ordInterval,
+                ordInterval : data.ordInterval,
                 minAmtRate : data.minOrdRate, //최소주문비율  
                 maxAmtRate : data.minOrdRate, //최대주문비율 
                 isOrdered : false, //주문시도 여부
@@ -915,8 +915,8 @@ function trade_bitmex(_signal){
             apiKey : data.apiKey,
             secreteKey : data.secreteKey,
             symbol : data.symbol,
-            minOrdAmt = data.minOrdCost,
-            ordInterval = data.ordInterval,
+            minOrdAmt : data.minOrdCost,
+            ordInterval : data.ordInterval,
             firstMargin : 0,
             totalRemainAmt : 0, //미체결 수량
             totalRemainVal : 0, //미체결 가치
