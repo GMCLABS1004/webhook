@@ -8,8 +8,6 @@ require('winston-daily-rotate-file');
 require('date-utils');
 var div_exit_bitmex = require('./lib/div_exit_bitmex');
 var div_entry_bitmex = require('./lib/div_entry_bitmex');
-var div_exit_bithumb = require('./lib/div_exit_bithumb');
-var div_entry_bithumb = require('./lib/div_entry_bithumb');
 var BithumAPI = require('./API/bithumbAPI');
 var coinoneAPI = require('./API/coinoneAPI.js');
 var upbitAPI = require('./API/upbitAPI.js');
@@ -158,11 +156,13 @@ function trade_bithumb(_signal){
           avail_pay : 0,
           avail_coin : 0,
           symbol : "",
-          isSide : '',
-          ticker : 0,
+          side : '',
           ask : [],
-          bid : [],
+          bid : []
         }
+
+        var side = _signal.side;
+        (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
         cb(null, data);
       },
       function readSetting(data, cb){
@@ -180,12 +180,6 @@ function trade_bithumb(_signal){
 
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("빗썸 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
-            return; 
-          }
-          
-          //탈출중이거나 진입중이면 신호무시
-          if(res[0].isExiting === true || res[0].isEntering === true){
-            console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
 
@@ -228,29 +222,7 @@ function trade_bithumb(_signal){
           cb(null, data);
         });
       },
-      function ticker(){
-        bithumAPI.ticker("BTC", function(error, response, body){
-          if(error){
-            console.log("빗썸 balance 값 조회 error1 : " + error);
-            return;
-          }
-          try{
-              var json = JSON.parse(body);
-          }catch(error){
-            console.log("빗썸 balance 값 조회 error1 : " + error);
-            return;
-          }
-          
-          if(json.status !== "0000"){
-            console.log("빗썸 balance 값 조회 error2 : " + body);
-            return;
-          }
-          var json = JSON.parse(body);
-          
-          data.ticker = data.closing_price;
-          cb(null,data);
-        });
-      },
+  
       function balance_bithumb(data,cb){
         var rgParams = {
           currency : data.symbol
@@ -267,7 +239,7 @@ function trade_bithumb(_signal){
             console.log("빗썸 balance 값 조회 error1 : " + error);
               return;
           }
-          
+  
           if(json.status !== "0000"){
             console.log("빗썸 balance 값 조회 error2 : " + body);
               return;
@@ -275,82 +247,92 @@ function trade_bithumb(_signal){
           //console.log(body);
           
           var coin_name = data.symbol.toLowerCase();
-          data.avail_coin = Number(json.data["available_btc"]);
+          data.avail_coin = Number(json.data["available_"+coin_name]);
           data.avail_pay = Math.floor(Number(json.data["available_"+"krw"]));
-
-          if(data.avail_coin * data.ticker > 2000){
-            data.isSide = "Buy"
-          }else{
-            data.isSide = "NONE"
-          }
           cb(null,data);
         });
       },
       function order1(data, cb){ //주문1
-        if(data.isSide === _signal.side){ //진입한 포지션 === 요청포지션
-          console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
-          //res.send({}); 
-          return;
-        }
-        
-        if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
+        //console.log(data);
+
+       
+        var revSide = '';
+        (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
+        console.log("side : " + data.side );
+        console.log("revSide : " + revSide );
+        console.log("avail_pay : "+ data.avail_pay);
+        console.log("margin : "+ data.margin);
+        console.log("leverage : "+ data.leverage);
+        console.log("price : " + data[revSide].price);
+        if(data.side === 'bid'){
+          //var amount = Number(((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price) - 0.00014999).toFixed(4));
+          var amount = fixed4((((data.avail_pay * data.margin) * data.leverage) /  data[revSide].price));
           
-          //목표금액  => 이용가능금액 * 마진 * 레버리지
-          var goalValue = Math.floor(data.avail_pay * data.margin * data.leverage);
-          if(goalValue > data.avail_pay){
-            goalValue = Math.floor(data.avail_pay);
-          }
-
-          //빗썸 진입
-          var obj = {
-              idx : 1,
-              apiKey : data.apiKey,
-              secreteKey : data.secreteKey,
-              ordInterval : data.ordInterval,
-              firstMargin : 0,
-              availableMargin : 0, //잔액
-              totalRemainAmt : 0, //주문후 남은 주문수량
-              totalRemainVal : 0, //주문후 남은 가치
-              goalValue : goalValue, //주문 목표 금액
-
-              totalOrdValue : 0, //주문넣은 가치 합산
-              side : 'bid', //주문 타입
-              minOrdValue : data.minOrdCost, //최소주문금액
-              siteMinValue : 2000, //거래소 주문 최소 가치
-              minValueRate : data.minOrdRate, //최소주문비율
-              maxValueRate : data.maxOrdRate, //최대주문비율
-              orderID : "", //주문id
-              msg : "div1"
-          }
-          setTimeout(div_entry_bithumb(bithumAPI, obj), 0);
-          cb(null, data);
+        }else if(data.side === 'ask'){
+          //var amount = Number((data.avail_coin - 0.00014999).toFixed(4));
+          var amount = fixed4(data.avail_coin);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy'){ //현재포지션 -> 매수 and 신호 -> 탈출
-          //탈출
-          //빗썸탈출
-          var data = {
-            idx : 1,
-            apiKey : data.apiKey,
-            secreteKey : data.secreteKey,
-            ordInterval : data.ordInterval,
-            minOrdVal : data.minOrdCost, //원
-            minOrdAmt : 0,
-            siteMinVal : 2000, //원
-            siteMinAmt : 0, //btc 수량
-            goalAmt : data.avail_coin, //목표 수량
-            totalOrdAmt : 0, //누적 주문 수량 
-            openingQty : 0, //진입한 포지션 수량 
-            side : "",
-            minAmtRate : data.minOrdRate, //최소수량비율 
-            maxAmtRate : data.maxOrdRate, //최대수량비율
-            orderID : "",
-            isOrdered : false, //주문시도 여부
-            isSuccess : false, //주문성공 여부
-            isContinue : false, //주문분할 계속할지 여부
-          }
-          setTimeout(div_exit_bithumb(bithumAPI, data), 0);
-          cb(null, data);
+
+        var rgParams = {
+          order_currency : 'BTC',
+          payment_currency : 'KRW',
+          price : data[revSide].price,
+          type : data.side,
+          units : amount
+        };
+        console.log("avail krw : " + data.avail_pay);
+        console.log("avail coin : " + data.avail_coin);
+        console.log(rgParams);
+        //수량 : 마진, 레버리지
+        //둘다 : 최소수량 check
+        //매도 : 코인수량 check
+        //매수 : 사용가능금액 check 
+        
+        var flag = isOrder(rgParams.type, rgParams.price, rgParams.units, 2000, data.avail_pay, data.avail_coin, rgParams.order_currency, "bithumb" );
+        
+        if(flag === true){
+          
+          bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
+              if(error){
+                  console.log("빗썸 주문에러 error1 : " + error);
+                  return;
+              }
+
+              try{
+                  var json = JSON.parse(body);
+              }catch(error){
+                  console.log("빗썸 주문에러 error2 : " + error);
+                  return;
+              }
+
+              if(json.status !== "0000"){
+                  console.log("빗썸 주문에러 조회 error3 : " + body);
+                  return;
+              }
+              logger.info("site : bithumb " + "/ side : " + rgParams.type + "/ price : " + price_comma(rgParams.price) + "/ amount : "+ amount_comma(rgParams.units) );
+              var history = {
+                site : "bithumb",
+                side : rgParams.type,
+                price : rgParams.price,
+                amount : rgParams.units,
+                timestamp : (new Date().getTime() + (1000 * 60 * 60 * 9))
+              } 
+              orderDB.insertMany(history,function(error,res){
+                if(error){
+                  console.log(error);
+                  return;
+                }
+              });
+              console.log(JSON.stringify(body));
+              cb(null,data);
+          });
+          console.log("----빗썸 주문실행----");
+          console.log("avail krw : " + data.avail_pay);
+          console.log("avail coin : " + data.avail_coin);
+          console.log(rgParams);
         }
+
+        //cb(null,data);
       }
     ],function(error, data){
         if(error){
@@ -918,7 +900,7 @@ function trade_bitmex(_signal){
             msg : "div1"
         }
 
-        setTimeout(div_entry_bitmex(obj), 0);
+        setTimeout(div_entry_bitmex(obj), 10000);
         cb(null, data);
       }
     ],function(error, data){
