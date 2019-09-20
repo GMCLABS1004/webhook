@@ -247,7 +247,7 @@ function trade_bithumb(_signal){
           }
           var json = JSON.parse(body);
           
-          data.ticker = data.closing_price;
+          data.ticker = json.closing_price;
           cb(null,data);
         });
       },
