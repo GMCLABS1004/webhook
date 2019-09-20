@@ -283,7 +283,7 @@ function trade_bithumb(_signal){
           }else{
             data.isSide = "NONE"
           }
-          console.log("avail_coin : "+ avail_coin);
+          console.log("avail_coin : "+ data.avail_coin);
           console.log("ticker : "+ data.ticker);
           console.log("_signal : " + _signal.side);
           console.log("isSide : " + data.isSide);
