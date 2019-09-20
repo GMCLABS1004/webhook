@@ -228,7 +228,7 @@ function trade_bithumb(_signal){
           cb(null, data);
         });
       },
-      function ticker(){
+      function ticker(data,cb){
         bithumAPI.ticker("BTC", function(error, response, body){
           if(error){
             console.log("빗썸 balance 값 조회 error1 : " + error);
