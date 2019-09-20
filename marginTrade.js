@@ -785,6 +785,7 @@ function trade_bitmex(_signal){
           data.ordInterval = res[0].ordInterval * 1000;
           data.minOrdRate = res[0].minOrdRate * 0.01;
           data.maxOrdRate = res[0].maxOrdRate * 0.01;
+          console.log(data);
           cb(null, data);
         });
       },
