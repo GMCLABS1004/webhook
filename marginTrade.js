@@ -283,6 +283,8 @@ function trade_bithumb(_signal){
           }else{
             data.isSide = "NONE"
           }
+          console.log("_signal : " + _signal.side);
+          console.log("isSide : " + data.isSide);
           cb(null,data);
         });
       },
