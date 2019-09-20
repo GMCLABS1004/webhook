@@ -928,7 +928,8 @@ function trade_bitmex(_signal){
             orderID : "", //주문id'
             msg : "div1"
         }
-
+        console.log("진입주문전");
+        console.log(obj);
         setTimeout(div_entry_bitmex(obj), 0);
         cb(null, data);
       }
