@@ -7,16 +7,16 @@ var async = require('async');
 const winston = require('winston');
 require('winston-daily-rotate-file');
 require('date-utils');
-var webSetting = require('../webSetting.json');
-var orderDB = require('../models/order');
-var settings = require("../models/setting");
+var webSetting = require('./webSetting.json');
+var orderDB = require('./models/order');
+var settings = require("./models/setting");
 var url = 'https://testnet.bitmex.com';
 var apiKey = '-2YJMJOGLRMvUgaBD1_KzbLt'
 var secreteKey = 'aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd';
 var symbol = 'XBTUSD';
 var logger;
-var logfileName1 = '../log/marginTrade' +'.log'; //로그파일 경로1
-var logfileName2 = '../log/marginTrade' +'.debug.log'; //로그파일 경로2
+var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
+var logfileName2 = './log/marginTrade' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName1, logfileName2, function(loggerHandle){ logger = loggerHandle}); //logger 생성
 mongoose.connect(webSetting.dbPath, function(error){
     if(error){
@@ -79,7 +79,7 @@ module.exports=function divide_entry_bitmex(obj){
                 isSuccess : false, //주문성공 여부
                 isContinue : false, //주문분할 계속할지 여부
             }
-            logger.info(data.msg +" 주문 시작" );
+            logger.info(data.msg +" 시작" );
             //logger.info(JSON.stringify(data) );
             cb(null, data);
         },
