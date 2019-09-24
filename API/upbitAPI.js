@@ -83,7 +83,7 @@ module.exports = class upbitAPI{
      * @param {String} market 'KRW-BTC'
      * @param {String} to 'yyyy-MM-dd'
      */
-    candles_day(market, to, callback){ 
+    candles_day(market, to, callback){
         var options = { method: 'GET',
         url: 'https://api.upbit.com/v1/candles/days',
         qs: { market: market, to : to } };
@@ -92,6 +92,32 @@ module.exports = class upbitAPI{
             callback(error, response, body);
         });
     }
+
+    /**
+     * 
+     * @param {*} uuid 주문ID
+     * @param {*} callback 
+     */
+    order_info(uuid, callback){
+        const query = queryEncode({uuid: uuid});
+        const payload = {
+            access_key: this.access_key,
+            nonce: (new Date).getTime() + randomInt(200,1000),
+            query: query
+        };
+        const token = sign(payload, this.secret_key);
+
+        var options = {
+            method: "GET",
+            url: "https://api.upbit.com/v1/order?" + query,
+            headers: {Authorization: `Bearer ${token}`}
+        };
+
+        request(options, function (error, response, body) {
+            callback(error, response, body);
+        });
+    }
+
 
     orders(market, callback){
         const query = queryEncode({market: market});
@@ -108,7 +134,7 @@ module.exports = class upbitAPI{
             headers: {Authorization: `Bearer ${token}`}
         };
 
-        request(options, function (error, response, body) {
+        request(options, function (error, response, body){
             callback(error, response, body);
         });
         
@@ -170,6 +196,7 @@ module.exports = class upbitAPI{
             nonce: (new Date).getTime(),
             query: query
         };
+
         const token = sign(payload, this.secret_key);
 
         var options = {
@@ -177,6 +204,9 @@ module.exports = class upbitAPI{
             url: "https://api.upbit.com/v1/order?" + query,
             headers: {Authorization: `Bearer ${token}`}
         };
-        callback(error, response, body);
+        
+        request(options, function (error, response, body) {
+            callback(error, response, body);
+        });
     }
 }

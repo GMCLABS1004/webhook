@@ -2,7 +2,7 @@
 logs
 *.log
 ./log
-log/
+log/.json
 # Runtime data
 pids
 *.pid

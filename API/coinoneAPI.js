@@ -145,6 +145,21 @@ module.exports = class coinoneAPI{
         });
     }
 
+    myOrderInfo(order_id, currency, callback){
+        var url = 'https://api.coinone.co.kr/v2/order/order_info/';
+        var payload = {
+          'access_token': this.token,
+          'nonce': Date.now(),
+          'order_id': order_id,
+          'currency': currency,
+        }
+        var options = this.getPrivateOptions(url, payload);
+        request(options,function(error, httpResponse, body){
+            callback(error, httpResponse, body);
+        });
+    }
+
+
     getPrivateOptions(url, payload){
         payload = new Buffer(JSON.stringify(payload)).toString('base64')
         var headers = {
