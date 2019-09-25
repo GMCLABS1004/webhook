@@ -5,14 +5,14 @@ var price = 3.82;
 var amount = 1000;
 var orderID = 0;
 
-upbit.accounts(function(error, response, body){
-    if(error){
-        console.log(error);
-        return;
+// upbit.accounts(function(error, response, body){
+//     if(error){
+//         console.log(error);
+//         return;
 
-    }
-    console.log(body);
-});
+//     }
+//     console.log(body);
+// });
 
 
 // upbit.order("KRW-ADT", side, price, amount, function(error, response, body){
@@ -53,13 +53,13 @@ upbit.accounts(function(error, response, body){
 // });
 
 
-// upbit.cancel('74d2f92e-961c-467c-80a7-185da4b7d367', function(error, response, body){
-//     if(error){
-//         console.log("업비트 주문취소 error1 : " + error);
-//         return;
-//     }
-//     console.log(body);
-// });
+upbit.cancel('90242537-f93f-45ee-bc5d-842b0cd72857', function(error, response, body){
+    if(error){
+        console.log("업비트 주문취소 error1 : " + error);
+        return;
+    }
+    console.log(body);
+});
 
 // upbit.ticker("KRW-ADT", function(error, response, body){
 //     if(error){

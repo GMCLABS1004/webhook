@@ -755,9 +755,9 @@ function trade_upbit(_signal){
         if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
           
           //목표금액  => 이용가능금액 * 마진 * 레버리지
-          var goalValue = Math.floor(data.avail_pay * data.margin * data.leverage);
+          var goalValue = Math.floor((data.avail_pay * data.margin * data.leverage) * 0.99);
           if(goalValue > data.avail_pay){
-            goalValue = Math.floor(data.avail_pay);
+            goalValue = Math.floor(data.avail_pay * 0.99);
           }
 
           //빗썸 진입

@@ -6,12 +6,19 @@ async.waterfall([
         return cb();
     },
     function b(cb){
-        if(flag === false){
-            return cb(); 
-        }
-        console.log("b");
-        cb();
+        var str ="bbbbbb";
+        setTimeout(function(){
+            console.log(str);
+            return cb();
+        }, 2000);
     }
 ], function(error, res){
     console.log("c");
 });
+
+function kk(str, cb){
+    return function(){
+        console.log(str); 
+        return cb();
+    }
+}

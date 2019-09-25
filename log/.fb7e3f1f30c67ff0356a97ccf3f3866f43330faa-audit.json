@@ -6,11 +6,6 @@
     "auditLog": "log/.fb7e3f1f30c67ff0356a97ccf3f3866f43330faa-audit.json",
     "files": [
         {
-            "date": 1568166320137,
-            "name": "log/marginTrade.log.2019-09-11",
-            "hash": "8d460f28f29c5088ba41815568fd48dc"
-        },
-        {
             "date": 1568774117259,
             "name": "log/marginTrade.log.2019-09-18",
             "hash": "4256d4a1cc4597ec31c759e5d9827737"
@@ -29,6 +24,11 @@
             "date": 1569301879780,
             "name": "log/marginTrade.log.2019-09-24",
             "hash": "dfbaada147222e0d207cc76310e43282"
+        },
+        {
+            "date": 1569394501726,
+            "name": "log/marginTrade.log.2019-09-25",
+            "hash": "dbb80dbae7411afaabe48e7f4444b9b1"
         }
     ]
 }
