@@ -37,7 +37,7 @@ $(document).ready(function(){
         function getLog(date){
             $.ajax({
                 type: "GET",
-                url: "api/log?logDate="+date,
+                url: "api/log?logDate="+date+"&site="+$("#site").val(),
                 success: function(body) {
                     if(body){
                             if(body.existedLog === true){
@@ -59,6 +59,7 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
+        <input type='hidden' id="site" value="<%=site%>">
         일자 : <input type='date' id="logDate"/> <input type="button" id="logSearch" value="조회"/><br>
         <div id="logTitle"></div>
         <div id="logData"> </div>

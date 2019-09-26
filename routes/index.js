@@ -236,19 +236,21 @@ router.post('/api/siteOnOff',isAuthenticated, function(req,res){
 });
 
 router.get('/log',function(req, res){
-  res.render('log');
+  var site = req.query.site;
+  res.render('log',{site : site});
 });
 
 router.get('/api/log', isAuthenticated, function(req,res){
   var logDate = req.query.logDate;
-  var logFileName = "./log/marginTrade" +".log." + logDate;  
+  var site = req.query.site;
+  var logFileName = "./log/"+site +".log." + logDate;  
   console.log("logFileName : "+logFileName);
   try {
     if (fs.existsSync(logFileName)) {
       //file exists
       fs.readFile(logFileName, (err, data) => {  
         if (err) throw err;
-        var obj = {title : "<h2>마진거래 로그" + "</h2>", log : String(data).replace(/\n/g, "<br />"), existedLog : true, err : "" }
+        var obj = {title : "<h2>"+site+ " 로그" + "</h2>", log : String(data).replace(/\n/g, "<br />"), existedLog : true, err : "" }
         res.send(obj);
       });
     }else{
