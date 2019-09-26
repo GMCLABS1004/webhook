@@ -26,6 +26,30 @@ var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
 var logfileName2 = './log/marginTrade' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName1, logfileName2, function(loggerHandle){ logger = loggerHandle}); //logger 생성
 
+
+var logger_bitmex;
+var logfileName0_1 = './log/bitmex' +'.log'; //로그파일 경로1
+var logfileName0_2 = './log/bitmex' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName0_1, logfileName0_2, function(loggerHandle){ logger_bitmex = loggerHandle; logger_bitmex.info("비트멕스");}); //logger 생성
+
+var logger_bithumb;
+var logfileName1_1 = './log/bithumb' +'.log'; //로그파일 경로1
+var logfileName1_2 = './log/bithumb' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName1_1, logfileName1_2, function(loggerHandle){ logger_bithumb = loggerHandle; logger_bithumb.info("빗썸");}); //logger 생성
+
+
+var logger_coinone;
+var logfileName2_1 = './log/coinone' +'.log'; //로그파일 경로1
+var logfileName2_2 = './log/coinone' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName2_1, logfileName2_2, function(loggerHandle){ logger_coinone = loggerHandle; logger_coinone.info("코인원");}); //logger 생성
+
+
+var logger_upbit;
+var logfileName3_1 = './log/upbit' +'.log'; //로그파일 경로1
+var logfileName3_2 = './log/upbit' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName3_1, logfileName3_2, function(loggerHandle){ logger_upbit = loggerHandle; logger_upbit.info("업비트");}); //logger 생성
+
+
 function fixed4(num){
   var str = new String(num);
   var arr = str.split(".");
@@ -333,7 +357,8 @@ function trade_bithumb(_signal){
               orderID : "", //주문id
               msg : "div1"
           }
-          setTimeout(div_entry_bithumb(bithumAPI, obj), 0);
+          logger_bithumb.info("빗썸로그");
+          setTimeout(div_entry_bithumb(bithumAPI, obj, logger_bithumb), 0);
           cb(null, data);
         }
         else if(_signal.side === 'Exit' && data.isSide === 'Buy'){ //현재포지션 -> 매수 and 신호 -> 탈출
@@ -360,7 +385,8 @@ function trade_bithumb(_signal){
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부
           }
-          setTimeout(div_exit_bithumb(bithumAPI, data), 0);
+          logger_bithumb.info("빗썸로그");
+          setTimeout(div_exit_bithumb(bithumAPI, data, logger_bithumb), 0);
           cb(null, data);
         }
       }
@@ -550,7 +576,7 @@ function trade_coinone(_signal){
               orderID : "", //주문id
               msg : "div1"
           }
-          setTimeout(div_entry_coinone(coinone, obj), 0);
+          setTimeout(div_entry_coinone(coinone, obj, logger_coinone), 0);
           cb(null, data);
         }
         else if(_signal.side === 'Exit' && data.isSide === 'Buy'){ //현재포지션 -> 매수 and 신호 -> 탈출
@@ -577,7 +603,7 @@ function trade_coinone(_signal){
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부
           }
-          setTimeout(div_exit_coinone(coinone, data), 0);
+          setTimeout(div_exit_coinone(coinone, data, logger_coinone), 0);
           cb(null, data);
         }
         
@@ -710,7 +736,7 @@ function trade_upbit(_signal){
                 console.log("업비트 잔액조회 조회 error1 : " + error);
                 return;
             }
-            
+
             try{
                 var json = JSON.parse(body);
             }catch(error){
@@ -781,7 +807,7 @@ function trade_upbit(_signal){
               orderID : "", //주문id
               msg : "div1"
           }
-          setTimeout(div_entry_upbit(upbit, obj), 0);
+          setTimeout(div_entry_upbit(upbit, obj, logger_upbit), 0);
           cb(null, data);
         }
         else if(_signal.side === 'Exit' && data.isSide === 'Buy'){ //현재포지션 -> 매수 and 신호 -> 탈출
@@ -808,7 +834,7 @@ function trade_upbit(_signal){
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부
           }
-          setTimeout(div_exit_upbit(upbit, data), 0);
+          setTimeout(div_exit_upbit(upbit, data, logger_upbit), 0);
           cb(null, data);
         }
       }
@@ -927,13 +953,14 @@ function trade_bitmex(_signal){
           //res.send({}); 
           return;
         }
-       
+        
         if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
             cb(null, data);
         }
+
         else if(_signal.side === 'Exit'){ //포지션종료
             console.log("포지션 종료"); //로직종료
-        
+
             var obj = {
                 idx : 1,
                 url : data.url,
@@ -953,7 +980,7 @@ function trade_bitmex(_signal){
                 isSuccess : false, //주문성공 여부
                 isContinue : false, //주문분할 계속할지 여부
             }
-            setTimeout(div_exit_bitmex(obj), 0);
+            setTimeout(div_exit_bitmex(obj, logger_bitmex), 0);
             return;
         }
         else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션O && Buy or Sell
@@ -976,7 +1003,7 @@ function trade_bitmex(_signal){
                 isSuccess : false, //주문성공 여부
                 isContinue : false, //주문분할 계속할지 여부
             }
-            setTimeout(div_exit_bitmex(obj), 0);
+            setTimeout(div_exit_bitmex(obj, logger_bitmex), 0);
             cb(null, data);
         }
       },
@@ -1026,7 +1053,7 @@ function trade_bitmex(_signal){
         }
         console.log("진입주문전");
         console.log(obj);
-        setTimeout(div_entry_bitmex(obj), 0);
+        setTimeout(div_entry_bitmex(obj, logger_bitmex), 0);
         cb(null, data);
       }
     ],function(error, data){
