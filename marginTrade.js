@@ -285,7 +285,7 @@ function trade_bithumb(_signal){
           data.avail_coin = Number(json.data["available_btc"]);
           data.avail_pay = Math.floor(Number(json.data["available_"+"krw"]));
 
-          if(data.avail_coin * data.ticker > 3000){
+          if(data.avail_coin > 0.0001){
             data.isSide = "Buy"
           }else{
             data.isSide = "NONE"
@@ -501,7 +501,7 @@ function trade_coinone(_signal){
                 data.avail_coin = Number(json[coin_name].avail);
                 data.avail_pay = Math.floor(Number(json["krw"].avail));
 
-                if(data.avail_coin * data.ticker > 3000){
+                if(data.avail_coin > 0.0001){ //* data.ticker 
                   data.isSide = "Buy"
                 }else{
                   data.isSide = "NONE"
@@ -710,7 +710,7 @@ function trade_upbit(_signal){
                 console.log("업비트 잔액조회 조회 error1 : " + error);
                 return;
             }
-
+            
             try{
                 var json = JSON.parse(body);
             }catch(error){
@@ -732,7 +732,7 @@ function trade_upbit(_signal){
                 }
             });
             
-            if(data.avail_coin * data.ticker > 3000){
+            if(data.avail_coin > 0.0001){
               data.isSide = "Buy"
             }else{
               data.isSide = "NONE"
