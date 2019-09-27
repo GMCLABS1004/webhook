@@ -21,13 +21,36 @@
                     <a class="btn btn-outline-dark btn-sm mgR10" href="log" role="button" target="_self">로그</a>
                     <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check"<%=isMargin.execBot%> />
                 </div>
-                <form class="setting_1_1">
+                <form class="setting_1_2">
                     <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비트멕스</label>
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥1</label>
                         <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex" role="button" target="_self">로그</a>  
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex" role="button" target="_self">세부설정</a>
-                            <input type="checkbox" id="bitmex_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex%> />
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex1" role="button" target="_self">로그</a> 
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistory?site=bitmex1" role="button" target="_self">거래내역</a>   
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex1" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="bitmex1_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex1%> />
+                        </div>
+                    </div>
+                </form>
+                <form class="setting_1_2">
+                    <div class="row" style="margin-left:0;">
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥2</label>
+                        <div class="setting_onoff col-sm-10">
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex2" role="button" target="_self">로그</a>
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistory?site=bitmex2" role="button" target="_self">거래내역</a>   
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex2" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="bitmex2_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex2%> />
+                        </div>
+                    </div>
+                </form>
+                <form class="setting_1_2">
+                    <div class="row" style="margin-left:0;">
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥3</label>
+                        <div class="setting_onoff col-sm-10">
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex3" role="button" target="_self">로그</a> 
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistory?site=bitmex3" role="button" target="_self">거래내역</a>   
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex3" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="bitmex3_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex3%> />
                         </div>
                     </div>
                 </form>

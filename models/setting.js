@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var settingSchema = new Schema({
-    site : {type:String, default : "bitmex", unique : true, required : true},
+    site : {type:String, default : "bitmex", required : true},
     url : {type:String, default : "https://testnet.bitmex.com"},
     symbol : {type:String, default : "XBTUSD"},       
-    apiKey : {type:String, default : "-2YJMJOGLRMvUgaBD1_KzbLt"},
-    secreteKey : {type:String, default : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"},
+    apiKey : {type:String, unique : true, default : "-2YJMJOGLRMvUgaBD1_KzbLt"},
+    secreteKey : {type:String, unique : true, default : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"},
     leverage : {type:Number, default : 1}, //레버리지      
     margin : {type:Number, default : 10}, //마진
     scriptNo : {type:Number, default : 1}, //스크립트 넘버

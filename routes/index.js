@@ -264,7 +264,8 @@ router.get('/api/log', isAuthenticated, function(req,res){
 });
 
 router.get('/orderHistory', isAuthenticated, function(req, res){
-  res.render('orderHistory');
+  var site = req.query.site;
+  res.render('orderHistory',{site : site});
 });
 
 router.get('/api/orderHistory',isAuthenticated, function(req, res){
@@ -274,7 +275,7 @@ router.get('/api/orderHistory',isAuthenticated, function(req, res){
   if(logDate === undefined){
     logDate = new Date().toISOString().slice(0,10);
   }
-  order.find({site : site, "timestamp" : {"$gte": new Date(logDate+"T00:00:00.000Z"),"$lte": new Date(logDate+"T23:59:59.000Z")}}).sort({timestamp : "desc"}).exec(function(error, result){
+  order.find({site : site, "start_time" : {"$gte": new Date(logDate+"T00:00:00.000Z"),"$lte": new Date(logDate+"T23:59:59.000Z")}}).sort({start_time : "desc"}).exec(function(error, result){
     if(error){
       console.log(error);
       res.send(error);
