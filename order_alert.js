@@ -21,14 +21,14 @@ setInterval(alert(), 5000);
 
 function alert(){
     return function(){
-        orderDB.find({isSend : false}).sort({end_time : "desc"}).exec(function(error, res){
+        orderDB.find({isSend : false}).sort({end_time : "asc"}).exec(function(error, res){
             if(error){
                 console.log(error);
                 return;
             }
             console.log(res);
             for(i=0; i<res.length; i++){
-                var dateArr = new Date( res[i].end_time.getTime() + (1000 * 60 * 60 *9)).toISOString().split("T");
+                var dateArr = new Date( res[i].end_time.getTime()).toISOString().split("T");
                 var msg = 
                 "거래소 : " + res[i].site + "\n" +
                 "타입 : " +  res[i].type + " / "+ res[i].side + "\n" +
