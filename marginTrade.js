@@ -903,6 +903,7 @@ function trade_bitmex(_signal, siteName){
               walletBalance : 0, //지갑잔고
               marginBalance : 0, //마진 밸런스
               availableMargin : 0, // 사용가능잔고
+              ordInterval : 0,
               leverage : 1, //setting값 
               margin : 0.1, //setting값
               openingQty : 0, // 들어가 있는 수량
