@@ -1105,6 +1105,11 @@ function trade_bitmex(_signal, siteName){
         if(_signal.side === 'Exit' || _signal.side === 'Buy Exit' || _signal.side === 'Sell Exit'){
           return cb(null, data);
         }
+
+        if(_signal.side !== 'Sell' && _signal.side !== 'Buy'){
+          return cb(null, data);
+        }
+        
         var start_time = new Date()
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
         //진입주문
