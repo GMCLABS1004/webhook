@@ -1,9 +1,11 @@
 var orderDB = require('./models/order');
 var mongoose = require('mongoose');
 var numeral = require('numeral');
+var setting = require('./order_alert.json');
 const TelegramBot = require('node-telegram-bot-api');
+
 // replace the value below with the Telegram token you receive from @BotFather
-const token = '923302959:AAHKTAgloEI67wS7YxGlZp4jZi9DJOt8350';
+const token = setting.token//'923302959:AAHKTAgloEI67wS7YxGlZp4jZi9DJOt8350';
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
 var webSetting = require('./webSetting');
@@ -38,9 +40,9 @@ function alert(){
                 "수익율 : " +  (res[i].benefitRate) + "\n" +
                 "날짜 : " +  dateArr[0] + "\n" + 
                 "시간 : " +  dateArr[1].split("Z")[0];
-                bot.sendMessage(487119052, msg); //대표님
-                bot.sendMessage(803791407, msg); //연호형님
-                bot.sendMessage(728701781, msg); //수식형님
+                // bot.sendMessage(487119052, msg); //대표님
+                // bot.sendMessage(803791407, msg); //연호형님
+                // bot.sendMessage(728701781, msg); //수식형님
                 bot.sendMessage(888129309, msg); //주태경
                 //console.log("msg : " + msg);
                 orderDB.findByIdAndUpdate(res[i]._id, {$set :{isSend : true}},function(err, body){

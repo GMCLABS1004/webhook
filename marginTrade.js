@@ -94,6 +94,14 @@ mongoose.connect(webSetting.dbPath, function(error){
   //   }
   //   //console.log(res);
   // });
+  
+  //프로그램 시작할때 저장되있는 신호 전부 삭제
+  signal.remove({}, function(error, data){
+    if(error){
+      console.log(error);
+      return;
+    }
+  });
 
   settings.find({}, function(err, res){ //거래소에 대응하는 환경설정을 찾는다.
     if(err){
@@ -170,34 +178,33 @@ setInterval(marginTrade(), 3000);
 function marginTrade(){
   
   return function(){
-    //console.log("실행");
-    signal.find({},function(error, res){
+
+    signal.find({}).sort({timestamp : "asc"}).exec(function(error, res){
+      
       if(error){
         console.log(error);
         return;
       }
+
      //console.log(res);
       if(res.length > 0){
         console.log("");
         console.log("");
         console.log("-----신호목록-----");
-    
-        for(i=0; i<res.length; i++){
-          setTimeout(trade_bitmex(new Object(res[i]), 'bitmex1'), 0);
-          setTimeout(trade_bitmex(new Object(res[i]), 'bitmex2'), 0);
-          setTimeout(trade_bitmex(new Object(res[i]), 'bitmex3'), 0);
-          setTimeout(trade_bithumb(new Object(res[i])), 0);
-          setTimeout(trade_coinone(new Object(res[i])), 0);
-          setTimeout(trade_upbit(new Object(res[i])), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex1'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex2'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex3'), 0);
+        setTimeout(trade_bithumb(new Object(res[0])), 0);
+        setTimeout(trade_coinone(new Object(res[0])), 0);
+        setTimeout(trade_upbit(new Object(res[0])), 0); 
 
-          //신호 삭제
-          signal.findByIdAndRemove(res[i]._id, function(error, res){
-            if(error){
-              console.log(error);
-              return;
-            }
-          });
-        }
+        //신호 삭제
+        signal.findByIdAndRemove(res[0]._id, function(error, res){
+          if(error){
+            console.log(error);
+            return;
+          }
+        });
       }
     });
   }
