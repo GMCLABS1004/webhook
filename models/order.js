@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var orderSchema = new Schema({
     site : {type:String, default : "-1", required : true},
     symbol : {type:String, default : ""},
-    totalAsset : {type:Number, default : 1}, //총자산
+    totalAsset : {type:Number, default : 0}, //총자산
     type : {type:String, default : ""},
     side : {type:String, default : ""},
     price : {type:Number, default : 1}, //가격
