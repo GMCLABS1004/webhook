@@ -155,6 +155,7 @@ router.get('/setting',isAuthenticated, function(req,res){
 router.post('/api/setting', isAuthenticated, function(req,res){
   var json = new Object(req.body);
   var obj = {
+    url : json.url,
     apiKey : json.apiKey,
     secreteKey : json.secreteKey,
     scriptNo : Number(json.scriptNo),

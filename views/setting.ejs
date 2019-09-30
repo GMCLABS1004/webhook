@@ -45,6 +45,19 @@
 
                 <div class="">
 
+                    <label for="url" class="key_label col-form-label">url</label>
+
+                    <div class="">
+
+                        <input type="text" class="form-control" id="url" value='<%=url%>' placeholder="">
+
+                    </div>
+
+                </div>
+
+
+                <div class="">
+
                     <label for="apiKey" class="key_label col-form-label">apikey</label>
 
                     <div class="">
@@ -153,6 +166,7 @@
             });
             $("#storeSet").click(function(){
                 var obj={
+                    url : $("#url").val(),
                     site : $("#site").val(),
                     symbol : $("#symbol").val(),
                     apiKey : $("#apiKey").val(),
