@@ -21,19 +21,21 @@ setInterval(alert(), 5000);
 
 function alert(){
     return function(){
-        orderDB.find({isSend : false}).sort({timestamp : "desc"}).exec(function(error, res){
+        orderDB.find({isSend : false}).sort({end_time : "asc"}).exec(function(error, res){
             if(error){
                 console.log(error);
                 return;
             }
             console.log(res);
             for(i=0; i<res.length; i++){
-                var dateArr = new Date( res[i].timestamp.getTime()).toISOString().split("T");
+                var dateArr = new Date( res[i].end_time.getTime()).toISOString().split("T");
                 var msg = 
                 "거래소 : " + res[i].site + "\n" +
-                "타입 : " +  res[i].side + "\n" +
+                "타입 : " +  res[i].type + " / "+ res[i].side + "\n" +
                 "가격 : " +  price_comma(res[i].price) + "\n" +
-                "수량 : " +  amount_comma(res[i].amount) + "\n" +
+                "수량 : " +  (res[i].amount) + "\n" +
+                "가치 : " +  amount_comma(res[i].value) + "\n" +
+                "수익율 : " +  (res[i].benefitRate) + "\n" +
                 "날짜 : " +  dateArr[0] + "\n" + 
                 "시간 : " +  dateArr[1].split("Z")[0];
                 bot.sendMessage(487119052, msg); //대표님
