@@ -8,8 +8,8 @@ require('winston-daily-rotate-file');
 require('date-utils');
 var div_exit_bitmex = require('./lib/div_exit_bitmex');
 var div_entry_bitmex = require('./lib/div_entry_bitmex');
-var div_exit_bithumb = require('./lib/div_exit_bithumb_bak');
-var div_entry_bithumb = require('./lib/div_entry_bithumb_bak');
+var div_exit_bithumb = require('./lib/div_exit_bithumb');
+var div_entry_bithumb = require('./lib/div_entry_bithumb');
 var div_exit_coinone = require('./lib/div_exit_coinone');
 var div_entry_coinone = require('./lib/div_entry_coinone');
 var div_exit_upbit = require('./lib/div_exit_upbit');
@@ -43,21 +43,21 @@ create_logger(logfileName2_1, logfileName2_2, function(loggerHandle){ logger_bit
 
 
 var logger_bithumb;
-var logfileName1_1 = './log/bithumb' +'.log'; //로그파일 경로1
-var logfileName1_2 = './log/bithumb' +'.debug.log'; //로그파일 경로2
-create_logger(logfileName1_1, logfileName1_2, function(loggerHandle){ logger_bithumb = loggerHandle; logger_bithumb.info("빗썸");}); //logger 생성
+var logfileName3_1 = './log/bithumb' +'.log'; //로그파일 경로1
+var logfileName3_2 = './log/bithumb' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName3_1, logfileName3_2, function(loggerHandle){ logger_bithumb = loggerHandle; logger_bithumb.info("빗썸");}); //logger 생성
 
 
 var logger_coinone;
-var logfileName2_1 = './log/coinone' +'.log'; //로그파일 경로1
-var logfileName2_2 = './log/coinone' +'.debug.log'; //로그파일 경로2
-create_logger(logfileName2_1, logfileName2_2, function(loggerHandle){ logger_coinone = loggerHandle; logger_coinone.info("코인원");}); //logger 생성
+var logfileName4_1 = './log/coinone' +'.log'; //로그파일 경로1
+var logfileName4_2 = './log/coinone' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName4_1, logfileName4_2, function(loggerHandle){ logger_coinone = loggerHandle; logger_coinone.info("코인원");}); //logger 생성
 
 
 var logger_upbit;
-var logfileName3_1 = './log/upbit' +'.log'; //로그파일 경로1
-var logfileName3_2 = './log/upbit' +'.debug.log'; //로그파일 경로2
-create_logger(logfileName3_1, logfileName3_2, function(loggerHandle){ logger_upbit = loggerHandle; logger_upbit.info("업비트");}); //logger 생성
+var logfileName5_1 = './log/upbit' +'.log'; //로그파일 경로1
+var logfileName5_2 = './log/upbit' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName5_1, logfileName5_2, function(loggerHandle){ logger_upbit = loggerHandle; logger_upbit.info("업비트");}); //logger 생성
 
 
 function fixed4(num){
@@ -533,8 +533,8 @@ function trade_coinone(_signal){
               return;
           }
           var json = JSON.parse(body);
-          console.log("ticker");
-          console.log(json);
+          //console.log("ticker");
+          //console.log(json);
           data.ticker = Number(json.last);
           cb(null,data);
         });
