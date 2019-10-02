@@ -8,8 +8,8 @@ require('winston-daily-rotate-file');
 require('date-utils');
 var div_exit_bitmex = require('./lib/div_exit_bitmex');
 var div_entry_bitmex = require('./lib/div_entry_bitmex');
-var div_exit_bithumb = require('./lib/div_exit_bithumb_bak');
-var div_entry_bithumb = require('./lib/div_entry_bithumb_bak');
+var div_exit_bithumb = require('./lib/div_exit_bithumb');
+var div_entry_bithumb = require('./lib/div_entry_bithumb');
 var div_exit_coinone = require('./lib/div_exit_coinone');
 var div_entry_coinone = require('./lib/div_entry_coinone');
 var div_exit_upbit = require('./lib/div_exit_upbit');
@@ -43,22 +43,21 @@ create_logger(logfileName2_1, logfileName2_2, function(loggerHandle){ logger_bit
 
 
 var logger_bithumb;
-var logfileName1_1 = './log/bithumb' +'.log'; //로그파일 경로1
-var logfileName1_2 = './log/bithumb' +'.debug.log'; //로그파일 경로2
-create_logger(logfileName1_1, logfileName1_2, function(loggerHandle){ logger_bithumb = loggerHandle; logger_bithumb.info("빗썸");}); //logger 생성
+var logfileName3_1 = './log/bithumb' +'.log'; //로그파일 경로1
+var logfileName3_2 = './log/bithumb' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName3_1, logfileName3_2, function(loggerHandle){ logger_bithumb = loggerHandle; logger_bithumb.info("빗썸");}); //logger 생성
 
 
 var logger_coinone;
-var logfileName2_1 = './log/coinone' +'.log'; //로그파일 경로1
-var logfileName2_2 = './log/coinone' +'.debug.log'; //로그파일 경로2
-create_logger(logfileName2_1, logfileName2_2, function(loggerHandle){ logger_coinone = loggerHandle; logger_coinone.info("코인원");}); //logger 생성
+var logfileName4_1 = './log/coinone' +'.log'; //로그파일 경로1
+var logfileName4_2 = './log/coinone' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName4_1, logfileName4_2, function(loggerHandle){ logger_coinone = loggerHandle; logger_coinone.info("코인원");}); //logger 생성
 
 
 var logger_upbit;
-var logfileName3_1 = './log/upbit' +'.log'; //로그파일 경로1
-var logfileName3_2 = './log/upbit' +'.debug.log'; //로그파일 경로2
-create_logger(logfileName3_1, logfileName3_2, function(loggerHandle){ logger_upbit = loggerHandle; logger_upbit.info("업비트");}); //logger 생성
-
+var logfileName5_1 = './log/upbit' +'.log'; //로그파일 경로1
+var logfileName5_2 = './log/upbit' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName5_1, logfileName5_2, function(loggerHandle){ logger_upbit = loggerHandle; logger_upbit.info("업비트");}); //logger 생성
 
 function fixed4(num){
   var str = new String(num);
@@ -176,11 +175,8 @@ mongoose.connect(webSetting.dbPath, function(error){
 setInterval(marginTrade(), 3000);
 
 function marginTrade(){
-  
   return function(){
-
     signal.find({}).sort({timestamp : "asc"}).exec(function(error, res){
-      
       if(error){
         console.log(error);
         return;
@@ -360,7 +356,8 @@ function trade_bithumb(_signal){
           //res.send({}); 
           return;
         }
-        
+        var start_time = new Date();
+        start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
         if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
           
           //목표금액  => 이용가능금액 * 마진 * 레버리지
@@ -371,6 +368,7 @@ function trade_bithumb(_signal){
 
           //빗썸 진입
           var obj = {
+              site : 'bithumb',
               idx : 1,
               apiKey : data.apiKey,
               secreteKey : data.secreteKey,
@@ -389,7 +387,8 @@ function trade_bithumb(_signal){
               minValueRate : data.minOrdRate, //최소주문비율
               maxValueRate : data.maxOrdRate, //최대주문비율
               orderID : "", //주문id
-              msg : "div1"
+              msg : "div1",
+              start_time : start_time
           }
           logger_bithumb.info("빗썸로그");
           setTimeout(div_entry_bithumb(bithumAPI, obj, logger_bithumb), 0);
@@ -400,6 +399,7 @@ function trade_bithumb(_signal){
           //빗썸탈출
           console.log("빗썸탈출");
           var data = {
+            site : 'bithumb',
             idx : 1,
             apiKey : data.apiKey,
             secreteKey : data.secreteKey,
@@ -409,6 +409,7 @@ function trade_bithumb(_signal){
             siteMinVal : 2000, //원
             siteMinAmt : 0, //btc 수량
             goalAmt : data.avail_coin, //목표 수량
+            totalOrdValue : 0, 
             totalOrdAmt : 0, //누적 주문 수량 
             openingQty : 0, //진입한 포지션 수량 
             side : "",
@@ -418,6 +419,7 @@ function trade_bithumb(_signal){
             isOrdered : false, //주문시도 여부
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부
+            start_time : start_time
           }
           logger_bithumb.info("빗썸로그");
           setTimeout(div_exit_bithumb(bithumAPI, data, logger_bithumb), 0);
@@ -533,8 +535,8 @@ function trade_coinone(_signal){
               return;
           }
           var json = JSON.parse(body);
-          console.log("ticker");
-          console.log(json);
+          //console.log("ticker");
+          //console.log(json);
           data.ticker = Number(json.last);
           cb(null,data);
         });
@@ -581,7 +583,8 @@ function trade_coinone(_signal){
           //res.send({}); 
           return;
         }
-        
+        var start_time = new Date();
+        start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
         if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
           //목표금액  => 이용가능금액 * 마진 * 레버리지
           var goalValue = Math.floor(data.avail_pay * data.margin * data.leverage);
@@ -591,6 +594,7 @@ function trade_coinone(_signal){
 
           //코인원 진입
           var obj = {
+              site : 'coinone',
               idx : 1,
               apiKey : data.apiKey,
               secreteKey : data.secreteKey,
@@ -601,13 +605,15 @@ function trade_coinone(_signal){
               totalRemainVal : 0, //주문후 남은 가치
               goalValue : goalValue, //주문 목표 금액
               totalOrdValue : 0, //주문넣은 가치 합산
+              totalOrdAmount : 0,
               side : '', //주문 타입
               minOrdValue : data.minOrdCost, //최소주문금액
               siteMinValue : 2000, //거래소 주문 최소 가치
               minValueRate : data.minOrdRate, //최소주문비율
               maxValueRate : data.maxOrdRate, //최대주문비율
               orderID : "", //주문id
-              msg : "div1"
+              msg : "div1",
+              start_time : start_time
           }
           setTimeout(div_entry_coinone(coinone, obj, logger_coinone), 0);
           cb(null, data);
@@ -617,6 +623,7 @@ function trade_coinone(_signal){
           //빗썸탈출
           console.log("코인원탈출");
           var data = {
+            site : 'coinone',
             idx : 1,
             apiKey : data.apiKey,
             secreteKey : data.secreteKey,
@@ -626,6 +633,7 @@ function trade_coinone(_signal){
             siteMinVal : 2000, //원
             siteMinAmt : 0, //btc 수량
             goalAmt : data.avail_coin, //목표 수량
+            totalOrdValue : 0, 
             totalOrdAmt : 0, //누적 주문 수량 
             openingQty : 0, //진입한 포지션 수량 
             side : "",
@@ -634,7 +642,8 @@ function trade_coinone(_signal){
             orderID : "",
             isOrdered : false, //주문시도 여부
             isSuccess : false, //주문성공 여부
-            isContinue : false, //주문분할 계속할지 여부
+            isContinue : false, //주문분할 계속할지 여부,
+            start_time : start_time
           }
           setTimeout(div_exit_coinone(coinone, data, logger_coinone), 0);
           cb(null, data);
@@ -791,7 +800,7 @@ function trade_upbit(_signal){
                 }
             });
             
-            if(data.avail_coin > 0.0001){
+            if(data.avail_coin > 0.0003){ //업비트만 0.0003
               data.isSide = "Buy"
             }else{
               data.isSide = "NONE"
@@ -810,7 +819,8 @@ function trade_upbit(_signal){
           //res.send({}); 
           return;
         }
-        
+        var start_time = new Date();
+        start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
         if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
           
           //목표금액  => 이용가능금액 * 마진 * 레버리지
@@ -819,8 +829,9 @@ function trade_upbit(_signal){
             goalValue = Math.floor(data.avail_pay * 0.99);
           }
 
-          //빗썸 진입
+          //업비트 진입
           var obj = {
+              site : "upbit",
               idx : 1,
               apiKey : data.apiKey,
               secreteKey : data.secreteKey,
@@ -832,13 +843,15 @@ function trade_upbit(_signal){
               goalValue : goalValue, //주문 목표 금액
 
               totalOrdValue : 0, //주문넣은 가치 합산
+              totalOrdAmount : 0,
               side : 'bid', //주문 타입
               minOrdValue : data.minOrdCost, //최소주문금액
-              siteMinValue : 2000, //거래소 주문 최소 가치
+              siteMinValue : 1001, //거래소 주문 최소 가치
               minValueRate : data.minOrdRate, //최소주문비율
               maxValueRate : data.maxOrdRate, //최대주문비율
               orderID : "", //주문id
-              msg : "div1"
+              msg : "div1",
+              start_time : start_time
           }
           setTimeout(div_entry_upbit(upbit, obj, logger_upbit), 0);
           cb(null, data);
@@ -848,15 +861,17 @@ function trade_upbit(_signal){
           //빗썸탈출
           console.log("업비트탈출");
           var data = {
+            site : "upbit",
             idx : 1,
             apiKey : data.apiKey,
             secreteKey : data.secreteKey,
             ordInterval : data.ordInterval,
             minOrdVal : data.minOrdCost, //원
             minOrdAmt : 0,
-            siteMinVal : 2000, //원
+            siteMinVal : 1001, //원
             siteMinAmt : 0, //btc 수량
             goalAmt : data.avail_coin, //목표 수량
+            totalOrdValue : 0, 
             totalOrdAmt : 0, //누적 주문 수량 
             openingQty : 0, //진입한 포지션 수량 
             side : "",
@@ -866,6 +881,7 @@ function trade_upbit(_signal){
             isOrdered : false, //주문시도 여부
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부
+            start_time : start_time
           }
           setTimeout(div_exit_upbit(upbit, data, logger_upbit), 0);
           cb(null, data);
