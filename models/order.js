@@ -7,7 +7,7 @@ var orderSchema = new Schema({
     type : {type:String, default : ""},
     side : {type:String, default : ""},
     start_price : {type:Number, default : 0}, //가격
-    end_price : {type:Number, default : 0}, //가격 
+    end_price : {type:Number, default : 0}, //가격
     price : {type:Number, default : 0}, //가격
     amount : {type:Number, default : 0}, //수량
     value : {type:Number, default : 0}, //가치
