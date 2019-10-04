@@ -575,8 +575,7 @@ function trade_coinone(_signal){
                 cb(null, data);
             }
         });
-      },  
-      
+      },
       function order1(data, cb){ //주문1
         if(data.isSide === _signal.side){ //진입한 포지션 === 요청포지션
           console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
