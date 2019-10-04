@@ -388,7 +388,9 @@ function trade_bithumb(_signal){
               maxValueRate : data.maxOrdRate, //최대주문비율
               orderID : "", //주문id
               msg : "div1",
-              start_time : start_time
+              start_time : start_time,
+              start_price : 0,
+              end_price : 0
           }
           logger_bithumb.info("빗썸로그");
           setTimeout(div_entry_bithumb(bithumAPI, obj, logger_bithumb), 0);
@@ -419,7 +421,9 @@ function trade_bithumb(_signal){
             isOrdered : false, //주문시도 여부
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부
-            start_time : start_time
+            start_time : start_time,
+            start_price : 0,
+            end_price : 0,
           }
           logger_bithumb.info("빗썸로그");
           setTimeout(div_exit_bithumb(bithumAPI, data, logger_bithumb), 0);
@@ -612,7 +616,9 @@ function trade_coinone(_signal){
               maxValueRate : data.maxOrdRate, //최대주문비율
               orderID : "", //주문id
               msg : "div1",
-              start_time : start_time
+              start_time : start_time,
+              start_price : 0,
+              end_price : 0
           }
           setTimeout(div_entry_coinone(coinone, obj, logger_coinone), 0);
           cb(null, data);
@@ -642,7 +648,9 @@ function trade_coinone(_signal){
             isOrdered : false, //주문시도 여부
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부,
-            start_time : start_time
+            start_time : start_time,
+            start_price : 0,
+            end_price : 0,
           }
           setTimeout(div_exit_coinone(coinone, data, logger_coinone), 0);
           cb(null, data);
@@ -850,7 +858,9 @@ function trade_upbit(_signal){
               maxValueRate : data.maxOrdRate, //최대주문비율
               orderID : "", //주문id
               msg : "div1",
-              start_time : start_time
+              start_time : start_time,
+              start_price : 0,
+              end_price : 0
           }
           setTimeout(div_entry_upbit(upbit, obj, logger_upbit), 0);
           cb(null, data);
@@ -880,7 +890,9 @@ function trade_upbit(_signal){
             isOrdered : false, //주문시도 여부
             isSuccess : false, //주문성공 여부
             isContinue : false, //주문분할 계속할지 여부
-            start_time : start_time
+            start_time : start_time,
+            start_price : 0,
+            end_price : 0
           }
           setTimeout(div_exit_upbit(upbit, data, logger_upbit), 0);
           cb(null, data);
@@ -1094,6 +1106,8 @@ function trade_bitmex(_signal, siteName){
                 ordInterval : data.ordInterval,
                 minAmtRate : data.minOrdRate, //최소주문비율  
                 maxAmtRate : data.minOrdRate, //최대주문비율 
+                start_price : 0,
+                end_price : 0,
                 start_time : start_time,
                 isOrdered : false, //주문시도 여부
                 isSuccess : false, //주문성공 여부
@@ -1155,6 +1169,8 @@ function trade_bitmex(_signal, siteName){
             maxValueRate : data.minOrdRate, //최대주문비율
             orderID : "", //주문id'
             msg : "div1",
+            start_price : 0,
+            end_price : 0,
             start_time : start_time
         }
         console.log("진입주문전");

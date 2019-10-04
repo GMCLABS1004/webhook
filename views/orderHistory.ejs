@@ -18,17 +18,20 @@
                             var time1 = json[i].start_time.split("T")[1].split(":");
                             var time2 = json[i].end_time.split("T")[1].split(":")
                             $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td>" + (i+1) + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td>" + json[i].start_time.split("T")[0] + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td>" + time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0] + "</td>");
-                                    $("#mytable > tbody:last").append("<td>" + json[i].totalAsset + "</td>");
-                                    $("#mytable > tbody:last").append("<td>" + json[i].type + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td>" + json[i].side + "</td>");
-                                    $("#mytable > tbody:last").append("<td>" + json[i].price + "</td>");  
-                                    $("#mytable > tbody:last").append("<td>" + json[i].amount + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td>" + json[i].value + "</td>");                         
-                                    $("#mytable > tbody:last").append("<td>" + json[i].benefitRate + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='right'>" + (i+1) + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].start_time.split("T")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td align='right'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td align='right'>" + time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0] + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].totalAsset + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='center'>" + json[i].type + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='center'>" + (json[i].div_cnt) + "</td>");  
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].start_price + "</td>");  
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].end_price + "</td>");  
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].price + "</td>");  
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].amount + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].value + "</td>");                         
+                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].benefitRate + "</td>");
                             $("#mytable > tbody:last").append("<tr>");
                         }
                     }
@@ -67,7 +70,10 @@
             <td>자산</td>
             <td>구분</td>
             <td></td>
-            <td>가격</td>
+            <td>분할횟수</td>
+            <td>시작가격</td>
+            <td>종료가격</td>
+            <td>평균가격</td>
             <td>수량</td>
             <td>가치</td>
             <td>수익율</td>
