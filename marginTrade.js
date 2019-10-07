@@ -42,6 +42,44 @@ var logfileName2_2 = './log/bitmex3' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName2_1, logfileName2_2, function(loggerHandle){ logger_bitmex3 = loggerHandle; logger_bitmex3.info("비트멕스3");}); //logger 생성
 
 
+var logger_bitmex4;
+var logfileName3_1 = './log/bitmex4' +'.log'; //로그파일 경로1
+var logfileName3_2 = './log/bitmex4' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName3_1, logfileName3_2, function(loggerHandle){ logger_bitmex4 = loggerHandle; logger_bitmex4.info("비트멕스4");}); //logger 생성
+
+var logger_bitmex5;
+var logfileName4_1 = './log/bitmex5' +'.log'; //로그파일 경로1
+var logfileName4_2 = './log/bitmex5' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName4_1, logfileName4_2, function(loggerHandle){ logger_bitmex5 = loggerHandle; logger_bitmex5.info("비트멕스5");}); //logger 생성
+
+var logger_bitmex6;
+var logfileName5_1 = './log/bitmex6' +'.log'; //로그파일 경로1
+var logfileName5_2 = './log/bitmex6' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName5_1, logfileName5_2, function(loggerHandle){ logger_bitmex6 = loggerHandle; logger_bitmex6.info("비트멕스6");}); //logger 생성
+
+
+var logger_bitmex7;
+var logfileName6_1 = './log/bitmex7' +'.log'; //로그파일 경로1
+var logfileName6_2 = './log/bitmex7' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName6_1, logfileName6_2, function(loggerHandle){ logger_bitmex7 = loggerHandle; logger_bitmex7.info("비트멕스7");}); //logger 생성
+
+var logger_bitmex8;
+var logfileName7_1 = './log/bitmex8' +'.log'; //로그파일 경로1
+var logfileName7_2 = './log/bitmex8' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName7_1, logfileName7_2, function(loggerHandle){ logger_bitmex8 = loggerHandle; logger_bitmex8.info("비트멕스8");}); //logger 생성
+
+var logger_bitmex9;
+var logfileName8_1 = './log/bitmex9' +'.log'; //로그파일 경로1
+var logfileName8_2 = './log/bitmex9' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName8_1, logfileName8_2, function(loggerHandle){ logger_bitmex9 = loggerHandle; logger_bitmex9.info("비트멕스9");}); //logger 생성
+
+
+var logger_bitmex10;
+var logfileName9_1 = './log/bitmex10' +'.log'; //로그파일 경로1
+var logfileName9_2 = './log/bitmex10' +'.debug.log'; //로그파일 경로2
+create_logger(logfileName9_1, logfileName9_2, function(loggerHandle){ logger_bitmex10 = loggerHandle; logger_bitmex10.info("비트멕스10");}); //logger 생성
+
+
 var logger_bithumb;
 var logfileName3_1 = './log/bithumb' +'.log'; //로그파일 경로1
 var logfileName3_2 = './log/bithumb' +'.debug.log'; //로그파일 경로2
@@ -115,35 +153,99 @@ mongoose.connect(webSetting.dbPath, function(error){
           url : "https://testnet.bitmex.com", //ex)  "ANKR"
           symbol : "XBTUSD",
           apiKey : "-2YJMJOGLRMvUgaBD1_KzbLt",
-          secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"
+          secreteKey : "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd",
+          scriptNo : 302,
+          leverage : 1,
+          margin : 1,
+          minOrdCost : 2000,
+          ordInterval : 1,
         },
         {
           site : "bitmex2", // ex) "ANKR_KRW"
           url : "https://testnet.bitmex.com", //ex)  "ANKR"
           symbol : "XBTUSD",
-          apiKey : "1",
-          secreteKey : "1"
+          apiKey : "7SKvgnAUMiz6rzLl2Tjd8WZm",
+          secreteKey : "_9JeB-IrVckCdWJFbt6X2kgHmrOlJQKObca4WQpOGRHd03ZA",
+          scriptNo : 101,
+          leverage : 3,
+          margin : 50,
+          minOrdCost : 100,
+          ordInterval : 1,
         },
         {
           site : "bitmex3", // ex) "ANKR_KRW"
+          url : "https://testnet.bitmex.com", //ex)  "ANKR"
+          symbol : "XBTUSD",
+          apiKey : "qFG9oOJ_Xey0cQ17tRlMjsIN",
+          secreteKey : "ofmqAoKMzh7IfE4eU7_e5yYfBtzHRBmxx2zo1CuANzbsNB_c",
+          scriptNo : 1,
+          leverage : 3,
+          margin : 50,
+          minOrdCost : 100,
+          ordInterval : 2,
+        },
+        {
+          site : "bitmex4", // ex) "ANKR_KRW"
+          url : "https://testnet.bitmex.com", //ex)  "ANKR"
+          symbol : "XBTUSD",
+          apiKey : "1",
+          secreteKey : "1",
+        },
+        {
+          site : "bitmex5", // ex) "ANKR_KRW"
           url : "https://testnet.bitmex.com", //ex)  "ANKR"
           symbol : "XBTUSD",
           apiKey : "2",
           secreteKey : "2"
         },
         {
+          site : "bitmex6", // ex) "ANKR_KRW"
+          url : "https://testnet.bitmex.com", //ex)  "ANKR"
+          symbol : "XBTUSD",
+          apiKey : "3",
+          secreteKey : "3"
+        },
+        {
+          site : "bitmex7", // ex) "ANKR_KRW"
+          url : "https://testnet.bitmex.com", //ex)  "ANKR"
+          symbol : "XBTUSD",
+          apiKey : "4",
+          secreteKey : "4"
+        },
+        {
+          site : "bitmex8", // ex) "ANKR_KRW"
+          url : "https://testnet.bitmex.com", //ex)  "ANKR"
+          symbol : "XBTUSD",
+          apiKey : "5",
+          secreteKey : "5"
+        },
+        {
+          site : "bitmex9", // ex) "ANKR_KRW"
+          url : "https://testnet.bitmex.com", //ex)  "ANKR"
+          symbol : "XBTUSD",
+          apiKey : "6",
+          secreteKey : "6"
+        },
+        {
+          site : "bitmex10", // ex) "ANKR_KRW"
+          url : "https://testnet.bitmex.com", //ex)  "ANKR"
+          symbol : "XBTUSD",
+          apiKey : "7",
+          secreteKey : "7"
+        },
+        {
           site : "bithumb", // ex) "ANKR_KRW"
           url : "https://api.bithumb.com", //ex)  "ANKR"
           symbol : "BTC",
-          apiKey : "7446cc38540523fe9a0a04b033414ab5", //"223985a94a23a587e7aee533b82f7a4e"
-          secreteKey : "50684360909e128d413356721be9b614"//"4f76cce9768fbdc7f90c6b1fb7021846"
+          apiKey : "a1e625af03c45319301e31dcafcf1714", //"223985a94a23a587e7aee533b82f7a4e"
+          secreteKey : "d85753048a98992ca666d198d9ad6396"//"4f76cce9768fbdc7f90c6b1fb7021846"
         },
         {
           site : "coinone", // ex) "ANKR_KRW"
           url : "https://api.coinone.co.kr", //ex)  "ANKR"
           symbol : "BTC",
-          apiKey : "0d246678-06c0-4b44-9eb6-bd8ef507fc5a", //"21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0"
-          secreteKey : "dfb81257-4f3d-4beb-bafe-81dc122aae75" //"ec06eb68-a65a-442b-8257-c850a9242a09"
+          apiKey : "f806c68e-c1ea-4a12-bf50-1f9d78b778ec", //"21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0"
+          secreteKey : "69a6edd7-bdc1-40fc-8f9c-c000ea8fca3e" //"ec06eb68-a65a-442b-8257-c850a9242a09"
         },
         {
           site : "upbit", // ex) "ANKR_KRW"
@@ -190,9 +292,16 @@ function marginTrade(){
         setTimeout(trade_bitmex(new Object(res[0]), 'bitmex1'), 0);
         setTimeout(trade_bitmex(new Object(res[0]), 'bitmex2'), 0);
         setTimeout(trade_bitmex(new Object(res[0]), 'bitmex3'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex4'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex5'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex6'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex7'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex8'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex9'), 0);
+        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex10'), 0);
         setTimeout(trade_bithumb(new Object(res[0])), 0);
         setTimeout(trade_coinone(new Object(res[0])), 0);
-        setTimeout(trade_upbit(new Object(res[0])), 0); 
+        setTimeout(trade_upbit(new Object(res[0])), 0);
 
         //신호 삭제
         signal.findByIdAndRemove(res[0]._id, function(error, res){
@@ -922,6 +1031,27 @@ function trade_bitmex(_signal, siteName){
     }else if(siteName === 'bitmex3'){
       log_obj = new Object(logger_bitmex3);
       log_obj2 = new Object(logger_bitmex3);
+    }else if(siteName === 'bitmex4'){
+      log_obj = new Object(logger_bitmex4);
+      log_obj2 = new Object(logger_bitmex4);
+    }else if(siteName === 'bitmex5'){
+      log_obj = new Object(logger_bitmex5);
+      log_obj2 = new Object(logger_bitmex5);
+    }else if(siteName === 'bitmex6'){
+      log_obj = new Object(logger_bitmex6);
+      log_obj2 = new Object(logger_bitmex6);
+    }else if(siteName === 'bitmex7'){
+      log_obj = new Object(logger_bitmex7);
+      log_obj2 = new Object(logger_bitmex7);
+    }else if(siteName === 'bitmex8'){
+      log_obj = new Object(logger_bitmex8);
+      log_obj2 = new Object(logger_bitmex8);
+    }else if(siteName === 'bitmex9'){
+      log_obj = new Object(logger_bitmex9);
+      log_obj2 = new Object(logger_bitmex9);
+    }else if(siteName === 'bitmex10'){
+      log_obj = new Object(logger_bitmex10);
+      log_obj2 = new Object(logger_bitmex10);
     }
     var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
     console.log("[" + date.toISOString() + "] : " + JSON.stringify(_signal));
@@ -1186,6 +1316,30 @@ function trade_bitmex(_signal, siteName){
         }else if(obj.site === 'bitmex3'){
           //obj2 = new Object(logger_bitmex3);
           setTimeout(div_entry_bitmex(obj, logger_bitmex3), 0);
+        }else if(obj.site === 'bitmex4'){
+          //obj2 = new Object(logger_bitmex2);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex4), 0);
+          
+        }else if(obj.site === 'bitmex5'){
+          //obj2 = new Object(logger_bitmex3);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex5), 0);
+        }else if(obj.site === 'bitmex6'){
+          //obj2 = new Object(logger_bitmex2);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex6), 0);
+          
+        }else if(obj.site === 'bitmex7'){
+          //obj2 = new Object(logger_bitmex3);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex7), 0);
+        }else if(obj.site === 'bitmex8'){
+          //obj2 = new Object(logger_bitmex2);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex8), 0);
+          
+        }else if(obj.site === 'bitmex9'){
+          //obj2 = new Object(logger_bitmex3);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex9), 0);
+        }else if(obj.site === 'bitmex10'){
+          //obj2 = new Object(logger_bitmex2);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex10), 0); 
         }
         
         cb(null, data);

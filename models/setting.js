@@ -10,7 +10,7 @@ var settingSchema = new Schema({
     margin : {type:Number, default : 10}, //마진
     scriptNo : {type:Number, default : 1}, //스크립트 넘버
     minOrdCost : {type:Number, default : 2000},//주문최소비용
-    ordInterval : {type:Number, default : 5},//주문 인터벌
+    ordInterval : {type:Number, default : 1},//주문 인터벌
     minOrdRate : {type:Number, default : 50}, //최소주문비율
     maxOrdRate : {type:Number, default : 90}, //최대주문비율
     execFlag : {type:Boolean, default : true}, //실행 on/off
