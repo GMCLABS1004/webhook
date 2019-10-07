@@ -238,21 +238,36 @@ mongoose.connect(webSetting.dbPath, function(error){
           url : "https://api.bithumb.com", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "a1e625af03c45319301e31dcafcf1714", //"223985a94a23a587e7aee533b82f7a4e"
-          secreteKey : "d85753048a98992ca666d198d9ad6396"//"4f76cce9768fbdc7f90c6b1fb7021846"
+          secreteKey : "d85753048a98992ca666d198d9ad6396",//"4f76cce9768fbdc7f90c6b1fb7021846"
+          scriptNo : 2,
+          leverage : 1,
+          margin : 100,
+          minOrdCost : 2000,
+          ordInterval : 1,
         },
         {
           site : "coinone", // ex) "ANKR_KRW"
           url : "https://api.coinone.co.kr", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "f806c68e-c1ea-4a12-bf50-1f9d78b778ec", //"21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0"
-          secreteKey : "69a6edd7-bdc1-40fc-8f9c-c000ea8fca3e" //"ec06eb68-a65a-442b-8257-c850a9242a09"
+          secreteKey : "69a6edd7-bdc1-40fc-8f9c-c000ea8fca3e", //"ec06eb68-a65a-442b-8257-c850a9242a09"
+          scriptNo : 2,
+          leverage : 1,
+          margin : 100,
+          minOrdCost : 2000,
+          ordInterval : 1,
         },
         {
           site : "upbit", // ex) "ANKR_KRW"
           url : "https://api.upbit.com", //ex)  "ANKR"
           symbol : "KRW-BTC",
           apiKey : "DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4", //"tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB"
-          secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7" //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
+          secreteKey : "HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7", //"mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv"
+          scriptNo : 2,
+          leverage : 1,
+          margin : 100,
+          minOrdCost : 2000,
+          ordInterval : 1,
         }
       ]
       settings.insertMany(obj,function(err, res){ //DB에 환경설정 insert
