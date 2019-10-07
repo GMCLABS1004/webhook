@@ -514,7 +514,9 @@ function trade_bithumb(_signal){
               msg : "div1",
               start_time : start_time,
               start_price : 0,
-              end_price : 0
+              end_price : 0,
+              total_krw : 0,
+              total_btc : 0
           }
           logger_bithumb.info("빗썸로그");
           setTimeout(div_entry_bithumb(bithumAPI, obj, logger_bithumb), 0);
@@ -548,6 +550,8 @@ function trade_bithumb(_signal){
             start_time : start_time,
             start_price : 0,
             end_price : 0,
+            total_krw : 0,
+            total_btc : 0
           }
           logger_bithumb.info("빗썸로그");
           setTimeout(div_exit_bithumb(bithumAPI, data, logger_bithumb), 0);
@@ -742,7 +746,9 @@ function trade_coinone(_signal){
               msg : "div1",
               start_time : start_time,
               start_price : 0,
-              end_price : 0
+              end_price : 0,
+              total_krw : 0,
+              total_btc : 0
           }
           setTimeout(div_entry_coinone(coinone, obj, logger_coinone), 0);
           cb(null, data);
@@ -775,6 +781,8 @@ function trade_coinone(_signal){
             start_time : start_time,
             start_price : 0,
             end_price : 0,
+            total_krw : 0,
+            total_btc : 0
           }
           setTimeout(div_exit_coinone(coinone, data, logger_coinone), 0);
           cb(null, data);
@@ -984,7 +992,9 @@ function trade_upbit(_signal){
               msg : "div1",
               start_time : start_time,
               start_price : 0,
-              end_price : 0
+              end_price : 0,
+              total_krw : 0,
+              total_btc : 0
           }
           setTimeout(div_entry_upbit(upbit, obj, logger_upbit), 0);
           cb(null, data);
@@ -1016,7 +1026,9 @@ function trade_upbit(_signal){
             isContinue : false, //주문분할 계속할지 여부
             start_time : start_time,
             start_price : 0,
-            end_price : 0
+            end_price : 0,
+            total_krw : 0,
+            total_btc : 0
           }
           setTimeout(div_exit_upbit(upbit, data, logger_upbit), 0);
           cb(null, data);
