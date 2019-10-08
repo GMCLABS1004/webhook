@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script>
+
+
+
         function getHistory(date, site){
             $.ajax({
                 type : "GET",
@@ -22,16 +27,16 @@
                                     $("#mytable > tbody:last").append("<td align='right'>" + json[i].start_time.split("T")[0] + "</td>"); 
                                     $("#mytable > tbody:last").append("<td align='right'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
                                     $("#mytable > tbody:last").append("<td align='right'>" + time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0] + "</td>");
-                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].totalAsset + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(json[i].totalAsset, site) + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + json[i].type + "</td>"); 
                                     $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + (json[i].div_cnt) + "</td>");  
-                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].start_price + "</td>");  
-                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].end_price + "</td>");  
-                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].price + "</td>");  
-                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].amount + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].value + "</td>");                         
-                                    $("#mytable > tbody:last").append("<td align='right'>" + json[i].benefitRate + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].start_price, site) + "</td>");  
+                                    $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].end_price, site) + "</td>");  
+                                    $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].price, site) + "</td>");  
+                                    $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(json[i].amount, site) + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td align='right'>" + value_comma(json[i].value, site) + "</td>");                         
+                                    $("#mytable > tbody:last").append("<td align='right'>" + benefit_comma(json[i].benefitRate) + "</td>");
                             $("#mytable > tbody:last").append("<tr>");
                         }
                     }
@@ -40,7 +45,79 @@
                     console.log("error : "+error);
                 }
             });
+
+            
         }
+
+        function asset_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+ 
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.00000000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function price_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function amount_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var amt = Number(num);
+            if(site_type==='bitmex'){
+                return numeral(amt).format( '₩0,0' ); 
+            }else{
+                return numeral(amt).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }
+        }
+
+        function value_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' ); 
+            }
+        }
+
+        function benefit_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+        }
+
         $(document).ready(function(){
             var today = new Date().toISOString().slice(0,10);
             var site = $("#site").val();
