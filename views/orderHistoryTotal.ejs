@@ -46,8 +46,12 @@
                                     
                         }
 
-                        if(json.length >= 2){
+                        if(json.length>=1){
                             start_asset = json[json.length-1].totalAsset;
+                        }
+
+                        if(json.length >= 2){
+                            
                             end_asset = json[0].totalAsset;
 
                             totalBenefit = (end_asset - start_asset)
