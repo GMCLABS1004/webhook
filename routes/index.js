@@ -286,5 +286,24 @@ router.get('/api/orderHistory',isAuthenticated, function(req, res){
   });
 });
 
+router.get('/orderHistoryTotal', isAuthenticated, function(req, res){
+  var site = req.query.site;
+  res.render('orderHistoryTotal',{site : site});
+});
+
+
+router.get('/api/orderHistoryTotal',isAuthenticated, function(req, res){
+  console.log("/api/orderHistoryTotal 실행");
+  var site = req.query.site;
+  order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
+    if(error){
+      console.log(error);
+      res.send(error);
+    }
+    console.log(result);
+    res.send(result);
+  });
+});
+
 
  module.exports = router;
