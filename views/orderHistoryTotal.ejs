@@ -21,7 +21,7 @@
                         var start_asset =0;
                         var end_asset = 0;
                         $("#mytable > tbody:last").empty();
-                        
+
                         for(i=0; i<json.length; i++){
                             var time1 = json[i].start_time.split("T")[1].split(":");
                             var time2 = json[i].end_time.split("T")[1].split(":")
@@ -41,17 +41,23 @@
                                     $("#mytable > tbody:last").append("<td align='right'>" + value_comma(json[i].value, site) + "</td>");                         
                                     $("#mytable > tbody:last").append("<td align='right'>" + benefit_comma(json[i].benefitRate) + "</td>");
                             $("#mytable > tbody:last").append("<tr>");
-                                
-                                    totalBenefit += json[i].benefit;
+
+                                    //totalBenefit += json[i].benefit;
                                     
                         }
 
                         if(json.length >= 2){
                             start_asset = json[json.length-1].totalAsset;
                             end_asset = json[0].totalAsset;
-                            totalBenefitRate = (((end_asset - start_asset)/start_asset) *100);
+
                             totalBenefit = (end_asset - start_asset)
+                            totalBenefitRate = ((totalBenefit/start_asset) *100);
                         }
+                        $("#start_asset").html("");
+                        $("#totalBenefit").html("");
+                        $("#totalBenefitRate").html("");
+
+                        $("#start_asset").html("시작 자산 : " + asset_comma(start_asset, site));
                         $("#totalBenefit").html("총수익 : " + asset_comma(totalBenefit, site));
                         $("#totalBenefitRate").html("총수익율 : " + benefit_comma(totalBenefitRate));
 
@@ -148,6 +154,7 @@
     조회 <input type="button" id="logSearch" value="조회"/><br>
 
     <h2><%=site%> 거래 내역</h2>
+    <div id="start_asset"></div>
     <div id="totalBenefit"></div>
     <div id="totalBenefitRate"></div>
     <table id="mytable" border="1px">
