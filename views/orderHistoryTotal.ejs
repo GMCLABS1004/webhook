@@ -8,7 +8,7 @@
 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script>
-
+        
         function getHistory(site){
             $.ajax({
                 type : "GET",
@@ -16,7 +16,12 @@
                 success : function(json){
                     if(json){
                         console.log(json);
+                        var totalBenefit =0;
+                        var totalBenefitRate =0;
+                        var start_asset =0;
+                        var end_asset = 0;
                         $("#mytable > tbody:last").empty();
+                        
                         for(i=0; i<json.length; i++){
                             var time1 = json[i].start_time.split("T")[1].split(":");
                             var time2 = json[i].end_time.split("T")[1].split(":")
@@ -36,7 +41,19 @@
                                     $("#mytable > tbody:last").append("<td align='right'>" + value_comma(json[i].value, site) + "</td>");                         
                                     $("#mytable > tbody:last").append("<td align='right'>" + benefit_comma(json[i].benefitRate) + "</td>");
                             $("#mytable > tbody:last").append("<tr>");
+
+                                    totalBenefit += json[i].benefit;
+                                    
                         }
+
+                        if(json.length >= 2){
+                            start_asset = json[json.length-1].totalAsset;
+                            end_asset = json[0];
+                            totalBenefitRate = (end_asset - start_asset)/start_asset;
+                        }
+                        $("#totalBenefit").html("총수익 : " + asset_comma(totalBenefit, site));
+                        $("#totalBenefitRate").html("총수익율 : " + benefit_comma(totalBenefitRate));
+                        
                     }
                 },
                 error : function(request, status, error){
@@ -130,6 +147,8 @@
     조회 <input type="button" id="logSearch" value="조회"/><br>
 
     <h2><%=site%> 거래 내역</h2>
+    <div id="totalBenefit"></div>
+    <div id="totalBenefitRate"></div>
     <table id="mytable" border="1px">
         <tr>
             <td>no</td>
