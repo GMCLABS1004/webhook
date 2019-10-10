@@ -164,6 +164,17 @@
                         </div>
                     </div>
                 </form>
+                <form class="setting_1_2">
+                    <div class="row" style="margin-left:0;">
+                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">코빗</label>
+                        <div class="setting_onoff col-sm-10">
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=korbit" role="button" target="_self">로그</a>  
+                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=korbit" role="button" target="_self">거래내역</a>
+                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=korbit" role="button" target="_self">세부설정</a>
+                            <input type="checkbox" id="korbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_korbit%>/>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
