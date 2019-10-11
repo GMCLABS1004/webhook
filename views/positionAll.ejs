@@ -25,6 +25,7 @@
                                 $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='left'>" + list[i].site + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + isPosition(list[i].size) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</td>");  
@@ -40,7 +41,16 @@
                 console.log("error : " + error);
             }
         });
+        function isPosition(size){
+            if(size > 0){
+                return "long"
+            }else if(size < 0){
+                return "short";
+            }else{
+                return "";
+            }
 
+        }
         function asset_comma(num, site){
             var site_type='';
             if(site.indexOf("bitmex") !== -1){
@@ -125,6 +135,7 @@
             <td>no</td>
             <td>계정</td>
             <td>스크립트</td>
+            <td>포지션</td>
             <td>수량</td>
             <td>가치</td>
             <td>진입가격</td>
