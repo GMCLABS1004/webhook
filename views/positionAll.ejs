@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        $.ajax({
+            method : "GET",
+            url : "api/positionAll",
+            success: function(json){
+                console.log(json);
+                if(json){
+                   
+                    $("#mytable > tbody:last").empty();
+                    for(i=0; i<json.length; i++){
+                        
+                        $("#mytable > tbody:last").append("<tr>");
+                                $("#mytable > tbody:last").append("<td align='right'>" + (i+1) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='right'>" + json[i].site + "</td>");
+                                $("#mytable > tbody:last").append("<td align='right'>" + json[i].symbol + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" +json[i].size + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='center'>" + json[i].value.toFixed(4) + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + json[i].avgEntryPrice + "</td>");  
+                                $("#mytable > tbody:last").append("<td align='right'>" + json[i].margin + "</td>");  
+                                $("#mytable > tbody:last").append("<td align='right'>" + json[i].leverage + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='right'>" + json[i].unrealisedPnl.toFixed(4) +"(" + json[i].unrealisedRoePcnt.toFixed(2)+"%)" + "</td>");                         
+                                $("#mytable > tbody:last").append("<td align='right'>" + json[i].realisedPnl.toFixed(4) + "</td>");                         
+                        $("#mytable > tbody:last").append("<tr>");
+                    }
+                }
+            },
+            error : function(request, status, error) {
+                console.log("error : " + error);
+            }
+        });
+    </script>
+    <title>Document</title>
+</head>
+<body>
+    <h2>비트맥스 포지션</h2>
+    <table id="mytable" border="1px">
+        <tr>
+            <td>no</td>
+            <td>계정</td>
+            <td>심볼</td>
+            <td>수량</td>
+            <td>가치</td>
+            <td>진입가격</td>
+            <td>마진</td>
+            <td>레버리지</td>
+            <td>미실현손익</td>
+            <td>실현손익</td>
+        </tr>
+        <tbody>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,3 +1,6 @@
+var async = require('async');
+var crypto = require('crypto');
+var request = require('request');
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
@@ -71,6 +74,176 @@ router.get('/', isAuthenticated, function(req, res){
 // router.get('/main', isAuthenticated, function(req, res, next){
 //   res.render('main', {user_info : req.user});
 // });
+
+router.get('/positionAll', isAuthenticated, function(req, res, next){
+  res.render('positionAll');
+});
+
+
+router.get('/api/positionAll', isAuthenticated, function(req, response, next){
+  var list = [];
+  
+    // console.log(res);
+    async.waterfall([
+      function readSetting(cb){
+        var set_list =[];
+        setting.find({execFlag : true},function(error,res){
+          if(error){
+            console.log(error);
+            return;
+          }
+          
+          for(i=0; i<res.length; i++){
+            if(res[i].site.indexOf('bitmex') !== -1){
+              set_list.push(res[i]);    
+            }
+          }
+          cb(null, set_list);
+        });
+      },
+      function getPosition(set_list, cb){
+        for(i=0; i<set_list.length; i++){
+          setTimeout(getPosition_bitmex(set_list[i], function(error, data){
+            if(error){
+              console.log(error);
+              return;
+            }
+            // console.log("data : ");
+            // console.log(data);
+            list.push(data);
+            if(set_list.length === list.length){
+              cb(null);
+            }
+          }), 0);
+        }
+      }
+    ], function(error, results){
+      if(error){
+        console.log(error);
+      }
+      console.log(list);
+      
+  
+      list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
+        return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
+      });
+      response.send(list);
+    });
+  
+});
+
+function getPosition_bitmex(set, cb){
+  return function(){
+    var requestOptions = setRequestHeader(set.url, set.apiKey, set.secreteKey,'GET','position','');
+    request(requestOptions, function(err,responsedata,body){
+      if(err){
+        console.log(err);
+      }
+      var obj = JSON.parse(body);
+      var data = {}
+      for(var i=0; i<obj.length; i++){
+        if(obj[i].symbol === 'XBTUSD'){
+          data = bitmex_position_parse(set.site, obj[i]);
+          data["leverage"] = set.leverage;
+          data["margin"] = set.margin;
+          
+          cb(null, data);
+        }
+      }
+    })
+  }
+}
+
+
+function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
+  path = '/api/v1/'+ endpoint;
+  expires = new Date().getTime() + (60 * 1000); // 1 min in the future
+  var requestOptions;
+  if(verb === 'POST' || verb === 'PUT'){
+      var postBody = JSON.stringify(data);
+      var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
+      var headers = {
+          'content-type' : 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'api-expires': expires,
+          'api-key': apiKey,
+          'api-signature': signature
+      };
+      requestOptions = {
+          headers: headers,
+          url: url+path,
+          method: verb,
+          body: postBody
+      };
+  }else{ //'GET'
+      var query = '?'+ data;
+      var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + query + expires).digest('hex');
+      var headers = {
+        'content-type' : 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'api-expires': expires,
+        'api-key': apiKey,
+        'api-signature': signature
+      };
+      requestOptions = {
+          headers: headers,
+          url: url+path + query,
+          method: verb
+      };
+  }
+  return requestOptions;
+}
+
+
+function bitmex_position_parse(site, obj){
+  var posObj = {};
+  posObj["site"] = site;
+  if(typeof(obj.symbol) !== "undefined" && obj.symbol !== null)
+      posObj["symbol"] = obj.symbol;
+
+  if(typeof(obj.currentQty) !== "undefined" && obj.currentQty !== null) 
+      posObj["size"] = obj.currentQty;
+
+  if(typeof(obj.homeNotional) !== "undefined" && obj.homeNotional !== null) 
+      posObj["value"] = obj.homeNotional;
+
+  if(typeof(obj.avgEntryPrice) !== "undefined" && obj.avgEntryPrice !== null){
+    posObj["avgEntryPrice"] = obj.avgEntryPrice;
+  }else{
+    posObj["avgEntryPrice"] = 0;
+  }
+      
+
+  if(typeof(obj.markPrice) !== "undefined" && obj.markPrice !== null) 
+      posObj["markPrice"] = obj.markPrice;
+
+  if(typeof(obj.liquidationPrice) !== "undefined" && obj.liquidationPrice !== null) 
+      posObj["liquidationPrice"] = obj.liquidationPrice;
+
+  if(typeof(obj.maintMargin) !== "undefined" && obj.maintMargin !== null) 
+      posObj["margin"] = obj.maintMargin;
+
+  if(typeof(obj.leverage) !== "undefined" && obj.leverage !== null)
+      posObj["leverage"] = obj.leverage;
+
+  if(typeof(obj.unrealisedPnl) !== "undefined" && obj.unrealisedPnl !== null) 
+      posObj["unrealisedPnl"] =  obj.unrealisedPnl * 0.00000001;
+
+  if(typeof(obj.unrealisedRoePcnt) !== "undefined" && obj.unrealisedRoePcnt !== null) 
+      posObj["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
+
+  if(typeof(obj.realisedPnl) !== "undefined" && obj.realisedPnl !== null) 
+      posObj["realisedPnl"] = obj.realisedPnl * 0.0000000001;
+  
+  if(typeof(obj.isOpen) !== "undefined" && obj.isOpen !== null) 
+      posObj["isOpen"] = new Boolean(obj.isOpen);
+  
+  return posObj;
+  
+}
+
 
 router.get('/manage', isAuthenticated, function(req, res, next){
   var date = new Date();
