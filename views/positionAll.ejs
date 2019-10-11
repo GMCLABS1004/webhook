@@ -14,21 +14,24 @@
             success: function(json){
                 console.log(json);
                 if(json){
-                   
+                    var list = json.list;
+                    var last_price = json.last_price;
                     $("#mytable > tbody:last").empty();
-                    for(i=0; i<json.length; i++){
+                    $("#last_price").html("");
+                    $("#last_price").html("현재가 : "+ last_price +"<br><br>");
+                    for(i=0; i<list.length; i++){
                         
                         $("#mytable > tbody:last").append("<tr>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='left'>" + json[i].site + "</td>");
-                                $("#mytable > tbody:last").append("<td align='right'>" + json[i].symbol + "</td>");
-                                $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(json[i].size,json[i].site) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(json[i].value, json[i].site) + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + price_comma(json[i].avgEntryPrice, json[i].site) + "</td>");  
-                                $("#mytable > tbody:last").append("<td align='center'>" + json[i].margin + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + json[i].leverage + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='center'>" + value_comma(json[i].unrealisedPnl.toFixed(4), json[i].site) +"(" + roePer_comma(json[i].unrealisedRoePcnt)+"%)" + "</td>");                         
-                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(json[i].realisedPnl.toFixed(4), json[i].site) + "</td>");                         
+                                $("#mytable > tbody:last").append("<td align='left'>" + list[i].site + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
+                                $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</td>");  
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].margin + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='center'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</td>");                         
+                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].realisedPnl.toFixed(4), list[i].site) + "</td>");                         
                         $("#mytable > tbody:last").append("<tr>");
                     }
                 }
@@ -114,12 +117,14 @@
     <title>Document</title>
 </head>
 <body>
+   
     <h2>비트맥스 포지션</h2>
+    <div id="last_price"></div>
     <table id="mytable" border="1px">
         <tr>
             <td>no</td>
             <td>계정</td>
-            <td>심볼</td>
+            <td>스크립트</td>
             <td>수량</td>
             <td>가치</td>
             <td>진입가격</td>
