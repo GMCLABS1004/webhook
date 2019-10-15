@@ -82,7 +82,7 @@ router.get('/positionAll', isAuthenticated, function(req, res, next){
 
 router.get('/api/positionAll', isAuthenticated, function(req, response, next){
   var list = [];
-  
+  var last_price = 0;
     // console.log(res);
     async.waterfall([
       function readSetting(cb){
@@ -100,6 +100,23 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
           }
           cb(null, set_list);
         });
+      },
+      function ticker(set_list, cb){
+        
+        if(set_list.length > 0){
+          
+          var requestOptions = setRequestHeader(set_list[0].url, set_list[0].apiKey, set_list[0].secreteKey,'GET','trade','symbol=XBTUSD&count=1&reverse=true');
+          request(requestOptions, function(err,responsedata,body){
+            if(err){
+              console.log(err);
+            }
+            var obj = JSON.parse(body);
+            last_price = obj[0].price;
+            cb(null, set_list); 
+          })
+        }else{
+          cb(null, set_list);
+        }
       },
       function getPosition(set_list, cb){
         for(i=0; i<set_list.length; i++){
@@ -123,11 +140,11 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
       }
       console.log(list);
       
-  
+      console.log('last_price : '+ last_price);
       list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
         return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
       });
-      response.send(list);
+      response.send({last_price : last_price, list : list});
     });
   
 });
@@ -146,7 +163,7 @@ function getPosition_bitmex(set, cb){
           data = bitmex_position_parse(set.site, obj[i]);
           data["leverage"] = set.leverage;
           data["margin"] = set.margin;
-          
+          data["scriptNo"] = set.scriptNo;
           cb(null, data);
         }
       }
