@@ -23,6 +23,7 @@ var korbitAPI = require('./API/korbitAPI.js');
 var signal = require("./models/signal");
 var settings = require("./models/setting");
 var orderDB = require('./models/order');
+var orderDB2 = require('./models/order_avg');
 var webSetting = require('./webSetting.json');
 var logger;
 var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
@@ -246,30 +247,33 @@ mongoose.connect(webSetting.dbPath, function(error){
         },
         {
           site : "bithumb", // ex) "ANKR_KRW"
+          site_type : "korean",
           url : "https://api.bithumb.com", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "a1e625af03c45319301e31dcafcf1714", //"223985a94a23a587e7aee533b82f7a4e"
           secreteKey : "d85753048a98992ca666d198d9ad6396",//"4f76cce9768fbdc7f90c6b1fb7021846"
           scriptNo : 2,
-          leverage : 1,
+          leverage : 50,
           margin : 100,
           minOrdCost : 2000,
           ordInterval : 1,
         },
         {
           site : "coinone", // ex) "ANKR_KRW"
+          site_type : "korean",
           url : "https://api.coinone.co.kr", //ex)  "ANKR"
           symbol : "BTC",
           apiKey : "f806c68e-c1ea-4a12-bf50-1f9d78b778ec", //"21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0"
           secreteKey : "69a6edd7-bdc1-40fc-8f9c-c000ea8fca3e", //"ec06eb68-a65a-442b-8257-c850a9242a09"
           scriptNo : 2,
-          leverage : 1,
+          leverage : 50,
           margin : 100,
           minOrdCost : 2000,
           ordInterval : 1,
         },
         {
           site : "upbit", // ex) "ANKR_KRW"
+          site_type : "korean",
           url : "https://api.upbit.com", //ex)  "ANKR"
           symbol : "KRW-BTC",
           apiKey : "DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4", //"tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB"
@@ -282,6 +286,7 @@ mongoose.connect(webSetting.dbPath, function(error){
         },
         {
           site : "korbit", // ex) "ANKR_KRW"
+          site_type : "korean",
           url : "https://api.korbit.co.kr", //ex)  "ANKR"
           symbol : "btc_krw",
           apiKey : "E7ZfIiba5QoVuuTZZNdOLD3TCtdBFgpOgMZqca5FJn9Lppb0xNAtjlQ5L0QCg", //"tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB"
@@ -337,10 +342,14 @@ function marginTrade(){
         setTimeout(trade_bitmex(new Object(res[0]), 'bitmex8'), 0);
         setTimeout(trade_bitmex(new Object(res[0]), 'bitmex9'), 0);
         setTimeout(trade_bitmex(new Object(res[0]), 'bitmex10'), 0);
+        
+        //어떤 거래소가 진입 or 탈출하는가
+        //모든거래소 거래가 언제 끝나는가
         setTimeout(trade_bithumb(new Object(res[0])), 0);
         setTimeout(trade_coinone(new Object(res[0])), 0);
         setTimeout(trade_upbit(new Object(res[0])), 0);
         setTimeout(trade_korbit(new Object(res[0])), 0);
+        setTimeout(check_order_complete("korean", res[0].scriptNo),3000);
 
         //신호 삭제
         signal.findByIdAndRemove(res[0]._id, function(error, res){
@@ -395,6 +404,7 @@ function trade_bithumb(_signal){
             console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
+
 
           // console.log(res);
           // console.log(res[0].apiKey);
@@ -485,7 +495,7 @@ function trade_bithumb(_signal){
           var coin_name = data.symbol.toLowerCase();
           data.avail_coin = Number(json.data["available_btc"]);
           data.avail_pay = Math.floor(Number(json.data["available_"+"krw"]));
-          
+
           if(data.avail_coin > 0.0001){
             data.isSide = "Buy"
           }else{
@@ -1795,4 +1805,109 @@ function amount_comma(num){
   }else{
       return coin.toFixed(4); // 0.00000078 -> 0.00000078
   }
+}
+
+
+function check_order_complete(site_type, scriptNo){
+  return function(){
+      settings.find({},function(error, res){
+          if(error){
+              console.log(error);
+              return;
+          }
+          var list = [];
+          var retryFalg = false;
+          for(i=0; i<res.length; i++){
+              if(res[i].site_type === site_type && res[i].scriptNo === scriptNo && res[i].execFlag === true){
+                  console.log(res[i]);
+                  list.push(res[i]);
+              }
+          }
+          if(list.length > 0){
+              for(i=0; i<list.length; i++){
+                  if(list[i].isExiting === true || list[i].isEntering === true){
+                      retryFalg = true;
+                  }
+              }
+
+              if(retryFalg === true){
+                  setTimeout(check_order_complete(site_type, scriptNo),3000);
+              }else{
+                  setTimeout(insert_trade_history(list), 3000);
+              }
+          }else{
+              console.log("목록없음 로직종료");
+          }
+      });
+  }
+}
+
+function insert_trade_history(list){
+  return function(){
+      var search_list = [];
+      var order_list=[];
+      for(i=0; i<list.length; i++){
+          search_list.push({site : list[i].site});
+      }
+
+      for(i=0; i<search_list.length; i++){
+          console.log(search_list[i]);
+          orderDB.find(search_list[i]).sort({start_time : "desc"}).limit(1).exec(function(error,data){
+              if(error){
+                  console.log(error);
+                  return;
+              }
+              console.log("주문데이터");
+              console.log(data);
+              console.log(data[0].start_time)
+              console.log(typeof(data[0].start_time));
+              console.log(data[0].start_time.getTime());
+              if(data.length > 0){
+                  order_list.push(data[0]);
+              }
+  
+              if(search_list.length === order_list.length){
+                  var obj = create_history_data(order_list);
+                  
+                  console.log(obj);
+                  orderDB2.insertMany(obj, function(error, res){
+                      if(error){
+                          console.log(error);
+                          return;
+                      }
+                      console.log(res);
+                  });
+              }
+          });
+      }
+  }
+}
+
+function create_history_data(list){
+  var obj ={
+      totalAsset : 0,
+      amount : 0,
+      value : 0
+  }
+
+  for(i=0; i<list.length; i++){
+      obj.totalAsset += list[i].totalAsset;
+      obj.amount += list[i].amount;
+      obj.value += list[i].value;
+  }
+  
+  obj.type = list[0].type;
+  obj.side = list[0].side;
+  obj.price = Math.floor(obj.value / obj.amount);
+  obj.start_time = filter_prior(new Object(list), "start_time", function(a,b){ return a.start_time.getTime() - b.start_time.getTime()});  
+  obj.end_time = filter_prior(new Object(list), "end_time", function(a,b){ return b.end_time.getTime() - a.end_time.getTime()});
+  obj.start_price = filter_prior(new Object(list), "start_price", function(a,b){ return a.start_price - b.start_price});  
+  obj.end_price = filter_prior(new Object(list), "end_price", function(a,b){ return b.end_price - a.end_price});
+  return obj;
+}
+
+
+function filter_prior(list, attrName, predicate){
+  list.sort(predicate);
+  return list[0][attrName];
 }

@@ -7,6 +7,7 @@ var fs = require('fs');
 var signal = require("../models/signal");
 var setting = require("../models/setting");
 var order = require("../models/order");
+var orderDB2 = require('../models/order_avg');
 var webSetting = require("../webSetting");
 var moment = require('moment');
 var forever = require('forever');
@@ -486,6 +487,25 @@ router.get('/api/orderHistoryTotal',isAuthenticated, function(req, res){
   console.log("/api/orderHistoryTotal 실행");
   var site = req.query.site;
   order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
+    if(error){
+      console.log(error);
+      res.send(error);
+    }
+    console.log(result);
+    res.send(result);
+  });
+});
+
+router.get('/avg_order_history', isAuthenticated, function(req, res){
+  var site_type = req.query.site_type;
+  res.render('avg_order_history',{site_type : site_type});
+});
+
+router.get('/api/avg_order_history',isAuthenticated, function(req, res){
+  console.log("/api/avg_order_history 실행");
+  var site_type = req.query.site_type;
+  console.log('site_type : '+ site_type);
+  orderDB2.find({site_type : site_type}).sort({start_time : "desc"}).exec(function(error, result){
     if(error){
       console.log(error);
       res.send(error);
