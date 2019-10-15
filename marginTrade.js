@@ -485,7 +485,7 @@ function trade_bithumb(_signal){
           var coin_name = data.symbol.toLowerCase();
           data.avail_coin = Number(json.data["available_btc"]);
           data.avail_pay = Math.floor(Number(json.data["available_"+"krw"]));
-
+          
           if(data.avail_coin > 0.0001){
             data.isSide = "Buy"
           }else{
@@ -526,7 +526,7 @@ function trade_bithumb(_signal){
               totalRemainAmt : 0, //주문후 남은 주문수량
               totalRemainVal : 0, //주문후 남은 가치
               goalValue : goalValue, //주문 목표 금액
-
+              firstAvailMargin : 0,
               totalOrdValue : 0, //주문넣은 가치 합산
               totalOrdAmount : 0,
               side : 'bid', //주문 타입
@@ -759,6 +759,7 @@ function trade_coinone(_signal){
               totalRemainAmt : 0, //주문후 남은 주문수량
               totalRemainVal : 0, //주문후 남은 가치
               goalValue : goalValue, //주문 목표 금액
+              firstAvailMargin : 0,
               totalOrdValue : 0, //주문넣은 가치 합산
               totalOrdAmount : 0,
               side : '', //주문 타입
@@ -1004,7 +1005,7 @@ function trade_upbit(_signal){
               totalRemainAmt : 0, //주문후 남은 주문수량
               totalRemainVal : 0, //주문후 남은 가치
               goalValue : goalValue, //주문 목표 금액
-
+              firstAvailMargin : 0,
               totalOrdValue : 0, //주문넣은 가치 합산
               totalOrdAmount : 0,
               side : 'bid', //주문 타입
@@ -1236,6 +1237,7 @@ function trade_korbit(_signal){
               totalRemainAmt : 0, //주문후 남은 주문수량
               totalRemainVal : 0, //주문후 남은 가치
               goalValue : goalValue, //주문 목표 금액
+              firstAvailMargin : 0,
               totalOrdValue : 0, //주문넣은 가치 합산
               totalOrdAmount : 0,
               side : '', //주문 타입
@@ -1269,6 +1271,7 @@ function trade_korbit(_signal){
             siteMinVal : 2000, //원
             siteMinAmt : 0, //btc 수량
             goalAmt : data.avail_coin, //목표 수량
+            firstAvailMargin : 0,
             totalOrdValue : 0, 
             totalOrdAmt : 0, //누적 주문 수량 
             openingQty : 0, //진입한 포지션 수량 
