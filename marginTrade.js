@@ -1821,7 +1821,7 @@ function check_is_ordering(site_type, scriptNo, idx){
         console.log("20회 이상주문중 아님, 로직 종료");
         return;
       }
-      
+
       var list = [];
       for(i=0; i<res.length; i++){
           if(res[i].site_type === site_type && res[i].scriptNo === scriptNo && res[i].execFlag === true){
@@ -1888,13 +1888,14 @@ function check_order_complete(site_type, scriptNo){
 
 function insert_trade_history(list){
   return function(){
-      var search_list = [];
-      var order_list=[];
-      for(i=0; i<list.length; i++){
+    var search_list = [];
+    var order_list=[];
+    async.waterfall([
+      function collect_order_data(cb){
+        for(i=0; i<list.length; i++){
           search_list.push({site : list[i].site});
-      }
-
-      for(i=0; i<search_list.length; i++){
+        }
+        for(i=0; i<search_list.length; i++){
           console.log(search_list[i]);
           orderDB.find(search_list[i]).sort({start_time : "desc"}).limit(1).exec(function(error,data){
               if(error){
@@ -1907,25 +1908,102 @@ function insert_trade_history(list){
               console.log(typeof(data[0].start_time));
               console.log(data[0].start_time.getTime());
               if(data.length > 0){
-                  order_list.push(data[0]);
+                order_list.push(data[0]);
               }
   
               if(search_list.length === order_list.length){
-                  var obj = create_history_data(order_list);
-                  
-                  console.log(obj);
-                  orderDB2.insertMany(obj, function(error, res){
-                      if(error){
-                          console.log(error);
-                          return;
-                      }
-                      console.log(res);
-                  });
+                var obj = create_history_data(order_list);
+                console.log(data);
+                cb(null, obj);
               }
           });
+        }
+      },
+      function getOrderHistory(obj, cb){
+        if(obj.type === 'exit'){
+          orderDB2.find({site_type : 'korean'}).sort({end_time : "desc"}).exec(function(error, res){
+            if(error){
+                console.log(error);
+                return;
+            }
+            if(res.length > 0){
+                benefit= obj.totalAsset - res[0].totalAsset; //탈출자산 - 진입자산
+                benefitRate = (benefit / res[0].totalAsset) * 100;
+            }else{
+                benefit =0;
+                benefitRate =0;
+            }
+            obj.benefit = benefit;
+            obj.benefitRate = benefitRate;
+            cb(null, obj);
+          });
+        }else{
+          obj.benefit = 0;
+          obj.benefitRate = 0;
+          cb(null, obj);
+        }
+      },
+      function insert_order_histroy(obj, cb){
+        orderDB2.insertMany(obj, function(error, res){
+          if(error){
+              console.log(error);
+              return;
+          }
+          //console.log(res);
+          cb(null, obj);
+        });
       }
+    ], function(error, results){
+      if(error){
+        console.log(error);
+        return;
+      }
+      console.log(results);
+    });
   }
 }
+
+
+// function insert_trade_history(list){
+//   return function(){
+//       var search_list = [];
+//       var order_list=[];
+//       for(i=0; i<list.length; i++){
+//           search_list.push({site : list[i].site});
+//       }
+
+//       for(i=0; i<search_list.length; i++){
+//           console.log(search_list[i]);
+//           orderDB.find(search_list[i]).sort({start_time : "desc"}).limit(1).exec(function(error,data){
+//               if(error){
+//                   console.log(error);
+//                   return;
+//               }
+//               console.log("주문데이터");
+//               console.log(data);
+//               console.log(data[0].start_time)
+//               console.log(typeof(data[0].start_time));
+//               console.log(data[0].start_time.getTime());
+//               if(data.length > 0){
+//                   order_list.push(data[0]);
+//               }
+  
+//               if(search_list.length === order_list.length){
+//                   var obj = create_history_data(order_list);
+                  
+//                   console.log(obj);
+//                   orderDB2.insertMany(obj, function(error, res){
+//                       if(error){
+//                           console.log(error);
+//                           return;
+//                       }
+//                       console.log(res);
+//                   });
+//               }
+//           });
+//       }
+//   }
+// }
 
 function create_history_data(list){
   var obj ={
