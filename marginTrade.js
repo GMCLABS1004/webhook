@@ -349,7 +349,8 @@ function marginTrade(){
         setTimeout(trade_coinone(new Object(res[0])), 0);
         setTimeout(trade_upbit(new Object(res[0])), 0);
         setTimeout(trade_korbit(new Object(res[0])), 0);
-        setTimeout(check_order_complete("korean", res[0].scriptNo),3000);
+        //setTimeout(check_order_complete("korean", res[0].scriptNo),0);
+        setTimeout(check_is_ordering("korean", res[0].scriptNo, 0),500);
 
         //신호 삭제
         signal.findByIdAndRemove(res[0]._id, function(error, res){
@@ -497,9 +498,9 @@ function trade_bithumb(_signal){
           data.avail_pay = Math.floor(Number(json.data["available_"+"krw"]));
 
           if(data.avail_coin > 0.0001){
-            data.isSide = "Buy"
+            data.isSide = "Buy";
           }else{
-            data.isSide = "NONE"
+            data.isSide = "NONE";
           }
           console.log("avail_coin : "+ data.avail_coin);
           console.log("ticker : "+ data.ticker);
@@ -1808,6 +1809,46 @@ function amount_comma(num){
 }
 
 
+function check_is_ordering(site_type, scriptNo, idx){
+  return function(){
+    settings.find({},function(error, res){
+      if(error){
+          console.log(error);
+          return;
+      }
+      console.log("idx :" +idx);
+      if(idx >= 20){
+        console.log("20회 이상주문중 아님, 로직 종료");
+        return;
+      }
+      
+      var list = [];
+      for(i=0; i<res.length; i++){
+          if(res[i].site_type === site_type && res[i].scriptNo === scriptNo && res[i].execFlag === true){
+              //console.log(res[i]);
+              list.push(res[i]);
+          }
+      }
+      if(list.length > 0){
+          for(i=0; i<list.length; i++){
+              if(list[i].isExiting === true || list[i].isEntering === true){
+                  console.log("주문중O : 주문완료까지 wait");
+                  setTimeout(check_order_complete(site_type, scriptNo),2000);
+                  return;
+              }else{
+                console.log("주문중X");
+              }
+          }
+
+          setTimeout(check_is_ordering(site_type, scriptNo, idx+1 ),500);
+      }else{
+          console.log("목록없음 로직종료");
+      }
+    });
+  }
+}
+
+
 function check_order_complete(site_type, scriptNo){
   return function(){
       settings.find({},function(error, res){
@@ -1827,13 +1868,16 @@ function check_order_complete(site_type, scriptNo){
               for(i=0; i<list.length; i++){
                   if(list[i].isExiting === true || list[i].isEntering === true){
                       retryFalg = true;
+                      break;
                   }
               }
-
+              
               if(retryFalg === true){
                   setTimeout(check_order_complete(site_type, scriptNo),3000);
+                  return;
               }else{
                   setTimeout(insert_trade_history(list), 3000);
+                  return;
               }
           }else{
               console.log("목록없음 로직종료");
