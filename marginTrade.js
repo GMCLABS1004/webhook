@@ -763,7 +763,7 @@ function trade_coinone(_signal){
           if(goalValue > data.avail_pay){
             goalValue = Math.floor(data.avail_pay);
           }
-          
+
           //코인원 진입
           var obj = {
               site : 'coinone',
@@ -1929,7 +1929,7 @@ function check_order_complete(site_type, scriptNo){
           var retryFalg = false;
           for(i=0; i<res.length; i++){
               if(res[i].site_type === site_type && res[i].scriptNo === scriptNo && res[i].execFlag === true){
-                  console.log(res[i]);
+                  //console.log(res[i]);
                   list.push(res[i]);
               }
           }
@@ -1972,10 +1972,10 @@ function insert_trade_history(list){
                   return;
               }
               console.log("주문데이터");
-              console.log(data);
-              console.log(data[0].start_time)
-              console.log(typeof(data[0].start_time));
-              console.log(data[0].start_time.getTime());
+              // console.log(data);
+              // console.log(data[0].start_time)
+              // console.log(typeof(data[0].start_time));
+              // console.log(data[0].start_time.getTime());
               if(data.length > 0){
                 order_list.push(data[0]);
               }
