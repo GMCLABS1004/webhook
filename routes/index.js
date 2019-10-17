@@ -62,6 +62,9 @@ router.get('/logout', function (req, res) {
   res.redirect('/login');
 });
 
+
+
+
 router.get('/changePW', isAuthenticated, function(req, res) {
   res.render('changePW');
 });

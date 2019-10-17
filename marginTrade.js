@@ -558,13 +558,12 @@ function trade_bithumb(_signal){
         }
         else if(_signal.side === 'Exit' && data.isSide === 'Buy'){ //현재포지션 -> 매수 and 신호 -> 탈출
           //탈출
-          //빗썸탈출
-          
-          var options = getFinanceOffOption(false);
+          //빗썸탈출 => 재정거래 봇 끄기
+          var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
             if(error){
-                console.log(error);
-                return;
+              console.log(error);
+              return;
             }
             var obj = {
               site : 'bithumb',
@@ -598,7 +597,6 @@ function trade_bithumb(_signal){
             setTimeout(div_exit_bithumb(bithumAPI, obj, logger_bithumb), 3000);
             cb(null, data);
           });
-          
         }
       }
     ],function(error, data){
@@ -765,7 +763,7 @@ function trade_coinone(_signal){
           if(goalValue > data.avail_pay){
             goalValue = Math.floor(data.avail_pay);
           }
-
+          
           //코인원 진입
           var obj = {
               site : 'coinone',
@@ -798,16 +796,14 @@ function trade_coinone(_signal){
           cb(null, data);
         }
         else if(_signal.side === 'Exit' && data.isSide === 'Buy'){ //현재포지션 -> 매수 and 신호 -> 탈출
-          //재정거래 거래소 off
-          var options = getFinanceOffOption(false);
+          console.log("코인원탈출");
+          var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
             if(error){
-                console.log(error);
-                return;
+              console.log(error);
+              return;
             }
             console.log(body);
-                        //빗썸탈출
-            console.log("코인원탈출");
             var obj = {
               site : 'coinone',
               idx : 1,
@@ -839,6 +835,7 @@ function trade_coinone(_signal){
             setTimeout(div_exit_coinone(coinone, obj, logger_coinone), 3000);
             cb(null, data);
           });
+
         }
         
         //cb(null, data);
@@ -1056,12 +1053,11 @@ function trade_upbit(_signal){
           //탈출
           //빗썸탈출
           console.log("업비트탈출");
-
-          var options = getFinanceOffOption(false);
+          var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
             if(error){
-                console.log(error);
-                return;
+              console.log(error);
+              return;
             }
             var obj = {
               site : "upbit",
@@ -1093,6 +1089,7 @@ function trade_upbit(_signal){
             setTimeout(div_exit_upbit(upbit, obj, logger_upbit), 3000);
             cb(null, data);
           });
+ 
         }
       }
     ],function(error, data){
@@ -1296,36 +1293,45 @@ function trade_korbit(_signal){
           //탈출
           //빗썸탈출
           console.log("코인원탈출");
-          var data = {
-            site : 'korbit',
-            idx : 1,
-            apiKey : data.apiKey,
-            secreteKey : data.secreteKey,
-            ordInterval : data.ordInterval,
-            minOrdVal : data.minOrdCost, //원
-            minOrdAmt : 0,
-            siteMinVal : 2000, //원
-            siteMinAmt : 0, //btc 수량
-            goalAmt : data.avail_coin, //목표 수량
-            firstAvailMargin : 0,
-            totalOrdValue : 0, 
-            totalOrdAmt : 0, //누적 주문 수량 
-            openingQty : 0, //진입한 포지션 수량 
-            side : "",
-            minAmtRate : data.minOrdRate, //최소수량비율 
-            maxAmtRate : data.maxOrdRate, //최대수량비율
-            orderID : "",
-            isOrdered : false, //주문시도 여부
-            isSuccess : false, //주문성공 여부
-            isContinue : false, //주문분할 계속할지 여부,
-            start_time : start_time,
-            start_price : 0,
-            end_price : 0,
-            total_krw : 0,
-            total_btc : 0
-          }
-          setTimeout(div_exit_korbit(korbit, data, logger_korbit), 0);
-          cb(null, data);
+          var options = getFinanceBotOffOption("BTC_KRW", "stop");
+          request(options, function(error, response, body){
+            if(error){
+              console.log(error);
+              return;
+            }
+            console.log(body);
+            var obj = {
+              site : 'korbit',
+              idx : 1,
+              apiKey : data.apiKey,
+              secreteKey : data.secreteKey,
+              ordInterval : data.ordInterval,
+              minOrdVal : data.minOrdCost, //원
+              minOrdAmt : 0,
+              siteMinVal : 2000, //원
+              siteMinAmt : 0, //btc 수량
+              goalAmt : data.avail_coin, //목표 수량
+              firstAvailMargin : 0,
+              totalOrdValue : 0, 
+              totalOrdAmt : 0, //누적 주문 수량 
+              openingQty : 0, //진입한 포지션 수량 
+              side : "",
+              minAmtRate : data.minOrdRate, //최소수량비율 
+              maxAmtRate : data.maxOrdRate, //최대수량비율
+              orderID : "",
+              isOrdered : false, //주문시도 여부
+              isSuccess : false, //주문성공 여부
+              isContinue : false, //주문분할 계속할지 여부,
+              start_time : start_time,
+              start_price : 0,
+              end_price : 0,
+              total_krw : 0,
+              total_btc : 0
+            }
+            setTimeout(div_exit_korbit(korbit, obj, logger_korbit), 0);
+            cb(null, data);
+          });
+
         }
         //cb(null, data);
       }
@@ -2033,22 +2039,23 @@ function insert_trade_history(list){
           cb(null, obj);
         });
       },
-      function financeBotOff(obj, cb){
-        var options = {};
-        if(obj.type === 'long'){ //long 완료시 재정거래 모든 거래소 on
-          options = getFinanceOffOption(true);
+      function financeFuncOff(obj, cb){
+        cb(null, obj);
+        // var options = {};
+        // if(obj.type === 'long'){ //long 완료시 재정거래 모든 거래소 on
+        //   options = getFinanceOffOption(true);
           
-        }else if(obj.type === 'exit'){ //exit 완료시 한번더 거래소 off(여기서 안해도 상관없음)
-          options = getFinanceOffOption(false);
-        }
-        request(options, function(error, response, body){
-          if(error){
-            console.log(error);
-            return;
-          }
-          console.log(body);
-          cb(null, obj);
-        });
+        // }else if(obj.type === 'exit'){ //exit 완료시 한번더 거래소 off(여기서 안해도 상관없음)
+        //   options = getFinanceOffOption(false);
+        // }
+        // request(options, function(error, response, body){
+        //   if(error){
+        //     console.log(error);
+        //     return;
+        //   }
+        //   console.log(body);
+        //   cb(null, obj);
+        // });
       }
     ], function(error, results){
       if(error){
