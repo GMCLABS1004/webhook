@@ -29,7 +29,7 @@ var request = require('request');
 
 function getFinanceBotOffOption(symbol, flag){
     var options ={
-      url : 'http://127.0.0.1:3000/api/financialBotOnOff',
+      url : 'http://localhost:3000/api/financialBotOnOff',
       method: "POST",
       header : {
           'content-type' : 'application/json',
