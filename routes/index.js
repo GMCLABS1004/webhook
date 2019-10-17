@@ -93,7 +93,9 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
             console.log(error);
             return;
           }
-          
+          console.log("readSetting");
+          console.log(res);
+        
           for(i=0; i<res.length; i++){
             if(res[i].site.indexOf('bitmex') !== -1){
               set_list.push(res[i]);    
@@ -111,6 +113,9 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
             if(err){
               console.log(err);
             }
+            console.log("ticker");
+            console.log(body);
+          
             var obj = JSON.parse(body);
             last_price = obj[0].price;
             cb(null, set_list); 
@@ -126,10 +131,13 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
               console.log(error);
               return;
             }
+            console.log("getPosition");
+            console.log(data);
             // console.log("data : ");
             // console.log(data);
             list.push(data);
             if(set_list.length === list.length){
+
               cb(null);
             }
           }), 0);
@@ -139,6 +147,7 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
       if(error){
         console.log(error);
       }
+      console.log("waterfall 결과");
       console.log(list);
       
       console.log('last_price : '+ last_price);
@@ -157,8 +166,17 @@ function getPosition_bitmex(set, cb){
       if(err){
         console.log(err);
       }
+      console.log("getPosition_bitmex");
+      console.log(body);
       var obj = JSON.parse(body);
-      var data = {}
+      var data = bitmex_position_notSearch(set);
+      
+      if(obj.length === 0){
+        // data["leverage"] = set.leverage;
+        // data["margin"] = set.margin;
+        // data["scriptNo"] = set.scriptNo;
+        return cb(null, data);
+      }
       for(var i=0; i<obj.length; i++){
         if(obj[i].symbol === 'XBTUSD'){
           data = bitmex_position_parse(set.site, obj[i]);
@@ -168,6 +186,7 @@ function getPosition_bitmex(set, cb){
           cb(null, data);
         }
       }
+
     })
   }
 }
@@ -214,6 +233,25 @@ function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
   return requestOptions;
 }
 
+
+function bitmex_position_notSearch(set){
+  return { 
+    site: set.site,
+    symbol: 'XBTUSD',
+    size: 0,
+    value: 0,
+    avgEntryPrice: 0,
+    markPrice: 0,
+    liquidationPrice: 0,
+    margin: set.margin,
+    leverage: set.leverage,
+    scriptNo : set.scriptNo,
+    unrealisedPnl: 0,
+    unrealisedRoePcnt: 0,
+    realisedPnl: 0,
+    isOpen: false
+  }
+}
 
 function bitmex_position_parse(site, obj){
   var posObj = {};
