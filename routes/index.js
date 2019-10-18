@@ -138,6 +138,7 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
             console.log(data);
             // console.log("data : ");
             // console.log(data);
+
             list.push(data);
             if(set_list.length === list.length){
 
@@ -161,6 +162,8 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
     });
   
 });
+
+
 
 function getPosition_bitmex(set, cb){
   return function(){
@@ -186,10 +189,20 @@ function getPosition_bitmex(set, cb){
           data["leverage"] = set.leverage;
           data["margin"] = set.margin;
           data["scriptNo"] = set.scriptNo;
-          cb(null, data);
         }
       }
 
+      var requestOptions = setRequestHeader(set.url, set.apiKey, set.secreteKey, 'GET','user/margin','currency=XBt');
+      request(requestOptions, function(error, response, body){
+          if(error){
+              console.log(error);
+              //res.send(error);
+              return;
+          }
+          var json = JSON.parse(body);
+          data.walletBalance = json.walletBalance / 100000000;
+          cb(null, data);
+      });
     })
   }
 }
@@ -241,6 +254,7 @@ function bitmex_position_notSearch(set){
   return { 
     site: set.site,
     symbol: 'XBTUSD',
+    walletBalance : 0,
     size: 0,
     value: 0,
     avgEntryPrice: 0,
