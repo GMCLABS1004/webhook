@@ -160,10 +160,207 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
       });
       response.send({last_price : last_price, list : list});
     });
-  
+});
+
+router.get('/positionAll_internal', isAuthenticated, function(req, res, next){
+  res.render('positionAll_internal');
+});
+
+router.get('/positionAll_internal', isAuthenticated, function(req, response, next){
+  var list = [];
+  var last_price = 0;
+
+  //실제로 동작중인 국내거래소 셋팅값을 가져와라
+  setting.find({execFlag : true, site : "korea"},function(error, set_list){
+    if(error){
+      console.log(error);
+      return;
+    }
+
+    var list=[];
+    if(set_list.length ===0){
+      response.send(list);
+      return;
+    }
+
+    //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
+    for(i=0; set_list.length; i++){
+      setTimeout(getPosition_korea(set_list[i], function(error, data){
+        if(error){
+          console.log(error);
+          return;
+        }
+        list.push(data);
+        if(list.length === filter_set.length){
+          response.send(list);
+        }
+      }), 0);
+    }
+  });
 });
 
 
+function getPosition_korea(set, cb){
+  return function(){
+    var predicate={}
+    if(set.site === 'bithumb') predicate = getPosition_bithumb;
+    else if(set.site === 'coinone') predicate = getPosition_coinone;
+    else if(set.site === 'upbit') predicate = getPosition_upbit;
+    else if(set.site === 'korbit') predicate = getPosition_korbit;
+    //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
+    setTimeout(predicate(set, function(error, data){
+      if(error){
+        console.log(error);
+        return;
+      }
+      cb(null, data);
+    }), 0);
+  }
+}
+
+function getPosition_bithumb(set, cb){
+  return function(){
+    
+    async.waterfall([
+      function init(cb){
+        //사이트, 스크립트, 마진, 레버리지
+        var data = {
+          site : set.site,//사이트
+          scriptNo : set.scriptNo, //스크립트
+          margin : set.margin,//마진
+          leverage : set.leverage //레버리지
+        }
+        cb(null, data);
+      },
+      function trade_history(data, cb){
+        //진입전자산, 진입가격
+
+      },
+      function ticker(data, cb){
+        //현재가 
+
+      },
+      function balance(data, cb){
+        //포지션(long), 보유수량, 가치, 현재자산(총krw)
+
+      }
+    ], function(error, data){
+      if(error){
+        console.log(error);
+        return;
+      }
+      return cb(null, data);
+    });
+  }
+}
+
+function getPosition_coinone(set, cb){
+  return function(){
+    
+    async.waterfall([
+      function init(cb){
+        //사이트, 스크립트, 마진, 레버리지
+        var data = {
+          site : set.site,//사이트
+          scriptNo : set.scriptNo, //스크립트
+          margin : set.margin,//마진
+          leverage : set.leverage //레버리지
+        }
+        cb(null, data);
+      },
+      function trade_history(data, cb){
+        //진입전자산, 진입가격
+
+      },
+      function ticker(data, cb){
+        //현재가 
+
+      },
+      function balance(data, cb){
+        //포지션(long), 보유수량, 가치, 현재자산(총krw)
+        
+      }
+    ], function(error, data){
+      if(error){
+        console.log(error);
+        return;
+      }
+      return cb(null, data);
+    });
+  }
+}
+
+function getPosition_upbit(set, cb){
+  return function(){
+    
+    async.waterfall([
+      function init(cb){
+        //사이트, 스크립트, 마진, 레버리지
+        var data = {
+          site : set.site,//사이트
+          scriptNo : set.scriptNo, //스크립트
+          margin : set.margin,//마진
+          leverage : set.leverage //레버리지
+        }
+        cb(null, data);
+      },
+      function trade_history(data, cb){
+        //진입전자산, 진입가격
+
+      },
+      function ticker(data, cb){
+        //현재가 
+
+      },
+      function balance(data, cb){
+        //포지션(long), 보유수량, 가치, 현재자산(총krw)
+        
+      }
+    ], function(error, data){
+      if(error){
+        console.log(error);
+        return;
+      }
+      return cb(null, data);
+    });
+  }
+}
+
+function getPosition_korbit(set, cb){
+  return function(){
+    
+    async.waterfall([
+      function init(cb){
+        //사이트, 스크립트, 마진, 레버리지
+        var data = {
+          site : set.site,//사이트
+          scriptNo : set.scriptNo, //스크립트
+          margin : set.margin,//마진
+          leverage : set.leverage //레버리지
+        }
+        cb(null, data);
+      },
+      function trade_history(data, cb){
+        //진입전자산, 진입가격
+
+      },
+      function ticker(data, cb){
+        //현재가 
+
+      },
+      function balance(data, cb){
+        //포지션(long), 보유수량, 가치, 현재자산(총krw)
+        
+      }
+    ], function(error, data){
+      if(error){
+        console.log(error);
+        return;
+      }
+      return cb(null, data);
+    });
+  }
+}
 
 function getPosition_bitmex(set, cb){
   return function(){

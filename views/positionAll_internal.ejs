@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        $.ajax({
+            method : "GET",
+            url : "api/positionAll",
+            success: function(json){
+                console.log(json);
+                if(json){
+                    var list = json.list;
+                    var last_price = json.last_price;
+                    $("#mytable > tbody:last").empty();
+                    $("#last_price").html("");
+                    $("#last_price").html("현재가 : "+ last_price +"<br><br>");
+                    for(i=0; i<list.length; i++){
+                        $("#mytable > tbody:last").append("<tr>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='left'>" + list[i].site + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + isPosition(list[i].size) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].walletBalance, list[i].site) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</td>");  
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].margin + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='center'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</td>");                         
+                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].realisedPnl.toFixed(4), list[i].site) + "</td>");                         
+                        $("#mytable > tbody:last").append("<tr>");
+                    }
+                }
+            },
+            error : function(request, status, error) {
+                console.log("error : " + error);
+            }
+        });
+        function isPosition(size){
+            if(size > 0){
+                return "long"
+            }else if(size < 0){
+                return "short";
+            }else{
+                return "";
+            }
+
+        }
+        function asset_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+ 
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.00000000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function price_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function amount_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var amt = Number(num);
+            if(site_type==='bitmex'){
+                return numeral(amt).format( '₩0,0' ); 
+            }else{
+                return numeral(amt).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }
+        }
+
+        function value_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' ); 
+            }
+        }
+
+        function benefit_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+        }
+        function roePer_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.00' ); // 1000.00000123 =>  1,000.00000123
+        }
+    </script>
+    <title>Document</title>
+</head>
+<body>
+   
+    <h2>비트맥스 포지션(국내)</h2>
+    <div id="last_price"></div>
+    <table id="mytable" border="1px">
+        <tr>
+            <td>no</td>
+            <td>계정</td>
+            <td>스크립트</td>
+            <td>포지션</td>
+            <td>총자산</td>
+            <td>수량</td>
+            <td>가치</td>
+            <td>진입가격</td>
+            <td>마진</td>
+            <td>레버리지</td>
+            <td>미실현손익</td>
+            <td>실현손익</td>
+        </tr>
+        <tbody>
+        </tbody>
+    </table>
+</body>
+</html>
