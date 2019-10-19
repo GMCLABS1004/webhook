@@ -15,7 +15,7 @@
                 console.log(json);
                 if(json){
                     var list = json.list;
-                    var last_price = json.last_price;
+                    var last_price = price_comma(json.last_price, "korean");
                     $("#mytable > tbody:last").empty();
                     $("#last_price").html("");
                     $("#last_price").html("현재가 : "+ last_price +"<br><br>");

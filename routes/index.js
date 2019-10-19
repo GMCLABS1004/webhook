@@ -199,7 +199,7 @@ router.get('/api/positionAll_internal', isAuthenticated, function(req, response,
         console.log(data);
         if(list.length === set_list.length){
           list.sort(ascending);
-          response.send({last_price :0, list : list});
+          response.send({last_price : list[0].ticker, list : list});
         }
       }), 0);
     }
