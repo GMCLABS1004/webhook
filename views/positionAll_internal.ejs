@@ -10,7 +10,7 @@
     <script>
         $.ajax({
             method : "GET",
-            url : "api/positionAll",
+            url : "api/positionAll_internal",
             success: function(json){
                 console.log(json);
                 if(json){
@@ -24,15 +24,14 @@
                                 $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='left'>" + list[i].site + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + isPosition(list[i].size) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].walletBalance, list[i].site) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].isSide + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].totalAsset, list[i].site) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</td>");  
+                                $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].price, list[i].site) + "</td>");  
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].margin + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='center'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</td>");                         
-                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].realisedPnl.toFixed(4), list[i].site) + "</td>");                         
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>");                          
+                                $("#mytable > tbody:last").append("<td align='right'>" + roePer_comma(list[i].benefitRate) + "</td>");                         
                         $("#mytable > tbody:last").append("<tr>");
                     }
                 }
@@ -142,7 +141,6 @@
             <td>진입가격</td>
             <td>마진</td>
             <td>레버리지</td>
-            <td>미실현손익</td>
             <td>실현손익</td>
         </tr>
         <tbody>

@@ -523,7 +523,7 @@ function trade_bithumb(_signal){
           if(goalValue > data.avail_pay){
             goalValue = Math.floor(data.avail_pay);
           }
-
+          
           //빗썸 진입
           var obj = {
               site : 'bithumb',
