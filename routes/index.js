@@ -336,10 +336,10 @@ function getPosition_bithumb(set, cb){
           if(res.length > 0){
               data.price = res[0].price;
               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
-              data.benefitRate = (benefit / res[0].totalAsset) * 100;
+              data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
           }else{
-              benefit =0;
-              benefitRate =0;
+              data.benefit =0;
+              data.benefitRate =0;
           }
           cb(null, data);
         });
@@ -455,10 +455,10 @@ function getPosition_coinone(set, cb){
           if(res.length > 0){
               data.price = res[0].price;
               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
-              data.benefitRate = (benefit / res[0].totalAsset) * 100;
+              data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
           }else{
-              benefit =0;
-              benefitRate =0;
+              data.benefit =0;
+              data.benefitRate =0;
           }
           cb(null, data);
         });
@@ -582,10 +582,10 @@ function getPosition_upbit(set, cb){
           if(res.length > 0){
               data.price = res[0].price;
               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
-              data.benefitRate = (benefit / res[0].totalAsset) * 100;
+              data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
           }else{
-              benefit =0;
-              benefitRate =0;
+              data.benefit =0;
+              data.benefitRate =0;
           }
           cb(null, data);
         });
@@ -701,10 +701,10 @@ function getPosition_korbit(set, cb){
           if(res.length > 0){
               data.price = res[0].price;
               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
-              data.benefitRate = (benefit / res[0].totalAsset) * 100;
+              data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
           }else{
-              benefit =0;
-              benefitRate =0;
+              data.benefit =0;
+              data.benefitRate =0;
           }
           cb(null, data);
         });
