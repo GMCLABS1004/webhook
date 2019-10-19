@@ -525,7 +525,7 @@ function getPosition_upbit(set, cb){
                 data.totalAsset = Math.floor(Number(element.balance) + Number(element.locked));
               }else if(element.currency === "BTC"){
                 data.size = fixed4(Number(element.balance) + Number(element.locked));
-                avail_btc = Math.floor(Number(element.balance));
+                avail_btc = fixed4(Number(element.balance));
               }
           });
           if(avail_btc > 0.0003){ //* data.ticker 
