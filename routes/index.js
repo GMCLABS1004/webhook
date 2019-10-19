@@ -519,13 +519,13 @@ function getPosition_upbit(set, cb){
               console.log("업비트 잔액조회 조회 error1 : " + body);
               return;
           }
-          
+          var avail_btc=0;
           json.forEach(element => {
               if(element.currency === "KRW"){ //KRW
                 data.totalAsset = Math.floor(Number(element.balance) + Number(element.locked));
-                avail_btc = Math.floor(Number(element.balance));
               }else if(element.currency === "BTC"){
                 data.size = fixed4(Number(element.balance) + Number(element.locked));
+                avail_btc = Math.floor(Number(element.balance));
               }
           });
           if(avail_btc > 0.0003){ //* data.ticker 
