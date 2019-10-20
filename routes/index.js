@@ -762,6 +762,10 @@ function getPosition_bitmex(set, cb){
 }
 
 function fixed4(num){
+  if(Number(num) < 0.0001){
+    return 0;
+  }
+  
   var str = new String(num);
   var arr = str.split(".");
   var str2 = arr[1].slice(0,4);
