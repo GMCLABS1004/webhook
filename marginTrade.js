@@ -1491,6 +1491,8 @@ function trade_bitmex(_signal, siteName){
             cb(null, data);
         }else if( (data.isSide === 'Buy' && _signal.side === 'Buy Exit') || (data.isSide === 'Sell' && _signal.side === 'Sell Exit') ){
           console.log("포지션 종료"); //로직종료
+            console.log("현재포지션 : "+ data.isSide);
+            console.log("신호 : "+ _signal.side);
             var start_time = new Date();
             start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
             var obj = {
@@ -1545,10 +1547,12 @@ function trade_bitmex(_signal, siteName){
         //     setTimeout(div_exit_bitmex(obj, log_obj), 0);
         //     return;
         // }
-        else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션O && Buy or Sell
+        else if( (data.isSide === 'Buy' && _signal.side === 'Exit') || (data.isSide === 'Sell' && _signal.side === 'Exit')){ //진입한 포지션O && Buy or Sell
             var start_time = new Date()
             start_time = start_time.getTime() + (1000 * 60 * 60 * 9);  
             console.log("포지션 종료"); //로직종료
+            console.log("현재포지션 : "+ data.isSide);
+            console.log("신호 : "+ _signal.side);
             var obj = {
                 site : data.site,
                 idx : 1,
@@ -1574,6 +1578,37 @@ function trade_bitmex(_signal, siteName){
             }
             setTimeout(div_exit_bitmex(obj, log_obj ), 0);
             cb(null, data);
+        }else if( (data.isSide === 'Buy' && _signal.side === 'Sell') || (data.isSide === 'Sell' && _signal.side === 'Buy')){ //진입한 포지션O && Buy or Sell
+          var start_time = new Date()
+          start_time = start_time.getTime() + (1000 * 60 * 60 * 9);  
+          console.log("포지션 종료"); //로직종료
+          console.log("현재포지션 : "+ data.isSide);
+          console.log("신호 : "+ _signal.side);
+          var obj = {
+              site : data.site,
+              idx : 1,
+              url : data.url,
+              apiKey : data.apiKey,
+              secreteKey : data.secreteKey,
+              symbol : data.symbol,
+              goalAmt : 0,
+              minOrdAmt : data.minOrdAmt,
+              totalOrdAmt : 0,
+              totalOrdValue : 0,
+              openingQty : 0, //진입한 포지션 수량 
+              side : "",
+              ordInterval : data.ordInterval,
+              minAmtRate : data.minOrdRate, //최소주문비율  
+              maxAmtRate : data.minOrdRate, //최대주문비율 
+              start_price : 0,
+              end_price : 0,
+              start_time : start_time,
+              isOrdered : false, //주문시도 여부
+              isSuccess : false, //주문성공 여부
+              isContinue : false, //주문분할 계속할지 여부
+          }
+          setTimeout(div_exit_bitmex(obj, log_obj ), 0);
+          cb(null, data);
         }
       },
       function getUserMargin(data, cb){ //잔액조회
