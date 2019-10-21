@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        var hisArr =[];
+        $(document).ready(function(){
+            find();
+            $("#add").click(function(){
+                var json={
+                    scriptName : $("#scriptName").val(),
+                    scriptNo : Number($("#scriptNo").val()),
+                    version : Number($("#version").val()),
+                }
+                insert(json);
+            });
+     
+            $("#remove").click(function(){
+                var rowData = new Array();
+                var tdArr = new Array();
+                var deleteArr = [];
+                var checkbox = $("input[name=user_CheckBox]:checked");
+                console.log("length : "+ checkbox.length);
+                // 체크된 체크박스 값을 가져온다
+                checkbox.each(function(i, element) {
+                    console.log(element);
+                    console.log(element.parentNode.nextSibling.textContent);
+                    var idx = Number(element.parentNode.nextSibling.textContent)-1;
+                    deleteArr.push(hisArr[idx]._id);
+                    //console.log(Number(td.eq(1).text()) -1 );
+                });
+                console.log(deleteArr);
+                remove(deleteArr);
+            });
+        });
+        function find(){
+            $.ajax({
+                method : "GET",
+                url : "api/findScript",
+                success: function(json){
+                    console.log(json);
+                    if(json){
+                        $("#mytable > tbody:last").empty();
+                        hisArr = new Object(json);
+                        for(i=0; i<json.length; i++){
+                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td align='center'>"+"<input type='checkbox' name='user_CheckBox' >" + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td align='left'>" + json[i].scriptName + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='center'>" + json[i].scriptNo + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='center'>" + json[i].version + "</td>");
+                            $("#mytable > tbody:last").append("<tr>");
+                        }
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log("error : " + error);
+                }
+            });
+        }
+
+        function insert(json){
+            console.log(json);
+            $.ajax({
+                method : "POST",
+                url : "api/insertScript",
+                dataType : "json",
+                data : json,
+                success: function(json){
+                    if(json){
+                        find();
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log("error : " + error);
+                }
+            });
+        }
+
+        function remove(deleteArr){
+            $.ajax({
+                type: "POST",
+                url: "/api/removeScript",
+                dataType: "json",
+                data : {deleteArr : deleteArr},
+                success: function(json) {
+                    console.log("제거완료");
+                    find();
+                },
+                error : function(request, status, error) {
+                        console.log("error : " + error);
+                }
+            });
+        }
+        
+    </script>
+    <title>Document</title>
+</head>
+<body>
+    <h2>스크립트</h2>
+
+    번호 : <input type="text" id="scriptNo" name="scriptNo" value=""><br>
+    이름 : <input type="text" id="scriptName" name="scriptName" value=""><br>
+    버전 : <input type="text" id="version" name="version" value=""><input type="button" id="add" value="추가"><br><br>
+    <table id="mytable" border="1px">
+        <tr>
+            <td></td>
+            <td>no</td>
+            <td>번호</td>
+            <td>이름</td>
+            <td>버전</td>
+        </tr>
+        <tbody>
+        </tbody>
+    </table>
+    <input type="button" id="remove" value="삭제">
+</body>
+</html>

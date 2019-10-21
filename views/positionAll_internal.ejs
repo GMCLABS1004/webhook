@@ -23,6 +23,8 @@
                         $("#mytable > tbody:last").append("<tr>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='left'>" + list[i].site + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptName + "</td>");
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].isSide + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].totalAsset, list[i].site) + "</td>"); 
@@ -126,14 +128,16 @@
     <title>Document</title>
 </head>
 <body>
-   
-    <h2>비트맥스 포지션(국내)</h2>
+    
+    <h2>포지션(국내)</h2>
     <div id="last_price"></div>
     <table id="mytable" border="1px">
         <tr>
             <td>no</td>
             <td>계정</td>
             <td>스크립트</td>
+            <td>버전</td>
+            <td>스크립트 번호</td>
             <td>포지션</td>
             <td>총자산</td>
             <td>수량</td>

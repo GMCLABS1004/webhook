@@ -8,6 +8,7 @@ var BithumAPI = require('../API/bithumbAPI');
 var coinoneAPI = require('../API/coinoneAPI.js');
 var upbitAPI = require('../API/upbitAPI.js');
 var korbitAPI = require('../API/korbitAPI.js');
+var script = require("../models/script");
 var signal = require("../models/signal");
 var setting = require("../models/setting");
 var order = require("../models/order");
@@ -83,6 +84,57 @@ router.get('/', isAuthenticated, function(req, res){
 //   res.render('main', {user_info : req.user});
 // });
 
+router.get('/script', isAuthenticated, function(req, res, next){
+  res.render('script');
+});
+
+router.get('/api/findScript', isAuthenticated, function(req, res, next){
+  script.find({}, function(error, json){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send(json);
+  });
+});
+
+router.post('/api/insertScript', isAuthenticated, function(req, res, next){
+  console.log('/api/insertScript');
+  var data = new Object(req.body);
+  console.log(data);
+  var obj = {
+    scriptName  : req.body.scriptName,
+    scriptNo  : Number(req.body.scriptNo),
+    version : Number(req.body.version)
+  }
+
+  script.insertMany(obj, function(error, body){
+    if(error){
+      console.log(error);
+      return;
+    }
+    console.log(body);
+    res.send({});
+  });
+});
+
+router.post('/api/removeScript', isAuthenticated, function(req, res, next){
+  var deleteArr = req.body.deleteArr; //start or stop
+  var length = deleteArr.length;
+  console.log(deleteArr)
+  for(i=0; i<deleteArr.length; i++){
+    script.findByIdAndDelete(deleteArr[i],function(error, json){
+      if(error){
+        console.log("error ㅏㄹ생:"+error);
+        res.send({});
+        return;
+      }
+      
+    });
+  }
+  res.send({});
+});
+
 router.get('/positionAll', isAuthenticated, function(req, res, next){
   res.render('positionAll');
 });
@@ -150,6 +202,33 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
             }
           }), 0);
         }
+      },
+      function readScriptInfo(cb){
+        if(list.length === 0){
+          return cb(null);
+        }
+
+        script.find({}, function(error, res){
+          if(error){
+            console.log(error);
+            return;
+          }
+
+          for(i=0; i<list.length; i++){
+            list[i].scriptName = "";
+            list[i].version = "";
+          }
+
+          for(i=0; i<list.length; i++){
+            for(j=0; j<res.length; j<j++){
+              if(list[i].scriptNo === res[j].scriptNo){
+                list[i].scriptName = res[j].scriptName
+                list[i].version = res[j].version;
+              }
+            }
+          }
+          cb(null);
+        })
       }
     ], function(error, results){
       if(error){
@@ -198,13 +277,49 @@ router.get('/api/positionAll_internal', isAuthenticated, function(req, response,
         list.push(data);
         console.log(data);
         if(list.length === set_list.length){
-          list.sort(ascending);
-          response.send({last_price : list[0].ticker, list : list});
+          //스크립트 이름 넣기
+          readScriptInfo(list, function(error, new_list){
+            if(error){
+              console.log(error);
+              return;
+            }
+            //abcd 순 정렬
+            new_list.sort(ascending);
+            response.send({last_price : list[0].ticker, list : list});
+          });
         }
       }), 0);
     }
   });
 });
+
+function readScriptInfo(list, cb){
+  if(list.length === 0){
+    return cb(null);
+  }
+
+  script.find({}, function(error, res){
+    if(error){
+      console.log(error);
+      return;
+    }
+
+    for(i=0; i<list.length; i++){
+      list[i].scriptName = "";
+      list[i].version = "";
+    }
+
+    for(i=0; i<list.length; i++){
+      for(j=0; j<res.length; j<j++){
+        if(list[i].scriptNo === res[j].scriptNo){
+          list[i].scriptName = res[j].scriptName
+          list[i].version = res[j].version;
+        }
+      }
+    }
+    cb(null, list);
+  })
+}
 
 // 대소문자 무시 ( toLowerCase ) 
 function ascending ( a , b ) {  
@@ -228,7 +343,8 @@ function getPosition_korea(set, cb){
         console.log(error);
         return;
       }
-      cb(null, data);
+      
+      cb(null, data);      
     }), 0);
   }
 }
