@@ -1090,9 +1090,7 @@ router.post('/api/setting', isAuthenticated, function(req,res){
     minOrdCost : Number(json.minOrdCost),
     ordInterval : Number(json.ordInterval),
     minOrdRate : Number(json.minOrdRate),
-    maxOrdRate : Number(json.maxOrdRate),
-    side : json.side,
-    side_num : Number(json.side_num),
+    maxOrdRate : Number(json.maxOrdRate)
   }
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){

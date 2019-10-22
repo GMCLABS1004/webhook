@@ -145,30 +145,7 @@
                     <div class="">
                         <input type="text" class="form-control" id="maxOrdRate" value='<%=maxOrdRate%>' placeholder="%">
                     </div>
-                </div>    
-                <div class="">
-
-                    <label for="side" class="key_label col-form-label">side</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="side" value='<%=side%>' placeholder="">
-
-                    </div>
-
-                </div>
-
-                <div class="">
-
-                    <label for="side_num" class="key_label col-form-label">side_num</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="side_num" value='<%=side_num%>' placeholder="">
-
-                    </div>
-
-                </div>   
+                </div>     
             </div>
 
         </form>
@@ -201,9 +178,7 @@
                     minOrdCost : $("#minOrdCost").val(),
                     ordInterval : $("#ordInterval").val(),
                     minOrdRate : $("#minOrdRate").val(),
-                    maxOrdRate : $("#maxOrdRate").val(),
-                    side : $("#side").val(),
-                    side_num : $("#side_num").val()
+                    maxOrdRate : $("#maxOrdRate").val()
                 }
                 console.log(JSON.stringify(obj));
                 $.ajax({
