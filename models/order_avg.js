@@ -5,6 +5,7 @@ var orderSchema = new Schema({
     totalAsset : {type:Number, default : 0}, //총자산
     type : {type:String, default : ""},
     side : {type:String, default : ""},
+    side_num : {type:Number, default : 0},
     start_price : {type:Number, default : 0}, //가격
     end_price : {type:Number, default : 0}, //가격
     price : {type:Number, default : 0}, //가격

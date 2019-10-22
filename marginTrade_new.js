@@ -25,7 +25,6 @@ var settings = require("./models/setting");
 var orderDB = require('./models/order');
 var orderDB2 = require('./models/order_avg');
 var webSetting = require('./webSetting.json');
-
 var logger;
 var logfileName1 = './log/marginTrade' +'.log'; //로그파일 경로1
 var logfileName2 = './log/marginTrade' +'.debug.log'; //로그파일 경로2
@@ -376,7 +375,6 @@ function trade_bithumb(_signal){
           avail_coin : 0,
           symbol : "",
           isSide : '',
-          side_num : 0,
           ticker : 0,
           ask : [],
           bid : [],
@@ -567,7 +565,7 @@ function trade_bithumb(_signal){
           request(options, function(error, response, body){
             if(error){
               console.log(error);
-              //return;return;
+              return;
             }
             var obj = {
               site : 'bithumb',
@@ -625,7 +623,6 @@ function trade_coinone(_signal){
         var data = {
           symbol : "",
           side : '',
-          side_num : 0,
           ask : [],
           bid : [],
           avail_coin : 0,
@@ -809,7 +806,7 @@ function trade_coinone(_signal){
           request(options, function(error, response, body){
             if(error){
               console.log(error);
-              //return;
+              return;
             }
             console.log(body);
             var obj = {
@@ -870,7 +867,6 @@ function trade_upbit(_signal){
         var data = {
           symbol : "",
           side : '',
-          side_num : 0,
           ordType : 'Limit',
           ask : [],
           bid : [],
@@ -1069,7 +1065,7 @@ function trade_upbit(_signal){
           request(options, function(error, response, body){
             if(error){
               console.log(error);
-              //return;
+              return;
             }
             var obj = {
               site : "upbit",
@@ -1126,7 +1122,6 @@ function trade_korbit(_signal){
         var data = {
           symbol : "",
           side : '',
-          side_num : 0,
           ask : [],
           bid : [],
           avail_coin : 0,
@@ -1308,12 +1303,12 @@ function trade_korbit(_signal){
         else if(_signal.side === 'Exit' && data.isSide === 'Buy' && _signal.side_num === data.side_num){ //현재포지션 -> 매수 and 신호 -> 탈출
           //탈출
           //빗썸탈출
-          console.log("코빗탈출");
+          console.log("코인원탈출");
           var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
             if(error){
               console.log(error);
-              
+              return;
             }
             console.log(body);
             var obj = {
@@ -2185,7 +2180,6 @@ function create_history_data(list){
   
   obj.type = list[0].type;
   obj.side = list[0].side;
-  obj.side_num  = list[0].side_num;
   obj.price = Math.floor(obj.value / obj.amount);
   obj.start_time = filter_prior(new Object(list), "start_time", function(a,b){ return a.start_time.getTime() - b.start_time.getTime()});  
   obj.end_time = filter_prior(new Object(list), "end_time", function(a,b){ return b.end_time.getTime() - a.end_time.getTime()});

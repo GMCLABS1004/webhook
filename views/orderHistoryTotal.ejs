@@ -33,6 +33,7 @@
                                     $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(json[i].totalAsset, site) + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + json[i].type + "</td>"); 
                                     $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");
+                                    $("#mytable > tbody:last").append("<td align='center'>" + json[i].side_num + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + (json[i].div_cnt) + "</td>");  
                                     $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].start_price, site) + "</td>");  
                                     $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].end_price, site) + "</td>");  
@@ -172,6 +173,7 @@
             <td>종료시간</td>
             <td>자산</td>
             <td>구분</td>
+            <td></td>
             <td></td>
             <td>분할횟수</td>
             <td>시작가격</td>

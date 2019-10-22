@@ -1051,6 +1051,7 @@ router.post('/api/marginTrade', function(req,res){
   var sigData = {
     scriptNo : Number(req.body.scriptNo),
     side : req.body.side,
+    side_num : Number(req.body.side_num),
     log : req.body.log,
     timestamp : new Date().getTime() + (1000 * 60 * 60 * 9)
   }
@@ -1089,13 +1090,45 @@ router.post('/api/setting', isAuthenticated, function(req,res){
     minOrdCost : Number(json.minOrdCost),
     ordInterval : Number(json.ordInterval),
     minOrdRate : Number(json.minOrdRate),
-    maxOrdRate : Number(json.maxOrdRate)
+    maxOrdRate : Number(json.maxOrdRate),
+    side : json.side,
+    side_num : Number(json.side_num),
   }
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
       console.log(error);
       return;
     }
+    res.send({"msg" : "설정업데이트 성공"});
+  });
+});
+
+
+router.get('/setting_status',isAuthenticated, function(req,res){
+  var site = req.query.site;
+  setting.findOne({site : site},function(error, json){
+    if(error){
+      res.render('setting',error);
+      return;
+    }
+    
+    res.render('setting_status',json);
+  })
+});
+
+router.post('/api/setting_status', isAuthenticated, function(req,res){
+  var json = new Object(req.body);
+  console.log(json);
+  var obj = {
+    side : json.side,
+    side_num : Number(json.side_num)
+  }
+  setting.updateOne({site : json.site},{$set : obj}, function(error,body){
+    if(error){
+      console.log(error);
+      return;
+    }
+    console.log(body);
     res.send({"msg" : "설정업데이트 성공"});
   });
 });
