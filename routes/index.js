@@ -88,6 +88,60 @@ router.get('/script',  function(req, res, next){
   res.render('script');
 });
 
+router.get('/script2',  function(req, res, next){
+  console.log("scriptNo : "+ req.query.scriptNo);
+  var scriptNo = Number(req.query.scriptNo);
+  res.render('script2',{scriptNo : scriptNo});
+});
+
+router.post('/api/updateScript',  function(req, res, next){
+  console.log('/api/updateScript');
+  var data = new Object(req.body);
+  var scriptNo = Number(req.body.scriptNo);
+  var data = {
+    long1 : create_array(req.body.long1),
+    long2 : create_array(req.body.long2),
+    long3 : create_array(req.body.long3),
+    long4 : create_array(req.body.long4),
+    long5 : create_array(req.body.long5),
+    short1 : create_array(req.body.short1),
+    short2 : create_array(req.body.short2),
+    short3 : create_array(req.body.short3),
+    short4 : create_array(req.body.short4),
+    short5 : create_array(req.body.short5)
+  }
+  console.log(data);
+  script.updateOne({scriptNo : scriptNo}, {$set : data}, function(error, bpdy){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send({});
+  });
+
+  function create_array(data){
+    if(data === ""){
+      return [];
+    }
+
+    var body = "["+data+"]";
+    var json = JSON.parse(body);
+    return json;
+  }
+});
+
+router.get('/api/findOneScript',  function(req, res, next){
+  var scriptNo = Number(req.query.scriptNo);
+  script.find({scriptNo :  scriptNo}, function(error, json){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send(json[0]);
+  });
+});
+
+
 router.get('/api/findScript',  function(req, res, next){
   script.find({}, function(error, json){
     if(error){
@@ -1091,6 +1145,7 @@ router.get('/setting', function(req,res){
     res.render('setting',json);
   });
 });
+
 
 
 router.get('/api/read_setting', function(req,res){

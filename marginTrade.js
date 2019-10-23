@@ -20,6 +20,7 @@ var BithumAPI = require('./API/bithumbAPI');
 var coinoneAPI = require('./API/coinoneAPI.js');
 var upbitAPI = require('./API/upbitAPI.js');
 var korbitAPI = require('./API/korbitAPI.js');
+var script = require("./models/script");
 var signal = require("./models/signal");
 var settings = require("./models/setting");
 var orderDB = require('./models/order');
@@ -380,6 +381,7 @@ function trade_bithumb(_signal){
           ticker : 0,
           ask : [],
           bid : [],
+          script_data : {},
         }
         cb(null, data);
       },
@@ -421,6 +423,20 @@ function trade_bithumb(_signal){
           data.maxOrdRate = res[0].maxOrdRate * 0.01;
           data.side_num = res[0].side_num;
           cb(null, data);
+        });
+      },
+      function readScript(data, cb){
+        script.find({scriptNo : _signal.scriptNo}, function(error, json){
+          if(error){
+            console.log(error);
+            return;
+          }
+          if(json.length > 0){
+            data.script_data = new Object(json[0]);
+            cb(null, data);
+          }else{
+            return;
+          }
         });
       },
       function orderbook_bithumb(data, cb){ //빗썸 매수/매도 조회
@@ -560,7 +576,7 @@ function trade_bithumb(_signal){
           setTimeout(div_entry_bithumb(bithumAPI, obj, logger_bithumb), 0);
           cb(null, data);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && _signal.side_num === data.side_num){ //현재포지션 -> 매수 and 신호 -> 탈출
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
           //탈출
           //빗썸탈출 => 재정거래 봇 끄기
           var options = getFinanceBotOffOption("BTC_KRW", "stop");
@@ -630,6 +646,7 @@ function trade_coinone(_signal){
           bid : [],
           avail_coin : 0,
           avail_pay : 0,
+          script_data : {}
         }
         var side = _signal.side;
         (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
@@ -668,6 +685,20 @@ function trade_coinone(_signal){
           data.maxOrdRate = res[0].maxOrdRate * 0.01;
           data.side_num = res[0].side_num;
           cb(null, data);
+        });
+      },
+      function readScript(data, cb){
+        script.find({scriptNo : _signal.scriptNo}, function(error, json){
+          if(error){
+            console.log(error);
+            return;
+          }
+          if(json.length > 0){
+            data.script_data = new Object(json[0]);
+            cb(null, data);
+          }else{
+            return;
+          }
         });
       },
       function orderbook_coinone(data, cb){ //코인원 매수/매도 조회
@@ -803,7 +834,7 @@ function trade_coinone(_signal){
           setTimeout(div_entry_coinone(coinone, obj, logger_coinone), 0);
           cb(null, data);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && _signal.side_num === data.side_num){ //현재포지션 -> 매수 and 신호 -> 탈출
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
           console.log("코인원탈출");
           var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
@@ -916,6 +947,20 @@ function trade_upbit(_signal){
           data.maxOrdRate = res[0].maxOrdRate * 0.01;
           data.side_num = res[0].side_num;
           cb(null, data);
+        });
+      },
+      function readScript(data, cb){
+        script.find({scriptNo : _signal.scriptNo}, function(error, json){
+          if(error){
+            console.log(error);
+            return;
+          }
+          if(json.length > 0){
+            data.script_data = new Object(json[0]);
+            cb(null, data);
+          }else{
+            return;
+          }
         });
       },
       function ticker_upbit(data,cb){
@@ -1061,7 +1106,7 @@ function trade_upbit(_signal){
           setTimeout(div_entry_upbit(upbit, obj, logger_upbit), 0);
           cb(null, data);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && _signal.side_num === data.side_num){ //현재포지션 -> 매수 and 신호 -> 탈출
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
           //탈출
           //빗썸탈출
           console.log("업비트탈출");
@@ -1131,6 +1176,7 @@ function trade_korbit(_signal){
           bid : [],
           avail_coin : 0,
           avail_pay : 0,
+          script_data : {}
         }
         var side = _signal.side;
         (side === 'Buy')? data.side = 'buy' : data.side = 'sell';
@@ -1185,6 +1231,20 @@ function trade_korbit(_signal){
             data.side_num = res[0].side_num;
             cb(null, data);
           });
+        });
+      },
+      function readScript(data, cb){
+        script.find({scriptNo : _signal.scriptNo}, function(error, json){
+          if(error){
+            console.log(error);
+            return;
+          }
+          if(json.length > 0){
+            data.script_data = new Object(json[0]);
+            cb(null, data);
+          }else{
+            return;
+          }
         });
       },
       function orderbook_korbit(data, cb){ //코빗 매수/매도 조회
@@ -1305,7 +1365,7 @@ function trade_korbit(_signal){
           setTimeout(div_entry_korbit(korbit, obj, logger_korbit), 0);
           cb(null, data);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && _signal.side_num === data.side_num){ //현재포지션 -> 매수 and 신호 -> 탈출
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
           //탈출
           //빗썸탈출
           console.log("코빗탈출");
@@ -1418,6 +1478,7 @@ function trade_bitmex(_signal, siteName){
               margin : 0.1, //setting값
               openingQty : 0, // 들어가 있는 수량
               isSide : 'none', //들어가 있는 side// Sell or Buy
+              script_data : {},
           }
           cb(null, data);
       },
@@ -1458,6 +1519,20 @@ function trade_bitmex(_signal, siteName){
           data.side_num = res[0].side_num;
           console.log(data);
           cb(null, data);
+        });
+      },
+      function readScript(data, cb){
+        script.find({scriptNo : _signal.scriptNo}, function(error, json){
+          if(error){
+            console.log(error);
+            return;
+          }
+          if(json.length > 0){
+            data.script_data = new Object(json[0]);
+            cb(null, data);
+          }else{
+            return;
+          }
         });
       },
       function ticker(data,cb){ //현재가 조회
@@ -1508,10 +1583,10 @@ function trade_bitmex(_signal, siteName){
         
         if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
             cb(null, data);
-        }else if( (data.isSide === 'Buy' && _signal.side === 'Buy Exit' && data.side_num === _signal.side_num) || 
-                  (data.isSide === 'Sell' && _signal.side === 'Sell Exit' && data.side_num === _signal.side_num) 
+        }else if( (data.isSide === 'Buy' && _signal.side === 'Buy Exit' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)) || 
+                  (data.isSide === 'Sell' && _signal.side === 'Sell Exit' && is_exit(data.script_data, "Sell", data.side_num, _signal.side_num)) 
                 ){
-          console.log("포지션 종료"); //로직종료
+            console.log("포지션 종료"); //로직종료
             console.log("현재포지션 : "+ data.isSide);
             console.log("신호 : "+ _signal.side);
             var start_time = new Date();
@@ -1745,7 +1820,28 @@ function trade_bitmex(_signal, siteName){
   }
 }
 
+function is_exit(script_data, posName, isSideNum, signal_side_num){
+  var name = '';
+  if(posName === 'Buy'){
+    name = 'long' + isSideNum; // ex) long + 1 => long1
+  }else if(posName === 'Sell'){
+    name = 'short' + isSideNum; // ex) short + 1 => long1
+  }else{
+    return false;
+  }
 
+  var condition = script_data[name]; //ex) condition = [1,2,3];
+  if(condition.length === 0){ //condition = [];
+    return false;
+  }
+
+  for(i=0; i<condition.length; i++){
+    if(signal_side_num === condition[i]){ // 2, [1,2,3]
+      return true; //탈출O
+    }
+  }
+  return false; //탈출X  // 5, [1,2,3]
+}
 
 function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
     path = '/api/v1/'+ endpoint;

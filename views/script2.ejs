@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <title>GMC DefenceBot - 세부설정</title>
+
+    <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="../Content/sub_1.css">
+
+    <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
+
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
+
+</head>
+
+<body style="min-width:1280px;">
+
+    <div class="setting">
+
+        <div class="m_txt">
+
+            <h4>마진거래 설정</h4>
+
+            <div class="button_box">
+
+                <button type="button" id="updateScript" class="btn btn-primary btn-md">저장</button>
+
+                <button type="button" id="closeWindow" class="btn btn-secondary btn-md">취소</button>
+
+            </div>
+        </div>
+
+        <div class="box box_1">
+
+            <form class="box_1_form">
+
+
+                <div class="">
+
+                    <label for="long1" class="key_label col-form-label">long1</label>
+
+                    <div class="">
+                        <input type="hidden" id="scriptNo" value="<%=scriptNo%>">
+                       <input type="text" class="form-control" id="long1"  placeholder="">
+
+                    </div>
+
+                </div>
+
+
+                <div class="">
+
+                    <label for="long2" class="key_label col-form-label">long2</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="long2"  placeholder="">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                    <label for="long3" class="key_label col-form-label">long3</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="long3"  placeholder="">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                    <label for="long4" class="key_label col-form-label">long4</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="long4"  placeholder="">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                    <label for="long5" class="key_label col-form-label">long5</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="long5"  placeholder="">
+
+                    </div>
+
+                </div>
+
+
+                <div class="">
+
+                    <label for="short1" class="key_label col-form-label">short1</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="short1"  placeholder="">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                    <label for="short2" class="key_label col-form-label">short2</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="short2"  placeholder="">
+
+                    </div>
+
+                </div>
+                <div class="">
+
+                    <label for="short3" class="key_label col-form-label">short3</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="short3"  placeholder="">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                    <label for="short4" class="key_label col-form-label">short4</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="short4"  placeholder="">
+
+                    </div>
+
+                </div>
+
+                <div class="">
+
+                    <label for="short5" class="key_label col-form-label">short5</label>
+
+                    <div class="">
+                       <input type="text" class="form-control" id="short5"  placeholder="">
+
+                    </div>
+
+                </div>
+   
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function (e) {
+
+            $('.lcs_check').lc_switch();
+            $("#closeWindow").click(function(){
+                //window.close();
+                history.back();
+            });
+            $("#updateScript").click(function(){
+                var obj={
+                    scriptNo : $("#scriptNo").val(),
+                    long1 : $("#long1").val(),
+                    long2 : $("#long2").val(),
+                    long3 : $("#long3").val(),
+                    long4 : $("#long4").val(),
+                    long5 : $("#long5").val(),
+
+                    short1 : $("#short1").val(),
+                    short2 : $("#short2").val(),
+                    short3 : $("#short3").val(),
+                    short4 : $("#short4").val(),
+                    short5 : $("#short5").val()
+                }
+                console.log(JSON.stringify(obj));
+                $.ajax({
+                    type: "POST",
+                    url: "api/updateScript",
+                    dataType: "json",
+                    data : obj,
+                    success: function(body) {
+                        if(body){
+                            alert(body.msg);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            });
+
+            $.ajax({
+                type : "GET",
+                url : 'api/findOneScript?scriptNo='+$("#scriptNo").val(),
+                success : function(json){
+                    if(json){
+                        console.log("findOneScript");
+                        console.log(json);
+                        $("#long1").val(arrayToStr(json.long1));
+                        $("#long2").val(arrayToStr(json.long2));
+                        $("#long3").val(arrayToStr(json.long3));
+                        $("#long4").val(arrayToStr(json.long4));
+                        $("#long5").val(arrayToStr(json.long5));
+
+                        $("#short1").val(arrayToStr(json.short1));
+                        $("#short2").val(arrayToStr(json.short2));
+                        $("#short3").val(arrayToStr(json.short3));
+                        $("#short4").val(arrayToStr(json.short4));
+                        $("#short5").val(arrayToStr(json.short5));
+                    }
+                },
+                error : function(request, status, error){
+                    console.log("error : "+error);
+                }
+            });
+
+            function arrayToStr(arr){
+                if(arr.length === 0){
+                    return "";
+                }
+                if(arr.length === 1){
+                    return arr[0];
+                }
+
+                var str = ""
+                for(i=0; i<arr.length; i++){
+                    
+                    if(i === arr.length-1){
+                        str += arr[i];
+                    }else{
+                        str += (arr[i] + ",");
+                    }
+                    
+                }
+                return str;
+            }
+        });
+    </script>
+
+</body>
+
+</html>

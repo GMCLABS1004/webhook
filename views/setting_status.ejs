@@ -29,7 +29,7 @@
         <div class="m_txt">
 
             <h4><%=site%> 마진거래 설정</h4>
-
+            
             <div class="button_box">
 
                 <button type="button" id="storeSet" class="btn btn-primary btn-md">저장</button>
@@ -141,7 +141,7 @@
                     if(json){
                         console.log("read_setting실행");
                         console.log(json);
-                        $("#isEntering").val(json.url),
+                        $("#isEntering").val(json.isEntering),
                         $("#isExiting").val(json.isExiting),
                         $("#side").val(json.side),
                         $("#side_num").val(json.side_num)
