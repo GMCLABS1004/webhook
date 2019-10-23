@@ -64,9 +64,9 @@
                     <div class="">
                         <input type="hidden" class="form-control" id="site" value='<%=site%>' placeholder="">
     
-                        <input type="hidden" class="form-control" id="symbol" value='<%=symbol%>' placeholder="">
+                        <input type="hidden" class="form-control" id="symbol"  placeholder="">
                         
-                        <input type="text" class="form-control" id="apiKey" value='<%=apiKey%>' placeholder="">
+                        <input type="text" class="form-control" id="apiKey"  placeholder="">
 
                     </div>
                 </div>
@@ -77,7 +77,7 @@
 
                     <div class="">
 
-                        <input type="text" class="form-control" id="secreteKey" value='<%=secreteKey%>' placeholder="">
+                        <input type="text" class="form-control" id="secreteKey"  placeholder="">
 
                     </div>
 
@@ -89,7 +89,7 @@
     
                         <div class="">
                            
-                            <input type="text" class="form-control" id="scriptNo" value='<%=scriptNo%>' placeholder="">
+                            <input type="text" class="form-control" id="scriptNo"  placeholder="">
     
                         </div>
                 </div>
@@ -100,7 +100,7 @@
 
                     <div class="">
 
-                        <input type="text" class="form-control" id="leverage" value='<%=leverage%>' placeholder="~배">
+                        <input type="text" class="form-control" id="leverage"  placeholder="~배">
 
                     </div>
                 </div>
@@ -111,7 +111,7 @@
 
                     <div class="">
 
-                        <input type="text" class="form-control" id="margin" value='<%=margin%>' placeholder="%">
+                        <input type="text" class="form-control" id="margin"  placeholder="%">
 
                     </div>
 
@@ -123,27 +123,27 @@
 
                     <div class="">
 
-                        <input type="text" class="form-control" id="minOrdCost" value='<%=minOrdCost%>' placeholder="원">
+                        <input type="text" class="form-control" id="minOrdCost"  placeholder="원">
                     </div>
                 </div>
 
                 <div class="">
                     <label for="ordInterval" class="key_label col-form-label">주문 인터벌</label>
                     <div class="">
-                        <input type="text" class="form-control" id="ordInterval" value='<%=ordInterval%>' placeholder="초">
+                        <input type="text" class="form-control" id="ordInterval"  placeholder="초">
                     </div>
                 </div>
 
                 <div class="">
                     <label for="minOrdRate" class="key_label col-form-label">최소주문비율</label>
                     <div class="">
-                        <input type="text" class="form-control" id="minOrdRate" value='<%=minOrdRate%>' placeholder="%">
+                        <input type="text" class="form-control" id="minOrdRate"  placeholder="%">
                     </div>
                 </div>
                 <div class="">
                     <label for="maxOrdRate" class="key_label col-form-label">최대주문비율</label>
                     <div class="">
-                        <input type="text" class="form-control" id="maxOrdRate" value='<%=maxOrdRate%>' placeholder="%">
+                        <input type="text" class="form-control" id="maxOrdRate" placeholder="%">
                     </div>
                 </div>     
             </div>
@@ -161,6 +161,9 @@
         $(document).ready(function (e) {
 
             $('.lcs_check').lc_switch();
+            
+
+
             $("#closeWindow").click(function(){
                 //window.close();
                 history.back();
@@ -195,6 +198,30 @@
                         console.log("error : " + error);
                     }
                 });
+            });
+
+            $.ajax({
+                type : "GET",
+                url : 'api/read_setting?site='+$("#site").val(),
+                success : function(json){
+                    if(json){
+                        console.log("read_setting실행");
+                        console.log(json);
+                        $("#url").val(json.url),
+                        $("#apiKey").val(json.apiKey),
+                        $("#secreteKey").val(json.secreteKey),
+                        $("#scriptNo").val(json.scriptNo),
+                        $("#leverage").val(json.leverage),
+                        $("#margin").val(json.margin),
+                        $("#minOrdCost").val(json.minOrdCost),
+                        $("#ordInterval").val(json.ordInterval),
+                        $("#minOrdRate").val(json.minOrdRate),
+                        $("#maxOrdRate").val(json.minOrdRate)
+                    }
+                },
+                error : function(request, status, error){
+                    console.log("error : "+error);
+                }
             });
         });
     </script>

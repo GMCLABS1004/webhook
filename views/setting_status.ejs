@@ -50,7 +50,7 @@
 
                     <div class="">
                         <input type="hidden" class="form-control" id="site" value='<%=site%>' readonly placeholder="">
-                       <input type="text" class="form-control" id="isEntering" value='<%=isEntering%>' readonly placeholder="">
+                       <input type="text" class="form-control" id="isEntering" readonly placeholder="">
 
                     </div>
 
@@ -62,7 +62,7 @@
 
                     <div class="">
 
-                        <input type="text" class="form-control" id="isExiting" value='<%=isExiting%>' readonly placeholder="">
+                        <input type="text" class="form-control" id="isExiting" readonly placeholder="">
 
                     </div>
 
@@ -75,7 +75,7 @@
 
                     <div class="">
 
-                        <input type="text" class="form-control" id="side" value='<%=side%>' readonly placeholder="">
+                        <input type="text" class="form-control" id="side" readonly placeholder="">
                         
                     </div>
 
@@ -87,7 +87,7 @@
 
                     <div class="">
 
-                        <input type="text" class="form-control" id="side_num" value='<%=side_num%>' placeholder="">
+                        <input type="text" class="form-control" id="side_num" placeholder="">
 
                     </div>
 
@@ -132,6 +132,24 @@
                         console.log("error : " + error);
                     }
                 });
+            });
+
+            $.ajax({
+                type : "GET",
+                url : 'api/read_setting?site='+$("#site").val(),
+                success : function(json){
+                    if(json){
+                        console.log("read_setting실행");
+                        console.log(json);
+                        $("#isEntering").val(json.url),
+                        $("#isExiting").val(json.isExiting),
+                        $("#side").val(json.side),
+                        $("#side_num").val(json.side_num)
+                    }
+                },
+                error : function(request, status, error){
+                    console.log("error : "+error);
+                }
             });
         });
     </script>

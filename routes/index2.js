@@ -1,473 +1,893 @@
+// var async = require('async');
+// var crypto = require('crypto');
+// var request = require('request');
 // var express = require('express');
 // var router = express.Router();
-// var async = require('async');
-// var bitmexURL = "https://testnet.bitmex.com"
-// var symbol = "XBTUSD";
-
-// var apiKeyId = "-2YJMJOGLRMvUgaBD1_KzbLt"; //bitmex API key
-// var apiSecret = "aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd"; //bitmex API Secret
-
-// // var apiKeyId = "KM2K3Y_DJsHKG3R_3dKW8GqF"
-// // var apiSecret = "FGld8-AgZKK10ph7uu_n39PQ8CJm0gxkzPJdmjfUeKoQay6_"
-
-// var crypto = require("crypto");
-// var request = require("request");
-
+// var fs = require('fs');
 // var BithumAPI = require('../API/bithumbAPI');
 // var coinoneAPI = require('../API/coinoneAPI.js');
 // var upbitAPI = require('../API/upbitAPI.js');
+// var korbitAPI = require('../API/korbitAPI.js');
+// var script = require("../models/script");
+// var signal = require("../models/signal");
+// var setting = require("../models/setting");
+// var order = require("../models/order");
+// var orderDB2 = require('../models/order_avg');
+// var webSetting = require("../webSetting");
+// var moment = require('moment');
+// var forever = require('forever');
+// var passport = require('passport');
+// const Users = require('../models/users');
+// var LocalStrategy = require('passport-local').Strategy;
+// passport.serializeUser(function (user, done) {
+//   done(null, user)
+// });
+
+// passport.deserializeUser(function (user, done) {
+//   done(null, user);
+// });
+
+// passport.use(new LocalStrategy({
+//   usernameField: 'username',
+//   passwordField: 'password',
+//   passReqToCallback: true //인증을 수행하는 인증 함수로 HTTP request를 그대로  전달할지 여부를 결정한다
+// }, function (req, username, password, done) {
+//   Users.findOne({id : username}, function(error, res){
+//     if (error) return done(error); // 서버 에러 처리
+//     if (!res) return done(null, false, { message: '존재하지 않는 아이디입니다' }); // 임의 에러 처리
+//     if(username === res.id && password === res.pw){
+//       return done(null, {
+//         'user_id': res.id,
+//       });
+//     }else{
+//       return done(false, null)
+//     }
+//   });
+// }));
+
+// var isAuthenticated = function(req, res, next) {
+//   if (req.isAuthenticated())
+//     return next();
+//   res.redirect('/login');
+// };
+
+// router.get('/login', function(req, res) {
+//   res.render('login');
+// });
 
 
-// //var bithumAPI = new BithumAPI("223985a94a23a587e7aee533b82f7a4e", "4f76cce9768fbdc7f90c6b1fb7021846");
-// //var coinone = new coinoneAPI("21635cc6-cbb4-4d7f-9abb-c6e78cf7ecf0","ec06eb68-a65a-442b-8257-c850a9242a09");
-// //var upbit = new upbitAPI("tI144KZJZNyTnx54szCDTJcby5JferjpqtHPWlEB","mvLUNJHvOfIbCCzNrlJlnxwKnV2DqPljAq6hI8iv");
+
+// router.post('/login', passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}), // 인증 실패 시 401 리턴, {} -> 인증 스트레티지
+//   function (req, res) {
+//     res.redirect('/manage');
+// });
+
+// router.get('/logout', function (req, res) {
+//   req.logout();
+//   res.redirect('/login');
+// });
 
 
-// var bithumAPI = new BithumAPI("7446cc38540523fe9a0a04b033414ab5", "50684360909e128d413356721be9b614");
-// var coinone = new coinoneAPI("0d246678-06c0-4b44-9eb6-bd8ef507fc5a","dfb81257-4f3d-4beb-bafe-81dc122aae75");
-// var upbit = new upbitAPI("DqvxjopaOh3v1ynwxDVDkBDWu8vxAiXhwVcqpxk4","HEx8ak9dJRZxgX9xRNDPRaHr3L79d7dn6ZMsHtL7");
+
+
+// router.get('/changePW', isAuthenticated, function(req, res) {
+//   res.render('changePW');
+// });
 
 
 // /* GET home page. */
-// router.get('/', function(req, res, next){
-//   var date = new Date();
-//   console.log("[" + date.toISOString() + "] : " + req.body);
-//   res.render('index', { title: 'Express' });
+// router.get('/', isAuthenticated, function(req, res){
+//   res.redirect('manage');
 // });
 
-// router.post('/api/webhook',function(req,res){
-//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-//   console.log("kkkk");
-//   console.log("body : "+req.body);
-//   console.log("text : "+req.body.text);
-//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body.text) );
-//   res.send({});
+// // router.get('/main', isAuthenticated, function(req, res, next){
+// //   res.render('main', {user_info : req.user});
+// // });
+
+// router.get('/script', isAuthenticated, function(req, res, next){
+//   res.render('script');
 // });
 
-
-// router.post('/api/bitmex', function(req,res){
-//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-//   async.waterfall([
-//     function init(cb){
-//         var data ={
-//             ticker : 0, //현재가
-//             walletBalance : 0, //지갑잔고
-//             marginBalance : 0, //마진 밸런스
-//             availableMargin : 0, // 사용가능잔고
-//             leverage : 1, //setting값 
-//             margin : 0.1, //setting값
-//             openingQty : 0, // 들어가 있는 수량
-//             isSide : 'none', //들어가 있는 side// Sell or Buy
-//         }
-//         cb(null, data);
-//     },    
-//     function ticker(data,cb){ //현재가 조회
-//         var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','trade','symbol='+symbol+'&count=1'+'&reverse='+true);//'currency=XBt'
-//         request(requestOptions, function(error,response,body){
-//             if(error) {
-//                 console.log("error : " +error);
-//                 res.send(error);
-//                 return;
-//             }
-//             var json = JSON.parse(body);
-//             console.log(body);
-//             data.ticker = json[0].price;
-//             cb(null, data);
-//         });
-//     },
-//     function position(data, cb){
-//       var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','position','');//'currency=XBt'
-//       request(requestOptions, function(err,response,body){
-//           if(err) {
-//               console.log(err);
-//               return;
-//           }
-//           //console.log(body);
-//           var json = JSON.parse(body);
-//           //console.log(json);
-//           for(i=0; i<json.length; i++){
-//               if(json[i].currentQty > 0 && json[i].symbol==='XBTUSD'){
-//                   console.log("매수");
-//                   data.openingQty = json[i].currentQty;
-//                   data.isSide = "Buy";
-//               }else if(json[i].currentQty < 0 && json[i].symbol==='XBTUSD'){
-//                   console.log("매도");
-//                   data.openingQty = json[i].currentQty;
-//                   data.isSide = "Sell";
-//               }
-//           }
-//           cb(null, data);
-//       });
-//     },
-//     function order1(data, cb){ //주문1
-      
-//       if(data.isSide === req.body.side){ //진입한 포지션 === 요청포지션
-//         console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
-//         res.send({}); 
-//         return;
-//       }
-     
-//       if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
-//         cb(null, data);
-//       }
-//       else if(req.body.side === 'Exit'){ //포지션종료
-//         console.log("포지션 종료"); //로직종료
-//         var requestClearHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order/closePosition', {symbol : symbol});
-//         request(requestClearHeader, function(error, response, body) {
-//           if(error){
-//             console.log(error)    
-//             res.send(error);
-//             return;
-//           }
-//           res.send({}); 
-//           return;
-//         });
-//       }
-//       else if(data.isSide === 'Buy' || data.isSide === 'Sell'){ //진입한 포지션O && Buy or Sell
-//         var side = req.body.side;
-//         var orderQty =  Math.abs(data.openingQty); //기존 수량 그대로 주문
-//         var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
-//           {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
-
-//         request(requestHeader, function(error, response, body){
-//             if(error){
-//             console.log(error)    
-//             res.send(error);
-//             return;
-//           }
-//           console.log("주문1 : " + body);
-//           cb(null, data);
-//         });
-//       }
-//     },
-//     function getUserMargin(data, cb){ //잔액조회
-//       if(req.body.side === 'Exit'){
-//         return cb(null, data);
-//       }
-      
-//       var requestOptions = setRequestHeader(apiKeyId, apiSecret, 'GET','user/margin','currency=XBt');
-//       request(requestOptions, function(error, response, body){
-//           if(error){
-//               console.log(error);
-//               res.send(error);
-//               return;
-//           }
-//           var json = JSON.parse(body);
-//           data.walletBalance = json.walletBalance / 100000000;
-//           data.marginBalance = json.marginBalance / 100000000;
-//           data.availableMargin = json.availableMargin / 100000000;
-//           //console.log("margin : " + body);
-//           cb(null, data);
-//       });
-//     },
-//     function order2(data, cb){
-//       if(req.body.side === 'Exit'){
-//         return cb(null, data);
-//       }
-
-//       var orderQty = Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker) ));
-//       var side = req.body.side;
-//       var requestHeader = setRequestHeader(apiKeyId, apiSecret, 'POST','order',
-//                   {symbol : symbol, side : side, orderQty : orderQty, ordType : "Market", text : "auto"});
-      
-//       request(requestHeader, function(error, response, body){
-//           if(error){
-//               console.log(error)    
-//               res.send(error);
-//               return;
-//           }
-//           console.log("주문2 : " + body);
-//           //var resBody = JSON.parse(body);
-//           cb(null, data);
-//       });
+// router.get('/api/findScript', isAuthenticated, function(req, res, next){
+//   script.find({}, function(error, json){
+//     if(error){
+//       console.log(error);
+//       return;
 //     }
-//   ],function(error, data){
-//       if(error){
-//           console.log("bitmex waterfall error : " + error);
-//           res.send(error);
-//           return;
-//       }
-//       res.send({});
+//     res.send(json);
 //   });
 // });
 
+// router.post('/api/insertScript', isAuthenticated, function(req, res, next){
+//   console.log('/api/insertScript');
+//   var data = new Object(req.body);
+//   console.log(data);
+//   var obj = {
+//     scriptName  : req.body.scriptName,
+//     scriptNo  : Number(req.body.scriptNo),
+//     version : Number(req.body.version)
+//   }
 
-// router.post('/api/upbit', function(req,res){
-//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-//   async.waterfall([
-//     function init(cb){
-//       var data = {
-//         side : '',
-//         ordType : 'Limit',
-//         ask : [],
-//         bid : []
+//   script.insertMany(obj, function(error, body){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     console.log(body);
+//     res.send({});
+//   });
+// });
+
+// router.post('/api/removeScript', isAuthenticated, function(req, res, next){
+//   var deleteArr = req.body.deleteArr; //start or stop
+//   var length = deleteArr.length;
+//   console.log(deleteArr)
+//   for(i=0; i<deleteArr.length; i++){
+//     script.findByIdAndDelete(deleteArr[i],function(error, json){
+//       if(error){
+//         console.log("error ㅏㄹ생:"+error);
+//         res.send({});
+//         return;
 //       }
-//       var side = req.body.side;
-//       (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
       
-//       cb(null, data);
-//     },
-//     function orderbook_upbit(data, cb){ //업비트 매수/매도 조회
-//       //3.업비트
-//       upbit.orderbook('KRW-BTC', function(error, response, body){
+//     });
+//   }
+//   res.send({});
+// });
+
+// router.get('/positionAll', isAuthenticated, function(req, res, next){
+//   res.render('positionAll');
+// });
+
+
+// router.get('/api/positionAll', isAuthenticated, function(req, response, next){
+//   var list = [];
+//   var last_price = 0;
+//     // console.log(res);
+//     async.waterfall([
+//       function readSetting(cb){
+//         var set_list =[];
+//         setting.find({execFlag : true},function(error,res){
 //           if(error){
-//               console.log("업비트 매수/매도 조회 error1 : " + error);
-//               return;
+//             console.log(error);
+//             return;
 //           }
-
-//           try{
-//               var json = JSON.parse(body);
-//           }catch(error){
-//               console.log("업비트 매수/매도 조회 error2 : " + error);
-//               return;
+//           console.log("readSetting");
+//           console.log(res);
+        
+//           for(i=0; i<res.length; i++){
+//             if(res[i].site.indexOf('bitmex') !== -1){
+//               set_list.push(res[i]);    
+//             }
 //           }
-
-//           if(typeof(json["error"]) === 'object'){
-//               console.log("업비트 잔액조회 조회 error1 : " + body);
-//               return;
-//           }
+//           cb(null, set_list);
+//         });
+//       },
+//       function ticker(set_list, cb){
+        
+//         if(set_list.length > 0){
           
-//           var obj = parse('upbit', json);
-//           data.ask = {price : obj.asks[0].price, amount : obj.asks[0].amount};
-//           data.bid = {price : obj.bids[0].price, amount : obj.bids[0].amount};
-//           cb(null, data);
+//           var requestOptions = setRequestHeader(set_list[0].url, set_list[0].apiKey, set_list[0].secreteKey,'GET','trade','symbol=XBTUSD&count=1&reverse=true');
+//           request(requestOptions, function(err,responsedata,body){
+//             if(err){
+//               console.log(err);
+//             }
+//             console.log("ticker");
+//             console.log(body);
+          
+//             var obj = JSON.parse(body);
+//             last_price = obj[0].price;
+//             cb(null, set_list); 
+//           })
+//         }else{
+//           cb(null, set_list);
+//         }
+//       },
+//       function getPosition(set_list, cb){
+//         for(i=0; i<set_list.length; i++){
+//           setTimeout(getPosition_bitmex(set_list[i], function(error, data){
+//             if(error){
+//               console.log(error);
+//               return;
+//             }
+//             console.log("getPosition");
+//             console.log(data);
+//             // console.log("data : ");
+//             // console.log(data);
+
+//             list.push(data);
+//             if(set_list.length === list.length){
+
+//               cb(null);
+//             }
+//           }), 0);
+//         }
+//       },
+//       function readScriptInfo(cb){
+//         if(list.length === 0){
+//           return cb(null);
+//         }
+
+//         script.find({}, function(error, res){
+//           if(error){
+//             console.log(error);
+//             return;
+//           }
+
+//           for(i=0; i<list.length; i++){
+//             list[i].scriptName = "";
+//             list[i].version = "";
+//           }
+
+//           for(i=0; i<list.length; i++){
+//             for(j=0; j<res.length; j<j++){
+//               if(list[i].scriptNo === res[j].scriptNo){
+//                 list[i].scriptName = res[j].scriptName
+//                 list[i].version = res[j].version;
+//               }
+//             }
+//           }
+//           cb(null);
+//         })
+//       }
+//     ], function(error, results){
+//       if(error){
+//         console.log(error);
+//       }
+//       console.log("waterfall 결과");
+//       console.log(list);
+      
+//       console.log('last_price : '+ last_price);
+//       list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
+//         return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
 //       });
-//     },
-//     function order1(data, cb){ //주문1
-//       var amount = Number((1200 / data[data.side].price).toFixed(4));
-//       console.log(data);
-//       console.log("amount : "+amount);
-//       var revSide = '';
-//       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
-//       upbit.order("KRW-BTC", data.side, data[revSide].price, amount, function(error, response, body){
+//       response.send({last_price : last_price, list : list});
+//     });
+// });
+
+// router.get('/positionAll_internal', isAuthenticated, function(req, res, next){
+//   res.render('positionAll_internal');
+// });
+
+// router.get('/api/positionAll_internal', isAuthenticated, function(req, response, next){
+//   var list = [];
+//   var last_price = 0;
+
+//   //실제로 동작중인 국내거래소 셋팅값을 가져와라
+//   setting.find({execFlag : true, site_type : "korean"},function(error, set_list){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     console.log(set_list);
+//     var list=[];
+//     if(set_list.length ===0){
+//       response.send({last_price :0, list : list});
+//       return;
+//     }
+//     console.log(set_list.length);
+//     //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
+//     for(i=0; i<set_list.length; i++){
+//       console.log("positionAll_internal");
+//       setTimeout(getPosition_korea(set_list[i], function(error, data){
 //         if(error){
 //           console.log(error);
 //           return;
 //         }
-//         console.log(body);
-//         cb(null,data);
-//       });
+//         list.push(data);
+//         console.log(data);
+//         if(list.length === set_list.length){
+//           //스크립트 이름 넣기
+//           readScriptInfo(list, function(error, new_list){
+//             if(error){
+//               console.log(error);
+//               return;
+//             }
+//             //abcd 순 정렬
+//             new_list.sort(ascending);
+//             response.send({last_price : list[0].ticker, list : list});
+//           });
+//         }
+//       }), 0);
 //     }
-//   ],function(error, data){
-//       if(error){
-//           console.log("waterfall error : " + error);
-//           res.send(error);
-//           return;
-//       }
-//       res.send({});
 //   });
 // });
 
+// function readScriptInfo(list, cb){
+//   if(list.length === 0){
+//     return cb(null);
+//   }
 
-// router.post('/api/coinone', function(req,res){
-//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-//   async.waterfall([
-//     function init(cb){
-//       var data = {
-//         side : '',
-//         ask : [],
-//         bid : []
-//       }
-//       var side = req.body.side;
-//       (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
-//       cb(null, data);
-//     },
-//     function orderbook_coinone(data, cb){ //업비트 매수/매도 조회
-//       //3.업비트
-//       coinone.orderbook("BTC", function(error, response, body){
-//         if(error){
-//             logger.error("코인원 매수/매도 값 조회 error1 : " + error);
-//             return;
+//   script.find({}, function(error, res){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+
+//     for(i=0; i<list.length; i++){
+//       list[i].scriptName = "";
+//       list[i].version = "";
+//     }
+
+//     for(i=0; i<list.length; i++){
+//       for(j=0; j<res.length; j<j++){
+//         if(list[i].scriptNo === res[j].scriptNo){
+//           list[i].scriptName = res[j].scriptName
+//           list[i].version = res[j].version;
 //         }
-        
-//         try{
-//             var json = JSON.parse(body);
-//         }catch(error){
-//             logger.error("코인원 매수/매도 값 조회 error1 : " + error);
-//             return;
-//         }
-        
-//         if(json.errorCode !== "0"){
-//             logger.error("코인원 매수/매도 값 조회 error2 : " + body);
-//             return;
-//         }else{
-//             //console.log("2.코인원 매수/매도 조회 성공");
-//             data.ask = {price : Number(json.ask[0].price), amount : Number(json.ask[0].qty) };
-//             data.bid = {price : Number(json.bid[0].price), amount : Number(json.bid[0].qty) };
-//             cb(null, data);
-//         }
-//       });
-//     },
-//     function order1(data, cb){ //주문1
-//       var amount = Number((1200 / data[data.side].price).toFixed(4));
-//       console.log(data);
-//       console.log("amount : "+amount);
-//       var revSide = '';
-//       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
-//       if(data.side === 'bid'){
-//         coinone.limitBuy("BTC", data[revSide].price, amount, function(error, response, body){
-//           if(error){
-//               console.log("코인원 주문에러 : "+error);
-//               return;
-//           }
-//           try{
-//               var json = JSON.parse(body);
-//           }catch(error){
-//             console("코인원 주문에러 error1 : " + error);
-//             return;
-//           }
-//           if(json.errorCode !== "0"){
-//             console("코인원 주문에러 error2 : " + body);
-//             return;
-//           }
-//           console.log(body);
-//           cb(null, data);
-//         });
-//       }else if(data.side === 'ask'){
-//         coinone.limitSell("BTC", data[revSide].price, amount, function(error, response, body){
-//           if(error){
-//               console.log("코인원 주문에러 : "+error);
-//               return;
-//           }
-//           try{
-//               var json = JSON.parse(body);
-//           }catch(error){
-//             console("코인원 주문에러 error1 : " + error);
-//             return;
-//           }
-//           if(json.errorCode !== "0"){
-//             console("코인원 주문에러 error2 : " + body);
-//             return;
-//           }
-//           console.log(body);
-//           cb(null, data);
-//         });
 //       }
 //     }
-//   ],function(error, data){
+//     cb(null, list);
+//   })
+// }
+
+// // 대소문자 무시 ( toLowerCase ) 
+// function ascending ( a , b ) {  
+//   var a = a.site.toString().toLowerCase(); 
+//   var b = b.site.toString().toLowerCase(); 
+//   return ( a < b ) ? -1 : ( a == b ) ? 0 : 1; 
+// } 
+
+// function getPosition_korea(set, cb){
+//   return function(){
+//     var predicate={}
+//     if(set.site === 'bithumb') predicate = getPosition_bithumb;
+//     else if(set.site === 'coinone') predicate = getPosition_coinone;
+//     else if(set.site === 'upbit') predicate = getPosition_upbit;
+//     else if(set.site === 'korbit') predicate = getPosition_korbit;
+
+//     console.log("getPosition_korea");
+//     //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
+//     setTimeout(predicate(set, function(error, data){
 //       if(error){
-//           console.log("waterfall error : " + error);
-//           res.send(error);
-//           return;
+//         console.log(error);
+//         return;
 //       }
-//       res.send({});
-//   });
-// });
-
-// router.post('/api/bithumb', function(req,res){
-//   var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
-//   console.log("[" + date.toISOString() + "] : " + JSON.stringify(req.body));
-//   async.waterfall([
-//     function init(cb){
-//       var data = {
-//         side : '',
-//         ask : [],
-//         bid : []
-//       }
-//       var side = req.body.side;
-//       (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
-//       cb(null, data);
-//     },
-//     function orderbook_bithumb(data, cb){ //빗썸 매수/매도 조회
-//       bithumAPI.orderbook("BTC",function(error,response, body){
-//         if(error){
-//             console.log("빗썸 매수/매도 값 조회 error1 : " + error);
-//             return;
-//         }
-
-//         try{
-//             var json = JSON.parse(body);
-//         }catch(error){
-//             console.log("빗썸 매수/매도 값 조회 error1 : " + error);
-//             return;
-//         }
-
-//         if(json.status !== "0000"){
-//             console.log("빗썸 매수/매도 값 조회 error2 : " + body);
-//             return;
-//         }
-        
-//         data.ask = {price : Number(json.data.asks[0].price), amount : Number(json.data.asks[0].quantity) };
-//         data.bid = {price : Number(json.data.bids[0].price), amount : Number(json.data.bids[0].quantity) };
-//         cb(null, data);
-//       });
-//     },
-
-//     function balance_bithumb(data,cb){
-//       var rgParams = {
-//         currency : "BTC"
-//       };
-    
-//       bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
-//         if(error){
-//             console.log("빗썸 balance 값 조회 error1 : " + error);
-//             return;
-//         }
-//         try{
-//             var json = JSON.parse(body);
-//         }catch(error){
-//           console.log("빗썸 balance 값 조회 error1 : " + error);
-//             return;
-//         }
-
-//         if(json.status !== "0000"){
-//           console.log("빗썸 balance 값 조회 error2 : " + body);
-//             return;
-//         }
-//         console.log(body);
-//         cb(null,data);
-//       });
-//     },
-//     function order1(data, cb){ //주문1
       
-//       console.log(data);
-//       console.log("amount : "+amount);
-//       var revSide = '';
-//       (data.side === 'bid')? revSide = 'ask' : revSide = 'bid';
-//       var amount = Number((10000 / data[revSide].price).toFixed(4));
-//       var rgParams = {
-//         order_currency : 'BTC',
-//         payment_currency : 'KRW',
-//         price : data[revSide].price,
-//         type : data.side,
-//         units : amount
+//       cb(null, data);      
+//     }), 0);
+//   }
+// }
+
+// function getPosition_bithumb(set, cb){
+//   return function(){
+//     var bithumAPI={};
+//     var total_krw =0;
+//     var total_btc =0;
+//     async.waterfall([
+//       function init(cb){
+//         console.log("getPosition_coinone");
+//         //사이트, 스크립트, 마진, 레버리지
+//         bithumAPI = new BithumAPI(set.apiKey, set.secreteKey);
+//         var data = {
+//           site : set.site,//사이트
+//           scriptNo : set.scriptNo, //스크립트
+//           isSide : "",
+//           totalAsset : 0,
+//           size: 0,
+//           value : 0,
+//           price : 0,
+//           margin : set.margin,//마진
+//           leverage : set.leverage, //레버리지
+//           benefit : 0,
+//           benefitRate: 0,
+//           ticker :0
+//         }
+//         cb(null, data);
+      
+//       },
+//       function balance(data, cb){
+//         //포지션(long), 보유수량, 가치, 현재자산(총krw)
+//         var rgParams = {
+//           currency : "BTC"
 //       };
-//       console.log(rgParams);
-//       bithumAPI.bithumPostAPICall('/trade/place', rgParams, function(error, response, body){
+      
+//       bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
 //           if(error){
-//               console.log("빗썸 주문에러 error1 : " + error);
+//               console.log("빗썸 balance 값 조회 error1 : " + error);
 //               return;
 //           }
 
 //           try{
 //               var json = JSON.parse(body);
 //           }catch(error){
-//               console.log("빗썸 주문에러 error2 : " + error);
+//               console.log("빗썸 balance 값 조회 error1 : " + error);
 //               return;
 //           }
 
 //           if(json.status !== "0000"){
-//               console.log("빗썸 주문에러 조회 error3 : " + body);
+//               console.log("빗썸 balance 값 조회 error2 : " + body);
 //               return;
 //           }
-//           console.log(JSON.stringify(body));
-//           cb(null,data);
-//       });
-//     }
-//   ],function(error, data){
-//       if(error){
-//           console.log("waterfall error : " + error);
-//           res.send(error);
-//           return;
-//       }
-//       res.send({});
-//   });
-// });
+          
+//           data.totalAsset =  Math.floor(Number(json.data["total_krw"]));
+//           data.size =  fixed4((Number(json.data["total_btc"])));
+//           var avail_btc = fixed4((Number(json.data["available_btc"])));
 
-// function setRequestHeader(apiKey, apiSecret, verb, endpoint, data){
+//           if(avail_btc > 0.0001){ //* data.ticker 
+//             data.isSide = "long"
+//           }else{
+//             data.isSide = "none"
+//           }
+//           cb(null, data);
+//         });
+//       },
+//       function ticker(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null, data);
+//         }
+//         bithumAPI.ticker("BTC", function(error, response, body){
+//           if(error){
+//             console.log("빗썸 balance 값 조회 error1 : " + error);
+//             return;
+//           }
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//             console.log("빗썸 balance 값 조회 error1 : " + error);
+//             return;
+//           }
+          
+//           if(json.status !== "0000"){
+//             console.log("빗썸 balance 값 조회 error2 : " + body);
+//             return;
+//           }
+//           var json = JSON.parse(body);
+//           data.ticker = json.data.closing_price;
+//           data.value = Math.floor(data.size * data.ticker);
+//           cb(null, data);
+//         });
+//       },
+//       function trade_history(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null,data);
+//         }
+        
+//         //진입전자산, 진입가격
+//         order.find({site : data.site, type : "long"}).sort({end_time : "desc"}).exec(function(error, res){
+//           if(error){
+//               console.log(error);
+//               return;
+//           }
+//           if(res.length > 0){
+//               data.price = res[0].price;
+//               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
+//               data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
+//           }else{
+//               data.benefit =0;
+//               data.benefitRate =0;
+//           }
+//           cb(null, data);
+//         });
+//       }
+//     ], function(error, data){
+//       if(error){
+//         console.log(error);
+//         return;
+//       }
+//       return cb(null, data);
+//     });
+//   }
+// }
+
+// function getPosition_coinone(set, cb){
+//   return function(){
+//     var coinone={};
+//     var total_krw =0;
+//     var total_btc =0;
+//     async.waterfall([
+//       function init(cb){
+//         console.log("getPosition_coinone");
+//         //사이트, 스크립트, 마진, 레버리지
+//         coinone = new coinoneAPI(set.apiKey, set.secreteKey);
+//         var data = {
+//           site : set.site,//사이트
+//           scriptNo : set.scriptNo, //스크립트
+//           isSide : "",
+//           totalAsset : 0,
+//           size: 0,
+//           value : 0,
+//           price : 0,
+//           margin : set.margin,//마진
+//           leverage : set.leverage, //레버리지
+//           benefit : 0,
+//           benefitRate: 0,
+//           ticker :0
+//         }
+//         cb(null, data);
+      
+//       },
+//       function balance(data, cb){
+//         //포지션(long), 보유수량, 가치, 현재자산(총krw)
+//         coinone.balance(function(error, httpResponse, body){
+//           if(error){
+//               console.log("코인원 balance 값 조회 error1 : " + error);
+//               return;
+//           }
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               console.log("코인원 balance 값 조회 error1 : " + error);
+//               return;
+//           }
+//           if(json.errorCode !== "0"){
+//             console.log("코인원 balance 값 조회 error2 : " + body);
+            
+//           }else{
+//             data.totalAsset =  Math.floor(Number(json["krw"].balance));
+//             data.size =  fixed4(Number(json["btc"].balance));
+//             var avail_btc = Number(json["btc"].avail);
+
+//             if(avail_btc > 0.0001){ //* data.ticker 
+//               data.isSide = "long"
+//             }else{
+//               data.isSide = "none"
+//             }
+//             cb(null, data);
+//           }
+//         });
+//       },
+//       function ticker(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null, data);
+//         }
+//         coinone.ticker("BTC", function(error, response, body){
+//           if(error){
+//             logger.error("코인원 매수/매도 값 조회 error1 : " + error);
+//             return;
+//           }
+          
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               logger.error("코인원 매수/매도 값 조회 error1 : " + error);
+//               return;
+//           }
+          
+//           if(json.errorCode !== "0"){
+//               logger.error("코인원 매수/매도 값 조회 error2 : " + body);
+//               return;
+//           }
+//           var json = JSON.parse(body);
+         
+//           data.ticker = Number(json.last);
+//           data.value = Math.floor(data.size * data.ticker);
+//           cb(null, data);
+        
+//         });
+
+//       },
+//       function trade_history(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null,data);
+//         }
+        
+//         //진입전자산, 진입가격
+//         order.find({site : data.site, type : "long"}).sort({end_time : "desc"}).exec(function(error, res){
+//           if(error){
+//               console.log(error);
+//               return;
+//           }
+//           if(res.length > 0){
+//               data.price = res[0].price;
+//               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
+//               data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
+//           }else{
+//               data.benefit =0;
+//               data.benefitRate =0;
+//           }
+//           cb(null, data);
+//         });
+//       }
+//     ], function(error, data){
+//       if(error){
+//         console.log(error);
+//         return;
+//       }
+//       return cb(null, data);
+//     });
+//   }
+// }
+
+// function getPosition_upbit(set, cb){
+//   return function(){
+//     var upbit={};
+//     var total_krw =0;
+//     var total_btc =0;
+//     async.waterfall([
+//       function init(cb){
+//         console.log("getPosition_upbit");
+//         //사이트, 스크립트, 마진, 레버리지
+//         upbit = new upbitAPI(set.apiKey, set.secreteKey);
+//         var data = {
+//           site : set.site,//사이트
+//           scriptNo : set.scriptNo, //스크립트
+//           isSide : "",
+//           totalAsset : 0,
+//           size: 0,
+//           value : 0,
+//           price : 0,
+//           margin : set.margin,//마진
+//           leverage : set.leverage, //레버리지
+//           benefit : 0,
+//           benefitRate: 0,
+//           ticker :0
+//         }
+//         cb(null, data);
+      
+//       },
+//       function balance(data, cb){
+//         //포지션(long), 보유수량, 가치, 현재자산(총krw)
+//         upbit.accounts(function(error, response, body){
+//           if(error){
+//               console.log("업비트 잔액조회 조회 error1 : " + error);
+//               return;
+//           }
+
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               console.log("업비트 잔액조회 조회 error1 : " + error);
+//               return;
+//           }
+          
+//           if(typeof(json["error"]) === 'object'){
+//               console.log("업비트 잔액조회 조회 error1 : " + body);
+//               return;
+//           }
+//           var avail_btc=0;
+//           json.forEach(element => {
+//               if(element.currency === "KRW"){ //KRW
+//                 data.totalAsset = Math.floor(Number(element.balance) + Number(element.locked));
+//               }else if(element.currency === "BTC"){
+//                 data.size = fixed4(Number(element.balance) + Number(element.locked));
+//                 avail_btc = fixed4(Number(element.balance));
+//               }
+//           });
+//           if(avail_btc > 0.0003){ //* data.ticker 
+//             data.isSide = "long"
+//           }else{
+//             data.isSide = "none"
+//           }
+//           cb(null, data);
+//         });
+//       },
+//       function ticker(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null, data);
+//         }
+
+//         upbit.ticker("KRW-BTC", function(error, response, body){
+//           if(error){
+//             console.log("업비트 현재가 조회 error1 : " + error);
+//             return;
+//           }
+          
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               console.log("업비트 현재가 조회 error2 : " + error);
+//               return;
+//           }
+
+//           if(typeof(json["error"]) === 'object'){
+//               console.log("업비트 현재가 조회 error1 : " + body);
+//               return;
+//           }
+
+//           var json = JSON.parse(body);
+//           // console.log("ticker");
+//           // console.log(json);
+//           data.ticker = json[0].trade_price;
+//           data.value = Math.floor(data.size * data.ticker);
+//           cb(null, data);
+         
+//         });
+//       },
+//       function trade_history(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null,data);
+//         }
+        
+//         //진입전자산, 진입가격
+//         order.find({site : data.site, type : "long"}).sort({end_time : "desc"}).exec(function(error, res){
+//           if(error){
+//               console.log(error);
+//               return;
+//           }
+//           if(res.length > 0){
+//               data.price = res[0].price;
+//               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
+//               data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
+//           }else{
+//               data.benefit =0;
+//               data.benefitRate =0;
+//           }
+//           cb(null, data);
+//         });
+//       }
+//     ], function(error, data){
+//       if(error){
+//         console.log(error);
+//         return;
+//       }
+//       return cb(null, data);
+//     });
+//   }
+// }
+
+// function getPosition_korbit(set, cb){
+//   return function(){
+//     var korbit={};
+//     var total_krw =0;
+//     var total_btc =0;
+//     async.waterfall([
+//       function init(cb){
+//         console.log("getPosition_korbit");
+//         //사이트, 스크립트, 마진, 레버리지
+//         korbit = new korbitAPI(set.apiKey, set.secreteKey);
+//         korbit.access_token(function(error, response, body){
+//           if(error){
+//               console.log(error);
+//               return;
+//           }
+
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               console.log(error);
+//               return;
+//           }
+//           korbit.token = json.access_token;
+//           var data = {
+//             site : set.site,//사이트
+//             scriptNo : set.scriptNo, //스크립트
+//             isSide : "",
+//             totalAsset : 0,
+//             size: 0,
+//             value : 0,
+//             price : 0,
+//             margin : set.margin,//마진
+//             leverage : set.leverage, //레버리지
+//             benefit : 0,
+//             benefitRate: 0,
+//             ticker :0
+//           }
+//           cb(null, data);
+//         });
+//       },
+//       function balance(data, cb){
+//         //포지션(long), 보유수량, 가치, 현재자산(총krw)
+//         korbit.balances(function(error, response, body){
+//           if(error){
+//               console.log("코빗 balance 값 조회 error1 : " + error);
+//               return;;
+//           }
+         
+//           try{
+//               var json = JSON.parse(body);
+//           }catch(error){
+//               console.log("코빗 balance 값 조회 error2 : " + error);
+//               return;
+//           }
+//           data.totalAsset =  Math.floor(Number(json["krw"].available) + Number(json["krw"].trade_in_use));
+//           data.size =  fixed4(Number(json["btc"].available) + Number(json["btc"].trade_in_use));
+//           var avail_btc = fixed4(Number(json["btc"].available));
+//           if(avail_btc > 0.0001){ //* data.ticker 
+//             data.isSide = "long"
+//           }else{
+//             data.isSide = "none"
+//           }
+//           cb(null, data);
+//         });
+//       },
+//       function ticker(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null, data);
+//         }
+
+//         //현재가
+//         korbit.ticker("btc_krw", function(error, response, body){
+//           if(error){
+//             console.log("코빗 ticker 값 조회 error1 : " +error);
+//             return;
+//           }
+//           try{
+//             var json = JSON.parse(body);
+//           }catch(error){
+//               console.log("코빗 ticker 값 조회 error2 : " + error);
+//               return;
+//           }
+//           data.ticker = Number(json.last);
+//           data.value = Math.floor(data.size * data.ticker);
+//           cb(null, data);
+//         });
+//       },
+//       function trade_history(data, cb){
+//         if(data.isSide === 'none'){
+//           return cb(null,data);
+//         }
+        
+//         //진입전자산, 진입가격
+//         order.find({site : data.site, type : "long"}).sort({end_time : "desc"}).exec(function(error, res){
+//           if(error){
+//               console.log(error);
+//               return;
+//           }
+//           if(res.length > 0){
+//               data.price = res[0].price;
+//               data.benefit = (data.value + data.totalAsset) - res[0].totalAsset; //탈출자산 - 진입자산
+//               data.benefitRate = (data.benefit / res[0].totalAsset) * 100;
+//           }else{
+//               data.benefit =0;
+//               data.benefitRate =0;
+//           }
+//           cb(null, data);
+//         });
+//       }
+//     ], function(error, data){
+//       if(error){
+//         console.log(error);
+//         return;
+//       }
+//       return cb(null, data);
+//     });
+//   }
+// }
+
+// function getPosition_bitmex(set, cb){
+//   return function(){
+//     var requestOptions = setRequestHeader(set.url, set.apiKey, set.secreteKey,'GET','position','');
+//     request(requestOptions, function(err,responsedata,body){
+//       if(err){
+//         console.log(err);
+//       }
+//       console.log("getPosition_bitmex");
+//       console.log(body);
+//       var obj = JSON.parse(body);
+//       var data = bitmex_position_notSearch(set);
+      
+//       if(obj.length === 0){
+//         // data["leverage"] = set.leverage;
+//         // data["margin"] = set.margin;
+//         // data["scriptNo"] = set.scriptNo;
+//         return cb(null, data);
+//       }
+//       for(var i=0; i<obj.length; i++){
+//         if(obj[i].symbol === 'XBTUSD'){
+//           data = bitmex_position_parse(set.site, obj[i]);
+//           data["leverage"] = set.leverage;
+//           data["margin"] = set.margin;
+//           data["scriptNo"] = set.scriptNo;
+//         }
+//       }
+
+//       var requestOptions = setRequestHeader(set.url, set.apiKey, set.secreteKey, 'GET','user/margin','currency=XBt');
+//       request(requestOptions, function(error, response, body){
+//           if(error){
+//               console.log(error);
+//               //res.send(error);
+//               return;
+//           }
+//           var json = JSON.parse(body);
+//           data.walletBalance = json.walletBalance / 100000000;
+//           cb(null, data);
+//       });
+//     })
+//   }
+// }
+
+// function fixed4(num){
+//   if(Number(num) < 0.0001){
+//     return 0;
+//   }
+  
+//   var str = new String(num);
+//   var arr = str.split(".");
+//   var str2 = arr[1].slice(0,4);
+//   return Number(arr[0] + '.' + str2);
+// }
+// function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
 //   path = '/api/v1/'+ endpoint;
 //   expires = new Date().getTime() + (60 * 1000); // 1 min in the future
 //   var requestOptions;
@@ -484,7 +904,7 @@
 //       };
 //       requestOptions = {
 //           headers: headers,
-//           url: bitmexURL+path,
+//           url: url+path,
 //           method: verb,
 //           body: postBody
 //       };
@@ -501,7 +921,7 @@
 //       };
 //       requestOptions = {
 //           headers: headers,
-//           url: bitmexURL+path + query,
+//           url: url+path + query,
 //           method: verb
 //       };
 //   }
@@ -509,54 +929,356 @@
 // }
 
 
-// function parse(site, json){
-//   if(site === 'upbit'){
-//       var upbit = {
-//           bids : new Array(),
-//           asks: new Array()
-//       }
-//       json[0].orderbook_units.forEach(element => {
-//           var askObj = new Object({
-//               price : element.ask_price,
-//               amount : element.ask_size,
-//           });
-
-//           var bidObj = new Object({
-//               price : element.bid_price,
-//               amount : element.bid_size,
-//           });
-//           upbit.asks.push(askObj);
-//           upbit.bids.push(bidObj);
-//       });
-
-//       return upbit;
+// function bitmex_position_notSearch(set){
+//   return { 
+//     site: set.site,
+//     symbol: 'XBTUSD',
+//     walletBalance : 0,
+//     size: 0,
+//     value: 0,
+//     avgEntryPrice: 0,
+//     markPrice: 0,
+//     liquidationPrice: 0,
+//     margin: set.margin,
+//     leverage: set.leverage,
+//     scriptNo : set.scriptNo,
+//     unrealisedPnl: 0,
+//     unrealisedRoePcnt: 0,
+//     realisedPnl: 0,
+//     isOpen: false
 //   }
 // }
 
-// router.post('/api/bithumb2',function(req,res){
-//   var rgParams = {
-//     currency : "BTC"
-//   };
+// function bitmex_position_parse(site, obj){
+//   var posObj = {};
+//   posObj["site"] = site;
+//   if(typeof(obj.symbol) !== "undefined" && obj.symbol !== null)
+//       posObj["symbol"] = obj.symbol;
 
-//   bithumAPI.bithumPostAPICall('/info/balance', rgParams, function(error, response, body){
+//   if(typeof(obj.currentQty) !== "undefined" && obj.currentQty !== null) 
+//       posObj["size"] = obj.currentQty;
+
+//   if(typeof(obj.homeNotional) !== "undefined" && obj.homeNotional !== null) 
+//       posObj["value"] = obj.homeNotional;
+
+//   if(typeof(obj.avgEntryPrice) !== "undefined" && obj.avgEntryPrice !== null){
+//     posObj["avgEntryPrice"] = obj.avgEntryPrice;
+//   }else{
+//     posObj["avgEntryPrice"] = 0;
+//   }
+      
+
+//   if(typeof(obj.markPrice) !== "undefined" && obj.markPrice !== null) 
+//       posObj["markPrice"] = obj.markPrice;
+
+//   if(typeof(obj.liquidationPrice) !== "undefined" && obj.liquidationPrice !== null) 
+//       posObj["liquidationPrice"] = obj.liquidationPrice;
+
+//   if(typeof(obj.maintMargin) !== "undefined" && obj.maintMargin !== null) 
+//       posObj["margin"] = obj.maintMargin;
+
+//   if(typeof(obj.leverage) !== "undefined" && obj.leverage !== null)
+//       posObj["leverage"] = obj.leverage;
+
+//   if(typeof(obj.unrealisedPnl) !== "undefined" && obj.unrealisedPnl !== null) 
+//       posObj["unrealisedPnl"] =  obj.unrealisedPnl * 0.00000001;
+
+//   if(typeof(obj.unrealisedRoePcnt) !== "undefined" && obj.unrealisedRoePcnt !== null) 
+//       posObj["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
+
+//   if(typeof(obj.realisedPnl) !== "undefined" && obj.realisedPnl !== null) 
+//       posObj["realisedPnl"] = obj.realisedPnl * 0.0000000001;
+  
+//   if(typeof(obj.isOpen) !== "undefined" && obj.isOpen !== null) 
+//       posObj["isOpen"] = new Boolean(obj.isOpen);
+  
+//   return posObj;
+  
+// }
+
+
+// router.get('/manage', isAuthenticated, function(req, res, next){
+//   var date = new Date();
+//   console.log("[" + date.toISOString() + "] : " + req.body);
+//   var status = {
+//     isMargin : {execBot : "unchecked", exec_bitmex : "unchecked", exec_bithumb : "unchecked", exec_coinone : "unchecked", exec_upbit : "unchecked" }
+//   }
+
+//   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
+
+//   botArr.push({botName : "marginTrade.js"});
+  
+//   setting.find({}, function(error, json){
 //     if(error){
-//         console.log("빗썸 balance 값 조회 error1 : " + error);
-//         return;
+//       console.log(error);
+//       return;
 //     }
-//     try{
-//         var json = JSON.parse(body);
-//     }catch(error){
-//         console.log("빗썸 balance 값 조회 error1 : " + error);
-//         return;
+//     console.log(json);
+//     for(i=0; i<json.length; i++){
+//       var flag = "unchecked";
+//       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
+//       status["isMargin"]["exec_"+json[i].site] = flag;
 //     }
 
-//     if(json.status !== "0000"){
-//         console.log("빗썸 balance 값 조회 error2 : " + body);
-//         return;
-//     }
-//     console.log(body);
-
+//     forever.list(false, function(err,processes){
+//       if(err){
+//           console.log("err : "+err);
+//           res.render('financialTradeSet',status);
+//       }
+//       else if(processes){
+//         console.log(processes);
+//         //실행중인 봇 체크 
+//         for(i=0; i<botArr.length; i++){
+//           for(j=0; j<processes.length; j++){
+//             if(processes[j].file.indexOf(botArr[i].botName) !== -1){
+//               botArr[i].isExec = "checked"; 
+//             }
+//           }
+//         }
+//         console.log("botArr : " + JSON.stringify(botArr));
+//       }
+      
+//       status["isMargin"]["execBot"] = botArr[0].isExec;
+  
+//       console.log("status2 호출 : " + JSON.stringify(status));
+//       res.render('manage',status);
+//     });
 //   });
 // });
 
- //module.exports = router;
+
+// router.post('/api/marginTrade', function(req,res){
+//   var sigData = {
+//     scriptNo : Number(req.body.scriptNo),
+//     side : req.body.side,
+//     side_num : Number(req.body.side_num),
+//     log : req.body.log,
+//     timestamp : new Date().getTime() + (1000 * 60 * 60 * 9)
+//   }
+//   signal.insertMany(sigData, function(error, data){
+//     if(error){
+//       console.log(error);
+//       res.send(error);
+//       return;
+//     }
+//     console.log(data);
+//     res.send({});
+//   });
+// });
+
+// router.get('/setting',isAuthenticated, function(req,res){
+//   var site = req.query.site;
+//   setting.findOne({site : site},function(error, json){
+//     if(error){
+//       res.render('setting',error);
+//       return;
+//     }
+//     console.log(json);
+//     res.render('setting',json);
+//   })
+// });
+
+// router.post('/api/setting', isAuthenticated, function(req,res){
+//   var json = new Object(req.body);
+//   var obj = {
+//     url : json.url,
+//     apiKey : json.apiKey,
+//     secreteKey : json.secreteKey,
+//     scriptNo : Number(json.scriptNo),
+//     leverage : Number(json.leverage),
+//     margin : Number(json.margin),
+//     minOrdCost : Number(json.minOrdCost),
+//     ordInterval : Number(json.ordInterval),
+//     minOrdRate : Number(json.minOrdRate),
+//     maxOrdRate : Number(json.maxOrdRate)
+//   }
+//   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     res.send({"msg" : "설정업데이트 성공"});
+//   });
+// });
+
+
+// router.get('/setting_status',isAuthenticated, function(req,res){
+//   var site = req.query.site;
+//   setting.findOne({site : site},function(error, json){
+//     if(error){
+//       res.render('setting',error);
+//       return;
+//     }
+    
+//     res.render('setting_status',json);
+//   })
+// });
+
+// router.post('/api/setting_status', isAuthenticated, function(req,res){
+//   var json = new Object(req.body);
+//   console.log(json);
+//   var obj = {
+//     side : json.side,
+//     side_num : Number(json.side_num)
+//   }
+//   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     console.log(body);
+//     res.send({"msg" : "설정업데이트 성공"});
+//   });
+// });
+
+// router.post('/api/botOnOff', isAuthenticated, function(req,res){
+//     //var botName = "/home/gmc/GMC_DefenceBot/" + req.body.id + ".js"; //봇이름
+//     var botPath = webSetting.botPath;
+//     var botName = botPath + req.body.id + ".js"; //봇이름
+//     var logFile = req.body.id + ".log." + moment().format("YYYY-MM-DD"); //로그 파일 이름
+//     var flag = req.body.flag; //start or stop
+//     console.log("botName : "+botName);
+//     console.log("logFile : "+ logFile);
+//     console.log("flag : "+flag);
+//     if(flag === "start"){ //봇시작
+//       console.log("봇시작");
+//       var options = {logFile : logFile, max: 3, silent: false, args: []};
+      
+//       forever.startDaemon(botName, options);
+//       res.send({msg : "start : " + botName, success : true, err : "", });
+      
+//     }else if("stop"){ //봇중지
+//       console.log("봇중지");
+//       forever.list(false, function(err, processes){
+//         if(err){
+//             console.log("err : "+err);
+//             res.send({msg : "stop", success : false, err : err});
+//             return;
+//         }
+//         if(processes){
+//             for(i=0; i<processes.length; i++){
+//               console.log("processes[i].file : " + processes[i].file);
+//               if(processes[i].file.indexOf(botName) !== -1){ 
+//                 var runner = forever.stop(processes[i].pid, true);
+//                 runner.on('stop', function (process) {
+//                     forever.log.info('Forever stopped process:' + '\n' + process);
+//                 });
+                        
+//                 runner.on('error', function(err) {
+//                     forever.log.error('Forever cannot find process with id: ' + err);
+//                     //process.exit(1);
+//                 });
+//               }
+//             }
+//         }
+//         res.send({msg : "stop : " + botName, success : true, err : ""});
+//       });
+//     }
+// });
+
+
+// router.post('/api/siteOnOff',isAuthenticated, function(req,res){
+//   var site = req.body.site;
+//   var execFlag = Boolean(Number(req.body.execFlag));
+//   console.log("site : " + site);
+//   console.log("execFlag : " + execFlag);
+
+//   setting.updateOne({site : site},{$set : {execFlag : execFlag}},function(error, body){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     res.send({});
+//   });
+// });
+
+// router.get('/log',function(req, res){
+//   var site = req.query.site;
+//   res.render('log',{site : site});
+// });
+
+// router.get('/api/log', isAuthenticated, function(req,res){
+//   var logDate = req.query.logDate;
+//   var site = req.query.site;
+//   var logFileName = "./log/"+site +".log." + logDate;  
+//   console.log("logFileName : "+logFileName);
+//   try {
+//     if (fs.existsSync(logFileName)) {
+//       //file exists
+//       fs.readFile(logFileName, (err, data) => {  
+//         if (err) throw err;
+//         var obj = {title : "<h2>"+site+ " 로그" + "</h2>", log : String(data).replace(/\n/g, "<br />"), existedLog : true, err : "" }
+//         res.send(obj);
+//       });
+//     }else{
+//       var obj = {existedLog : false, title : "", log : "", err : "파일이 존재하지 않습니다"}  
+//       res.send(obj);
+//     }
+//   }catch(err){
+//     var obj = {existedLog : false, title : "", log : "", err : "파일이 존재하지 않습니다"}
+//     res.send(obj);
+//   }
+// });
+
+// router.get('/orderHistory', isAuthenticated, function(req, res){
+//   var site = req.query.site;
+//   res.render('orderHistory',{site : site});
+// });
+
+// router.get('/api/orderHistory',isAuthenticated, function(req, res){
+//   console.log("/api/orderHistory 실행");
+//   var site = req.query.site;
+//   var logDate = req.query.logDate;
+//   if(logDate === undefined){
+//     logDate = new Date().toISOString().slice(0,10);
+//   }
+//   order.find({site : site, "start_time" : {"$gte": new Date(logDate+"T00:00:00.000Z"),"$lte": new Date(logDate+"T23:59:59.000Z")}}).sort({start_time : "desc"}).exec(function(error, result){
+//     if(error){
+//       console.log(error);
+//       res.send(error);
+//     }
+//     console.log(result);
+//     res.send(result);
+//   });
+// });
+
+// router.get('/orderHistoryTotal', isAuthenticated, function(req, res){
+//   var site = req.query.site;
+//   res.render('orderHistoryTotal',{site : site});
+// });
+
+
+// router.get('/api/orderHistoryTotal',isAuthenticated, function(req, res){
+//   console.log("/api/orderHistoryTotal 실행");
+//   var site = req.query.site;
+//   order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
+//     if(error){
+//       console.log(error);
+//       res.send(error);
+//     }
+//     console.log(result);
+//     res.send(result);
+//   });
+// });
+
+// router.get('/avg_order_history', isAuthenticated, function(req, res){
+//   var site_type = req.query.site_type;
+//   res.render('avg_order_history',{site_type : site_type});
+// });
+
+// router.get('/api/avg_order_history',isAuthenticated, function(req, res){
+//   console.log("/api/avg_order_history 실행");
+//   var site_type = req.query.site_type;
+//   console.log('site_type : '+ site_type);
+//   orderDB2.find({site_type : site_type}).sort({start_time : "desc"}).exec(function(error, result){
+//     if(error){
+//       console.log(error);
+//       res.send(error);
+//     }
+//     console.log(result);
+//     res.send(result);
+//   });
+// });
+
+
+//  module.exports = router;

@@ -70,25 +70,25 @@ router.get('/logout', function (req, res) {
 
 
 
-router.get('/changePW', isAuthenticated, function(req, res) {
+router.get('/changePW',  function(req, res) {
   res.render('changePW');
 });
 
 
 /* GET home page. */
-router.get('/', isAuthenticated, function(req, res){
+router.get('/',  function(req, res){
   res.redirect('manage');
 });
 
-// router.get('/main', isAuthenticated, function(req, res, next){
+// router.get('/main',  function(req, res, next){
 //   res.render('main', {user_info : req.user});
 // });
 
-router.get('/script', isAuthenticated, function(req, res, next){
+router.get('/script',  function(req, res, next){
   res.render('script');
 });
 
-router.get('/api/findScript', isAuthenticated, function(req, res, next){
+router.get('/api/findScript',  function(req, res, next){
   script.find({}, function(error, json){
     if(error){
       console.log(error);
@@ -98,7 +98,7 @@ router.get('/api/findScript', isAuthenticated, function(req, res, next){
   });
 });
 
-router.post('/api/insertScript', isAuthenticated, function(req, res, next){
+router.post('/api/insertScript',  function(req, res, next){
   console.log('/api/insertScript');
   var data = new Object(req.body);
   console.log(data);
@@ -118,7 +118,7 @@ router.post('/api/insertScript', isAuthenticated, function(req, res, next){
   });
 });
 
-router.post('/api/removeScript', isAuthenticated, function(req, res, next){
+router.post('/api/removeScript',  function(req, res, next){
   var deleteArr = req.body.deleteArr; //start or stop
   var length = deleteArr.length;
   console.log(deleteArr)
@@ -135,12 +135,12 @@ router.post('/api/removeScript', isAuthenticated, function(req, res, next){
   res.send({});
 });
 
-router.get('/positionAll', isAuthenticated, function(req, res, next){
+router.get('/positionAll',  function(req, res, next){
   res.render('positionAll');
 });
 
 
-router.get('/api/positionAll', isAuthenticated, function(req, response, next){
+router.get('/api/positionAll',  function(req, response, next){
   var list = [];
   var last_price = 0;
     // console.log(res);
@@ -245,11 +245,11 @@ router.get('/api/positionAll', isAuthenticated, function(req, response, next){
     });
 });
 
-router.get('/positionAll_internal', isAuthenticated, function(req, res, next){
+router.get('/positionAll_internal',  function(req, res, next){
   res.render('positionAll_internal');
 });
 
-router.get('/api/positionAll_internal', isAuthenticated, function(req, response, next){
+router.get('/api/positionAll_internal',  function(req, response, next){
   var list = [];
   var last_price = 0;
 
@@ -997,7 +997,7 @@ function bitmex_position_parse(site, obj){
 }
 
 
-router.get('/manage', isAuthenticated, function(req, res, next){
+router.get('/manage',  function(req, res, next){
   var date = new Date();
   console.log("[" + date.toISOString() + "] : " + req.body);
   var status = {
@@ -1066,7 +1066,7 @@ router.post('/api/marginTrade', function(req,res){
   });
 });
 
-router.get('/setting',isAuthenticated, function(req,res){
+router.get('/setting', function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
     if(error){
@@ -1078,7 +1078,36 @@ router.get('/setting',isAuthenticated, function(req,res){
   })
 });
 
-router.post('/api/setting', isAuthenticated, function(req,res){
+
+
+router.get('/setting', function(req,res){
+  var site = req.query.site;
+  setting.findOne({site : site},function(error, json){
+    if(error){
+      res.render('setting',error);
+      return;
+    }
+    console.log(json);
+    res.render('setting',json);
+  });
+});
+
+
+router.get('/api/read_setting', function(req,res){
+  var site = req.query.site;
+  setting.findOne({site : site},function(error, json){
+    if(error){
+      res.render('setting',error);
+      return;
+    }
+    console.log(json);
+    res.send(json);
+  });
+});
+
+
+
+router.post('/api/setting',  function(req,res){
   var json = new Object(req.body);
   var obj = {
     url : json.url,
@@ -1102,7 +1131,7 @@ router.post('/api/setting', isAuthenticated, function(req,res){
 });
 
 
-router.get('/setting_status',isAuthenticated, function(req,res){
+router.get('/setting_status', function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
     if(error){
@@ -1114,7 +1143,7 @@ router.get('/setting_status',isAuthenticated, function(req,res){
   })
 });
 
-router.post('/api/setting_status', isAuthenticated, function(req,res){
+router.post('/api/setting_status',  function(req,res){
   var json = new Object(req.body);
   console.log(json);
   var obj = {
@@ -1131,7 +1160,7 @@ router.post('/api/setting_status', isAuthenticated, function(req,res){
   });
 });
 
-router.post('/api/botOnOff', isAuthenticated, function(req,res){
+router.post('/api/botOnOff',  function(req,res){
     //var botName = "/home/gmc/GMC_DefenceBot/" + req.body.id + ".js"; //봇이름
     var botPath = webSetting.botPath;
     var botName = botPath + req.body.id + ".js"; //봇이름
@@ -1177,7 +1206,7 @@ router.post('/api/botOnOff', isAuthenticated, function(req,res){
 });
 
 
-router.post('/api/siteOnOff',isAuthenticated, function(req,res){
+router.post('/api/siteOnOff', function(req,res){
   var site = req.body.site;
   var execFlag = Boolean(Number(req.body.execFlag));
   console.log("site : " + site);
@@ -1197,7 +1226,7 @@ router.get('/log',function(req, res){
   res.render('log',{site : site});
 });
 
-router.get('/api/log', isAuthenticated, function(req,res){
+router.get('/api/log',  function(req,res){
   var logDate = req.query.logDate;
   var site = req.query.site;
   var logFileName = "./log/"+site +".log." + logDate;  
@@ -1220,12 +1249,12 @@ router.get('/api/log', isAuthenticated, function(req,res){
   }
 });
 
-router.get('/orderHistory', isAuthenticated, function(req, res){
+router.get('/orderHistory',  function(req, res){
   var site = req.query.site;
   res.render('orderHistory',{site : site});
 });
 
-router.get('/api/orderHistory',isAuthenticated, function(req, res){
+router.get('/api/orderHistory', function(req, res){
   console.log("/api/orderHistory 실행");
   var site = req.query.site;
   var logDate = req.query.logDate;
@@ -1242,13 +1271,13 @@ router.get('/api/orderHistory',isAuthenticated, function(req, res){
   });
 });
 
-router.get('/orderHistoryTotal', isAuthenticated, function(req, res){
+router.get('/orderHistoryTotal',  function(req, res){
   var site = req.query.site;
   res.render('orderHistoryTotal',{site : site});
 });
 
 
-router.get('/api/orderHistoryTotal',isAuthenticated, function(req, res){
+router.get('/api/orderHistoryTotal', function(req, res){
   console.log("/api/orderHistoryTotal 실행");
   var site = req.query.site;
   order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
@@ -1261,12 +1290,12 @@ router.get('/api/orderHistoryTotal',isAuthenticated, function(req, res){
   });
 });
 
-router.get('/avg_order_history', isAuthenticated, function(req, res){
+router.get('/avg_order_history',  function(req, res){
   var site_type = req.query.site_type;
   res.render('avg_order_history',{site_type : site_type});
 });
 
-router.get('/api/avg_order_history',isAuthenticated, function(req, res){
+router.get('/api/avg_order_history', function(req, res){
   console.log("/api/avg_order_history 실행");
   var site_type = req.query.site_type;
   console.log('site_type : '+ site_type);
