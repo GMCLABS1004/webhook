@@ -1055,13 +1055,16 @@ function bitmex_position_parse(site, obj){
   
 }
 
-
 router.get('/manage',  function(req, res, next){
+  res.render('manage');
+});
+
+
+
+router.get('/api/manage',  function(req, res, next){
   var date = new Date();
   console.log("[" + date.toISOString() + "] : " + req.body);
-  var status = {
-    isMargin : {execBot : "unchecked", exec_bitmex : "unchecked", exec_bithumb : "unchecked", exec_coinone : "unchecked", exec_upbit : "unchecked" }
-  }
+  var status = [];
 
   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
 
@@ -1076,13 +1079,13 @@ router.get('/manage',  function(req, res, next){
     for(i=0; i<json.length; i++){
       var flag = "unchecked";
       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
-      status["isMargin"]["exec_"+json[i].site] = flag;
+      status.push({ id : json[i].site+"_execFlag", flag : flag});
     }
 
     forever.list(false, function(err,processes){
       if(err){
           console.log("err : "+err);
-          res.render('financialTradeSet',status);
+          //res.render('financialTradeSet',status);
       }
       else if(processes){
         console.log(processes);
@@ -1097,13 +1100,65 @@ router.get('/manage',  function(req, res, next){
         console.log("botArr : " + JSON.stringify(botArr));
       }
       
-      status["isMargin"]["execBot"] = botArr[0].isExec;
-  
+      status.push({id : "marginTrade", flag : botArr[0].isExec});
+      
       console.log("status2 호출 : " + JSON.stringify(status));
-      res.render('manage',status);
+      res.send(status);
     });
   });
 });
+
+
+
+
+// router.get('/manage',  function(req, res, next){
+//   var date = new Date();
+//   console.log("[" + date.toISOString() + "] : " + req.body);
+//   var status = {
+//     isMargin : {marginTrade : "unchecked", bithumb_execFlag : "unchecked", coinone_execFlag : "unchecked", upbit_execFlag : "unchecked" }
+//   }
+
+//   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
+
+//   botArr.push({botName : "marginTrade.js"});
+  
+//   setting.find({}, function(error, json){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     console.log(json);
+//     for(i=0; i<json.length; i++){
+//       var flag = "unchecked";
+//       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
+//       status["isMargin"][json[i].site+"_execFlag"] = flag;
+//     }
+
+//     forever.list(false, function(err,processes){
+//       if(err){
+//           console.log("err : "+err);
+//           //res.render('financialTradeSet',status);
+//       }
+//       else if(processes){
+//         console.log(processes);
+//         //실행중인 봇 체크 
+//         for(i=0; i<botArr.length; i++){
+//           for(j=0; j<processes.length; j++){
+//             if(processes[j].file.indexOf(botArr[i].botName) !== -1){
+//               botArr[i].isExec = "checked"; 
+//             }
+//           }
+//         }
+//         console.log("botArr : " + JSON.stringify(botArr));
+//       }
+      
+//       status["isMargin"]["marginTrade"] = botArr[0].isExec;
+      
+//       console.log("status2 호출 : " + JSON.stringify(status));
+//       res.render('manage',status);
+//     });
+//   });
+// });
 
 
 router.post('/api/marginTrade', function(req,res){

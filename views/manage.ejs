@@ -15,6 +15,7 @@
         <h2>마진거래 설정</h2>
         <div class="box">
             <div class="setting_box">
+                <input type="hidden" id="is_on_off" value="false">
                 <a class="btn btn-outline-dark btn-sm mgR10" href="script" role="button" target="_self">스크립트 설정</a>
                 
                 <a class="btn btn-outline-dark btn-sm mgR10" href="positionAll" role="button" target="_self">포지션(해외)</a>
@@ -26,7 +27,7 @@
                     <a class="btn btn-outline-dark btn-sm mgR10" href="log" role="button" target="_self">로그</a>
                     <a class="btn btn-outline-dark btn-sm mgR10" href="avg_order_history?site_type=korean" role="button" target="_self">거래평균(국내)</a>
                     <a class="btn btn-outline-dark btn-sm mgR10" id="finance_tag" href="" role="button" target="_self">재정거래(국내)</a>
-                    <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check"<%=isMargin.execBot%> />
+                    <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check" />
                 </div>
                 <form class="setting_1_2">
                     <div class="row" style="margin-left:0;">
@@ -36,7 +37,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex1" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex1" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex1" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex1_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex1%> />
+                            <input type="checkbox" id="bitmex1_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -48,7 +49,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex2" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex2" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex2" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex2_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex2%> />
+                            <input type="checkbox" id="bitmex2_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -60,7 +61,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex3" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex3" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex3" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex3_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex3%> />
+                            <input type="checkbox" id="bitmex3_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -72,7 +73,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex4" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex4" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex4" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex4_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex4%> />
+                            <input type="checkbox" id="bitmex4_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -84,7 +85,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex5" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex5" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex5" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex5_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex5%> />
+                            <input type="checkbox" id="bitmex5_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -96,7 +97,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex6" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex6" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex6" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex6_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex6%> />
+                            <input type="checkbox" id="bitmex6_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -108,7 +109,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex7" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex7" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex7" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex7_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex7%> />
+                            <input type="checkbox" id="bitmex7_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -120,7 +121,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex8" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex8" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex8" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex8_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex8%> />
+                            <input type="checkbox" id="bitmex8_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -132,7 +133,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex9" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex9" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex9" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex9_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex9%> />
+                            <input type="checkbox" id="bitmex9_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -144,7 +145,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex10" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex10" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex10" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex10_execFlag" name="func" class="lcs_check" <%=isMargin.exec_bitmex10%> />
+                            <input type="checkbox" id="bitmex10_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -156,7 +157,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bithumb" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bithumb" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bithumb" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bithumb_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bithumb%>/>
+                            <input type="checkbox" id="bithumb_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -168,7 +169,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=coinone" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=coinone" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=coinone" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="coinone_execFlag" name="func" class="lcs_check" <%=isMargin.exec_coinone%> />
+                            <input type="checkbox" id="coinone_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -180,7 +181,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=upbit" role="button" target="_self">거래내역</a>   
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=upbit" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=upbit" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="upbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_upbit%>/>
+                            <input type="checkbox" id="upbit_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -192,7 +193,7 @@
                             <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=korbit" role="button" target="_self">거래내역</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=korbit" role="button" target="_self">세부설정</a>
                             <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=korbit" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="korbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_korbit%>/>
+                            <input type="checkbox" id="korbit_execFlag" name="func" class="lcs_check"  />
                         </div>
                     </div>
                 </form>
@@ -201,11 +202,42 @@
     </div>
 
     <script type="text/javascript">
+        
         $(document).ready(function (e) {
             $('.lcs_check').lc_switch();
             var finance_url = window.location.origin + ":3000/financialTradeSet";
             $("#finance_tag").attr("href",finance_url);
+            $.ajax({
+                type: "GET",
+                url: "api/manage",
+                success: function(list){
+                    
+                    if(list){
+                        
+                        for(i=0; i<list.length; i++){
+                            if(list[i].flag === 'checked'){
+                                $("#"+list[i].id).lcs_on();
+                            }
+                            // else if(list[i].flag === 'unchecked'){
+                            //     $("#"+list[i].id).lcs_off(false);
+                            // }
+                        }
+                    }
+                    console.log(list);
+                    $("#is_on_off").val('true');
+                },
+                error : function(request, status, error) {
+                    console.log("error : " + error);
+                }
+            });
+
+
             $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+               
+                if($("#is_on_off").val() === 'false'){
+                    
+                    return;
+                }
                 var askType = $(this).attr('name');
                 if(askType === 'bot'){ //봇 on/off
                     var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
@@ -254,6 +286,7 @@
             });
         });
     </script>
+  
 </body>
 </html>
 
