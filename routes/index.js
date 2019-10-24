@@ -417,6 +417,7 @@ function getPosition_bithumb(set, cb){
           site : set.site,//사이트
           scriptNo : set.scriptNo, //스크립트
           isSide : "",
+          side_num : set.side_num,
           totalAsset : 0,
           size: 0,
           value : 0,
@@ -538,6 +539,7 @@ function getPosition_coinone(set, cb){
           site : set.site,//사이트
           scriptNo : set.scriptNo, //스크립트
           isSide : "",
+          side_num : set.side_num,
           totalAsset : 0,
           size: 0,
           value : 0,
@@ -657,6 +659,7 @@ function getPosition_upbit(set, cb){
           site : set.site,//사이트
           scriptNo : set.scriptNo, //스크립트
           isSide : "",
+          side_num : set.side_num,
           totalAsset : 0,
           size: 0,
           value : 0,
@@ -797,6 +800,7 @@ function getPosition_korbit(set, cb){
             site : set.site,//사이트
             scriptNo : set.scriptNo, //스크립트
             isSide : "",
+            side_num : set.side_num,
             totalAsset : 0,
             size: 0,
             value : 0,
@@ -913,6 +917,7 @@ function getPosition_bitmex(set, cb){
           data["leverage"] = set.leverage;
           data["margin"] = set.margin;
           data["scriptNo"] = set.scriptNo;
+          data["side_num"] = set.side_num;
         }
       }
 

@@ -28,6 +28,7 @@
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + isPosition(list[i].size) + "</td>"); 
+                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].side_num + "</td>");
                                 $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].walletBalance, list[i].site) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
@@ -141,6 +142,7 @@
             <td>버전</td>
             <td>스크립트 번호</td>
             <td>포지션</td>
+            <td>side num</td>
             <td>총자산</td>
             <td>수량</td>
             <td>가치</td>
