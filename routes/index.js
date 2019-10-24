@@ -1075,7 +1075,7 @@ router.get('/api/manage',  function(req, res, next){
       console.log(error);
       return;
     }
-    console.log(json);
+    // console.log(json);
     for(i=0; i<json.length; i++){
       var flag = "unchecked";
       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
@@ -1102,7 +1102,7 @@ router.get('/api/manage',  function(req, res, next){
       
       status.push({id : "marginTrade", flag : botArr[0].isExec});
       
-      console.log("status2 호출 : " + JSON.stringify(status));
+      //console.log("status2 호출 : " + JSON.stringify(status));
       res.send(status);
     });
   });

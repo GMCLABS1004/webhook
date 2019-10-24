@@ -16,6 +16,7 @@
         <div class="box">
             <div class="setting_box">
                 <input type="hidden" id="is_on_off" value="false">
+                <input type="hidden" id="is_bot_on_off" value="false">
                 <a class="btn btn-outline-dark btn-sm mgR10" href="script" role="button" target="_self">스크립트 설정</a>
                 
                 <a class="btn btn-outline-dark btn-sm mgR10" href="positionAll" role="button" target="_self">포지션(해외)</a>
@@ -211,40 +212,42 @@
                 type: "GET",
                 url: "api/manage",
                 success: function(list){
-                    
                     if(list){
-                        
                         for(i=0; i<list.length; i++){
                             if(list[i].flag === 'checked'){
                                 $("#"+list[i].id).lcs_on();
                             }
-                            // else if(list[i].flag === 'unchecked'){
-                            //     $("#"+list[i].id).lcs_off(false);
-                            // }
+                            else if(list[i].flag === 'unchecked'){
+                                $("#"+list[i].id).lcs_off();
+                            }else{ //bot unckecked시 실행
+                                $("#"+list[i].id).lcs_off();
+                            }
                         }
                     }
                     console.log(list);
                     setTimeout(function(){
                         $("#is_on_off").val('true');
-                    }, 500);
+                    }, 200);
                 },
                 error : function(request, status, error) {
                     console.log("error : " + error);
                     setTimeout(function(){
                         $("#is_on_off").val('true');
-                    }, 500);
+                        
+                    }, 200);
                 }
             });
 
 
             $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
-               
-                if($("#is_on_off").val() === 'false'){
-                    
-                    return;
-                }
+                
                 var askType = $(this).attr('name');
                 if(askType === 'bot'){ //봇 on/off
+                    if($("#is_bot_on_off").val() === 'false'){
+                        console.log("봇 onoff 실행XXXX ");
+                        $("#is_bot_on_off").val('true');
+                        return;
+                    }
                     var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                     console.log('field changed status: '+ status );
                     var obj = new Object();
@@ -265,6 +268,11 @@
                         }
                     });
                 }else if(askType === 'func'){ // 기능 on/off 
+                   
+                     if($("#is_on_off").val() === 'false'){
+                        console.log("기능 onoff 실행XXXX ");
+                        return;
+                    }
                     console.log("기능 On/Off");
                     var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                     console.log('field changed status: '+ status );
