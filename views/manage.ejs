@@ -224,7 +224,9 @@
                         }
                     }
                     console.log(list);
-                    $("#is_on_off").val('true');
+                    setTimeout(function(){
+                        $("#is_on_off").val('true');
+                    }, 500);
                 },
                 error : function(request, status, error) {
                     console.log("error : " + error);
