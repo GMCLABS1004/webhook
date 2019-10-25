@@ -3,6 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
+    <style>
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+            /*====================*/
+            section {
+                max-width: 960px;
+                margin: 30px auto;
+                padding: 30px;
+            }
+            table {
+                width: 100%;
+            }
+            th,
+            td {
+                padding: 5px;
+                border: 1px solid #ddd;
+            }
+            th {
+                background: #f4f4f4;
+            }
+            .demo02 th {
+                width: 13%;
+            }
+            .demo02 td {
+                text-align: center;
+            }
+            .demo02 td:first-child {
+                text-align: center;
+            }
+            @media only screen and (max-width: 800px) {
+                .demo02 {
+                    display: block;
+                    width: 100%;
+                    margin: 0 -10px;
+                }
+                .demo02 thead {
+                    display: block;
+                    float: left;
+                    overflow-x: scroll;
+                }
+                .demo02 tbody {
+                    display: block;
+                    width: auto;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+                .demo02 th {
+                    display: block;
+                    width: auto;
+                }
+                .demo02 tbody tr {
+                    display: inline-block;
+                    margin: 0 -3px;
+                }
+                .demo02 td {
+                    display: block;
+                }
+            }
+        </style>
+
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     
@@ -128,29 +197,43 @@
     </script>
     <title>Document</title>
 </head>
-<body>
+
+<body class="body-37">
     
-    <h2>포지션(국내)</h2>
-    <div id="last_price"></div>
-    <table id="mytable" border="1px">
-        <tr>
-            <td>no</td>
-            <td>계정</td>
-            <td>스크립트</td>
-            <td>버전</td>
-            <td>스크립트 번호</td>
-            <td>포지션</td>
-            <td>side num</td>
-            <td>총자산</td>
-            <td>수량</td>
-            <td>가치</td>
-            <td>진입가격</td>
-            <td>마진</td>
-            <td>레버리지</td>
-            <td>실현손익</td>
-        </tr>
-        <tbody>
-        </tbody>
-    </table>
+        <div class="section-62">
+                <div class="w-container">
+            
+                <h2>포지션(국내)</h2>
+                
+                <div class="w-embed">
+                    <div class="table-wrapper">
+                        <br>
+                
+                        <div id="last_price"></div>
+                        <table id="mytable" border="1px">
+                            <thead>
+                                <tr>
+                                    <th>no</th>
+                                    <th>계정</th>
+                                    <th>스크립트</th>
+                                    <th>버전</th>
+                                    <th>스크립트 번호</th>
+                                    <th>포지션</th>
+                                    <th>총자산</th>
+                                    <th>수량</th>
+                                    <th>가치</th>
+                                    <th>진입가격</th>
+                                    <th>마진</th>
+                                    <th>레버리지</th>
+                                    <th>실현손익</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                </div>
 </body>
 </html>

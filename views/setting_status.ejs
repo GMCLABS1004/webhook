@@ -8,97 +8,74 @@
 
     <title>GMC DefenceBot - 세부설정</title>
 
-    <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" type="text/css" href="../Content/sub_1.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/sub_1.css"> -->
 
     <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
 
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
 
-    <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script> -->
 
     <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
 
 </head>
 
-<body style="min-width:1280px;">
-
-    <div class="setting">
-
-        <div class="m_txt">
-
-            <h4><%=site%> 마진거래 설정</h4>
-            
-            <div class="button_box">
-
-                <button type="button" id="storeSet" class="btn btn-primary btn-md">저장</button>
-
-                <button type="button" id="closeWindow" class="btn btn-secondary btn-md">취소</button>
-
-            </div>
-        </div>
-
-        <div class="box box_1">
-
-            <form class="box_1_form">
-
-
-                <div class="">
-
-                    <label for="isEntering" class="key_label col-form-label">진입중</label>
-
-                    <div class="">
-                        <input type="hidden" class="form-control" id="site" value='<%=site%>' readonly placeholder="">
-                       <input type="text" class="form-control" id="isEntering" readonly placeholder="">
-
-                    </div>
-
+<body class="body-51">
+        <div class="section-75">
+        <div class="w-container">
+                <div class="w-layout-grid grid-139">
+                   
+                  <div id="w-node-5d38c6c48663-de58f0e8" class="text-block-139">
+                        <h4><%=site%> 마진거래 설정</h4>
+                  </div>
+                  <button type="button" id="storeSet" class="button-33 w-button">저장</button>
+    
+                  <button type="button" id="closeWindow" class="button-46 w-button">취소</button>
+    
                 </div>
-
-                <div class="">
-
-                    <label for="isExiting" class="key_label col-form-label">탈출중</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="isExiting" readonly placeholder="">
-
+              
+                <div class="w-layout-grid grid-140">
+    
+                  <div class="form-block-7 w-form">
+                    <form class="form-17">
+                      <div class="text-block-140" for="isEntering">진입중</div>
+                      <input type="hidden" class="text-field-9 w-input" id="site" value='<%=site%>' readonly placeholder="">
+                       <input type="text" class="text-field-9 w-input" id="isEntering" readonly placeholder="">
+                    </form>
+                  </div>
+    
+                    <div class="form-block-4 w-form">
+                        <form class="form-17">
+                            <div class="text-block-141" for="isExiting">탈출중</div>
+                            <input type="text" class="form-control text-field-9 w-input" id="isExiting" readonly placeholder="">
+                        </form>
                     </div>
-
+    
+                      <div class="form-block-7 w-form">
+                        <form class="form-17">
+                          <div class="text-block-141" for="side">포지션</div>
+                          <input type="text" class="text-field-9 w-input" id="side" readonly placeholder="">
+                        </form>
+                      </div>
+    
+                      <div class="form-block-7 w-form">
+                        <form class="form-6">
+                          <div class="text-block-141" for="side_num">포지션 번호</div>
+                          <input type="text" class="text-field-9 w-input" id="side_num" placeholder="">
+                        </form>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-
-                <div class="">
-
-                    <label for="side" class="key_label col-form-label">포지션</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="side" readonly placeholder="">
-                        
-                    </div>
-                    
-                </div>
-
-                <div class="">
-
-                    <label for="side_num" class="key_label col-form-label">side num</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="side_num" placeholder="">
-
-                    </div>
-
-                </div>   
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
 
 
 

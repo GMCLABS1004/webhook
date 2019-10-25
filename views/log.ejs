@@ -1,5 +1,11 @@
 <html>
 <head>
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+<link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+<link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+<link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
 <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
 <script>
 $(document).ready(function(){
@@ -59,9 +65,25 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-        <input type='hidden' id="site" value="<%=site%>">
-        일자 : <input type='date' id="logDate"/> <input type="button" id="logSearch" value="조회"/><br>
-        <div id="logTitle"></div>
-        <div id="logData"> </div>
+                <div>
+                  <div class="w-container">
+                    <div class="w-layout-grid grid-176">
+                      <div id="w-node-6e9dc2024266-d357ade7" class="form-block-50 w-form">
+                        <div id="w-node-123f96a69bd9-e556b9e2" class="html-embed-39 w-embed">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="w-container">
+                      일자 : <input type='date' id="logDate"/> <input type="button" id="logSearch" value="조회"/><br>
+                    <div class="text-block-173"><strong></strong></div>
+                    <!-- <div class="text-block-173"><strong>idax BTC 거래량생성 로그</strong></div> -->
+                    <input type='hidden' id="site" value="<%=site%>">
+                   
+                    <div  id="logTitle"></div>
+                    <div class="logDate" id="logData"></div>
+                    </div>
+              
+                </div>
 </body>
 </html>

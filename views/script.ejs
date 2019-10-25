@@ -3,6 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
+    <style>
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+            /*====================*/
+            section {
+                max-width: 960px;
+                margin: 30px auto;
+                padding: 30px;
+            }
+            table {
+                width: 100%;
+            }
+            th,
+            td {
+                padding: 10px;
+                border: 1px solid #ddd;
+            }
+            th {
+                background: #f4f4f4;
+            }
+            .demo02 th {
+                width: 13%;
+            }
+            .demo02 td {
+                text-align: center;
+            }
+            .demo02 td:first-child {
+                text-align: center;
+            }
+            @media only screen and (max-width: 800px) {
+                .demo02 {
+                    display: block;
+                    width: 100%;
+                    margin: 0 -10px;
+                }
+                .demo02 thead {
+                    display: block;
+                    float: left;
+                    overflow-x: scroll;
+                }
+                .demo02 tbody {
+                    display: block;
+                    width: auto;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+                .demo02 th {
+                    display: block;
+                    width: auto;
+                }
+                .demo02 tbody tr {
+                    display: inline-block;
+                    margin: 0 -3px;
+                }
+                .demo02 td {
+                    display: block;
+                }
+            }
+        </style>
+
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script>
@@ -99,23 +168,43 @@
     </script>
     <title>Document</title>
 </head>
-<body>
-    <h2>스크립트</h2>
 
-    번호 : <input type="text" id="scriptNo" name="scriptNo" value=""><br>
-    이름 : <input type="text" id="scriptName" name="scriptName" value=""><br>
-    버전 : <input type="text" id="version" name="version" value=""><input type="button" id="add" value="추가"><br><br>
-    <table id="mytable" border="1px">
-        <tr>
-            <td></td>
-            <td>no</td>
-            <td>번호</td>
-            <td>이름</td>
-            <td>버전</td>
-        </tr>
-        <tbody>
-        </tbody>
-    </table>
-    <input type="button" id="remove" value="삭제">
+<div>
+        <div class="w-container">
+            <div class="w-layout-grid grid-176">
+                <div id="w-node-6e9dc2024266-d357ade7" class="form-block-50 w-form">
+                    <div id="w-node-123f96a69bd9-e556b9e2" class="html-embed-39 w-embed">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-container">
+<br>
+            <h2>스크립트</h2>
+            <br>
+
+            <div class="scriptNo">번호 : <input type="text" id="scriptNo" name="scriptNo" value=""></div><br>
+            <div class="scriptName">이름 : <input type="text" id="scriptName" name="scriptName" value="" ></div><br>
+            <div class="version">버전 : <input type="text" id="version" name="version" value="" ></div><br>
+            <input class="button-33 w-button" type="button" id="add" value="추가">
+            <table id="mytable" border="1px">
+                    <tr>
+                        <td></td>
+                        <td>no</td>
+                        <td>번호</td>
+                        <td>이름</td>
+                        <td>버전</td>
+                    </tr>
+                <tbody>
+                </tbody>
+            </table>
+            <br>
+
+            <input type="button" id="remove" value="삭제" class="button-46 w-button">
+        </div>
+    </div>
+    </div>
+    </div>
 </body>
+
 </html>

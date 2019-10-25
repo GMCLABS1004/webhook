@@ -3,204 +3,269 @@
 <head>
     <meta charset="utf-8" />
     <title>GMC DefenceBot - 설정</title>
-    <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../Content/sub.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/sub.css"> -->
     <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script> -->
     <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
 </head>
-<body style="min-width:1280px;">
-    <div class="setting">
-        <h2>마진거래 설정</h2>
-        <div class="box">
-            <div class="setting_box">
-                <input type="hidden" id="is_on_off" value="false">
-                <input type="hidden" id="is_bot_on_off" value="false">
-                <a class="btn btn-outline-dark btn-sm mgR10" href="script" role="button" target="_self">스크립트 설정</a>
-                
-                <a class="btn btn-outline-dark btn-sm mgR10" href="positionAll" role="button" target="_self">포지션(해외)</a>
-                    <a class="btn btn-outline-dark btn-sm mgR10" href="positionAll_internal" role="button" target="_self">포지션(국내)</a><br><br>
-                
-                <div class="setting_1">
-                    <h3>봇</h3>
-                    <!-- <a class="btn btn-outline-secondary btn-sm mgR10" href="coinisKRWBotDetailSet" role="button" target="_self">세부설정</a> -->
-                    <a class="btn btn-outline-dark btn-sm mgR10" href="log" role="button" target="_self">로그</a>
-                    <a class="btn btn-outline-dark btn-sm mgR10" href="avg_order_history?site_type=korean" role="button" target="_self">거래평균(국내)</a>
-                    <a class="btn btn-outline-dark btn-sm mgR10" id="finance_tag" href="" role="button" target="_self">재정거래(국내)</a>
-                    <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check" />
+
+<body class="body-10">
+        <div class="section-19">
+                <div class="container-31 w-container">
+                  <div class="">
+                    <div class="w-layout-grid grid-18">
+                        <a  href="script" id="w-node-0478bd28aab8-5357cf79" class="button-log w-button">스크립트 설정</a>
+        
+                      <a href="positionAll"  id="w-node-e0b6b8eb9240-5357cf79" class="button-log w-button">포지션(해외)</a>
+                      <a href="positionAll_internal"  id="w-node-38c14d03ad5f-5357cf79" class="button-log w-button">포지션(국내)</a>
+                    </div>
+                    </div>
                 </div>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥1</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex1" role="button" target="_self">로그</a> 
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex1" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex1" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex1" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex1_execFlag" name="func" class="lcs_check"  />
-                        </div>
+                <br><hr style="border: solid 1px #efefef;"><br>
+                <div class="container-31 w-container">
+                  <div class="div-grid">
+                    <div class="w-layout-grid grid-41">
+                        <input type="hidden" id="is_on_off" value="false">
+                        <input type="hidden" id="is_bot_on_off" value="false">
+                      <div id="w-node-6428824966db-5357cf79" class="text-block-64"><strong class="bold-text-66" >봇</strong></div>
+                        <!-- <a class="btn btn-outline-secondary btn-sm mgR10" href="coinisKRWBotDetailSet" role="button" target="_self">세부설정</a> -->
+                      <a id="w-node-28f5579adec6-5357cf79" href="log"  class="button-log w-button" role="button" target="_self">로그</a>
+                      <a id="w-node-9e158724c4e8-5357cf79" href="avg_order_history?site_type=korean" role="button" target="_self" class="button-8 w-button">거래평균(국내)</a>
+                      <a id="w-node-3ad2b0511a26-5357cf79" id="finance_tag" href="" role="button" target="_self" class="button-8 w-button">재정거래(국내)</a>
+                      <div id="w-node-8da96091dedb-5357cf79" class="text-block-61">
+                          <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check" />
+                      </div>
                     </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥2</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex2" role="button" target="_self">로그</a>
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex2" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex2" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex2" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex2_execFlag" name="func" class="lcs_check"  />
-                        </div>
+                  </div>
+                </div>
+        
+            <div class="container-31 w-container">
+                <div class="div-grid">
+                  <div class="w-layout-grid grid-17">
+                    <div id="w-node-59cf0b18cdc6-5357cf79" class="text-block-60"><br>
+                      <strong class="bold-text-24">비맥1</strong><br>‍
+                      </div>
+                      <a id="w-node-59cf0b18cdce-5357cf79" href="log?site=bitmex1" class="button-log w-button"  role="button" target="_self">로그</a>
+                      <a id="w-node-59cf0b18cdd0-5357cf79" href="orderHistoryTotal?site=bitmex1" class="button-8 w-button"  role="button" target="_self">거래내역</a>
+                      <a id="w-node-59cf0b18cdd2-5357cf79" href="setting?site=bitmex1" class="button-8 w-button"  role="button" target="_self">세부설정 </a>
+                      <a id="w-node-b6d9216376a9-5357cf79" href="setting_status?site=bitmex1" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                    <div id="w-node-59cf0b18cdd4-5357cf79" class="text-block-61">
+                        <input type="checkbox" id="bitmex1_execFlag" name="func" class="lcs_check"  />
                     </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥3</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex3" role="button" target="_self">로그</a> 
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex3" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex3" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex3" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex3_execFlag" name="func" class="lcs_check"  />
-                        </div>
+                  </div>
+                </div>
+              </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-59cf0b18cdc6-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-24">비맥2</strong><br>‍
                     </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥4</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex4" role="button" target="_self">로그</a> 
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex4" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex4" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex4" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex4_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥5</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex5" role="button" target="_self">로그</a>
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex5" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex5" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex5" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex5_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥6</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex6" role="button" target="_self">로그</a> 
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex6" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex6" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex6" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex6_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥7</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex7" role="button" target="_self">로그</a> 
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex7" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex7" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex7" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex7_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥8</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex8" role="button" target="_self">로그</a>
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex8" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex8" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex8" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex8_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥9</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex9" role="button" target="_self">로그</a> 
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex9" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex9" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex9" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex9_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">비맥10</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bitmex10" role="button" target="_self">로그</a> 
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bitmex10" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bitmex10" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bitmex10" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bitmex10_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">빗썸</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=bithumb" role="button" target="_self">로그</a>  
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=bithumb" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=bithumb" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=bithumb" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="bithumb_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">코인원</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=coinone" role="button" target="_self">로그</a>  
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=coinone" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=coinone" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=coinone" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="coinone_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">업비트</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=upbit" role="button" target="_self">로그</a>  
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=upbit" role="button" target="_self">거래내역</a>   
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=upbit" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=upbit" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="upbit_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
-                <form class="setting_1_2">
-                    <div class="row" style="margin-left:0;">
-                        <label for="staticEmail" class="setting_name col-sm-2 col-form-label">코빗</label>
-                        <div class="setting_onoff col-sm-10">
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="log?site=korbit" role="button" target="_self">로그</a>  
-                            <a class="btn btn-outline-dark btn-sm mgR10" href="orderHistoryTotal?site=korbit" role="button" target="_self">거래내역</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting?site=korbit" role="button" target="_self">세부설정</a>
-                            <a class="btn btn-outline-secondary btn-sm mgR10" href="setting_status?site=korbit" role="button" target="_self">상태설정</a>
-                            <input type="checkbox" id="korbit_execFlag" name="func" class="lcs_check"  />
-                        </div>
-                    </div>
-                </form>
+                    <a id="w-node-59cf0b18cdce-5357cf79" href="log?site=bitmex2" class="button-log w-button" role="button" target="_self">로그</a>
+                    <a id="w-node-59cf0b18cdd0-5357cf79" href="orderHistoryTotal?site=bitmex2" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-59cf0b18cdd2-5357cf79" href="setting?site=bitmex2" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_status?site=bitmex2" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-59cf0b18cdd4-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex2_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
-    </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-e162363a79b9-5357cf79" class="text-block-60"><br>
+                    <strong
+                      class="bold-text-25">비맥3</strong><br>‍
+                    </div>
+                      <a id="w-node-e162363a79c1-5357cf79" href="log?site=bitmex3" class="button-log w-button" role="button" target="_self">로그</a>
+                    <a id="w-node-e162363a79c3-5357cf79" href="orderHistoryTotal?site=bitmex3" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-e162363a79c5-5357cf79" href="setting?site=bitmex3" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-13f7cae0c6bf-5357cf79" href="setting_status?site=bitmex3" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-e162363a79c7-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex3_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-bb5475603950-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">비맥4</strong>‍
+                  </div>
+                  <a id="w-node-bb5475603956-5357cf79"  href="log?site=bitmex4" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-bb5475603958-5357cf79" href="orderHistoryTotal?site=bitmex4" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-bb547560395a-5357cf79" href="setting?site=bitmex4" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-69e9bb11f21c-5357cf79" href="setting_status?site=bitmex4" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-bb547560395c-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex4_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-607a61841f49-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">비맥5</strong>‍
+                  </div><a id="w-node-607a61841f4e-5357cf79"  href="log?site=bitmex5" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-607a61841f50-5357cf79" href="orderHistoryTotal?site=bitmex5" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-607a61841f52-5357cf79" href="setting?site=bitmex5" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-c66e1b9c51e5-5357cf79" href="setting_status?site=bitmex5" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-607a61841f54-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex5_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-c56e1fc2c30d-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">비맥6</strong>‍
+                  </div><a id="w-node-c56e1fc2c312-5357cf79"  href="log?site=bitmex6" class="button-log w-button" role="button" target="_self">로그</a>
+                    <a id="w-node-c56e1fc2c314-5357cf79" href="orderHistoryTotal?site=bitmex6" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-c56e1fc2c316-5357cf79" href="setting?site=bitmex6" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-df12c29a2910-5357cf79" href="setting_status?site=bitmex6" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-c56e1fc2c318-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex6_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-a31c697d0cd1-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">비맥7</strong>‍
+                  </div><a id="w-node-a31c697d0cd6-5357cf79"  href="log?site=bitme7" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-a31c697d0cd8-5357cf79" href="log?site=bitmex7" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-a31c697d0cda-5357cf79" href="log?site=bitmex7log?site=bitmex7log?site=bitmex7log?site=bitmex7log?site=bitmex7" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-f33d643a7edf-5357cf79" href="setting_status?site=bitmex7" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-a31c697d0cdc-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex7_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-60c28abfe37c-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">비맥8</strong>‍
+                  </div><a id="w-node-60c28abfe381-5357cf79" href="log?site=bitme8" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-60c28abfe383-5357cf79" href="orderHistoryTotal?site=bitmex8" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-60c28abfe385-5357cf79" href="setting?site=bitmex8" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-f33d643a7edf-5357cf79" href="setting_status?site=bitmex8" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-60c28abfe387-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex8_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-9c78f4d2d870-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">비맥9</strong>‍
+                  </div><a id="w-node-9c78f4d2d875-5357cf79"  href="log?site=bitmex9" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-9c78f4d2d877-5357cf79" href="orderHistoryTotal?site=bitmex9" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-9c78f4d2d879-5357cf79" href="setting?site=bitmex9" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-f7f2f325bb74-5357cf79" href="setting_status?site=bitmex9" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-9c78f4d2d87b-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex9_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="">
+                <div class="w-layout-grid grid-17 grid-bitmex10">
+                  <div id="w-node-6186969ebfba-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">비맥10</strong>‍
+                  </div><a id="w-node-6186969ebfbf-5357cf79"  href="log?site=bitmex10" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-6186969ebfc1-5357cf79" href="orderHistoryTotal?site=bitmex10" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-6186969ebfc3-5357cf79" href="setting?site=bitmex10" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-2e3638ec746e-5357cf79" href="setting_status?site=bitmex10" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-6186969ebfc5-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex10_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+            <br><hr style="border: solid 1px #efefef;"><br>
+        
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-8cb573001e34-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">빗썸</strong>
+                  </div><a id="w-node-8cb573001e39-5357cf79"  href="log?site=bithumb" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-8cb573001e3b-5357cf79" href="orderHistoryTotal?site=bithumb" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-8cb573001e3d-5357cf79" href="setting?site=bithumb" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-bd61527155ec-5357cf79" href="setting_status?site=bithumb" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-8cb573001e3f-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bithumb_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+              <div class="div-grid">
+                <div class="w-layout-grid grid-17">
+                  <div id="w-node-3cc7d1938413-5357cf79" class="text-block-60"><br>
+                    <strong class="bold-text-26">코인원</strong>
+                  </div><a id="w-node-3cc7d1938417-5357cf79"  href="log?site=coinone" class="button-log w-button" role="button" target="_self">로그</a>
+                  <a id="w-node-3cc7d1938419-5357cf79" href="orderHistoryTotal?site=coinone" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                    <a id="w-node-3cc7d193841b-5357cf79" href="setting?site=coinone" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    <a id="w-node-2fe00f8464b6-5357cf79" href="setting_status?site=coinone" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                  <div id="w-node-3cc7d193841d-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="coinone_execFlag" name="func" class="lcs_check"  />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-31 w-container">
+                <div class="div-grid">
+                  <div class="w-layout-grid grid-17">
+                    <div id="w-node-da64bc9bde05-5357cf79" class="text-block-60"><br><strong class="bold-text-26">업비트</strong>
+                    </div><a id="w-node-da64bc9bde09-5357cf79"  href="log?site=upbit" class="button-log w-button" role="button" target="_self">로그</a>
+                    <a id="w-node-da64bc9bde0b-5357cf79" href="orderHistoryTotal?site=upbit" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                      <a id="w-node-da64bc9bde0d-5357cf79" href="setting?site=upbit" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                      <a id="w-node-8067893b4796-5357cf79" href="setting_status?site=upbit" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                    <div id="w-node-da64bc9bde0f-5357cf79" class="text-block-61">
+                        <input type="checkbox" id="upbit_execFlag" name="func" class="lcs_check"  />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div class="container-31 w-container">
+                <div class="div-grid">
+                  <div class="w-layout-grid grid-17">
+                    <div id="w-node-da64bc9bde05-5357cf79" class="text-block-60"><br><strong class="bold-text-26" >코빗</strong>
+                    </div><a id="w-node-da64bc9bde09-5357cf79"  href="log?site=korbit" class="button-log w-button" role="button" target="_self">로그</a>
+                    <a id="w-node-da64bc9bde0b-5357cf79" href="orderHistoryTotal?site=korbit" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                      <a id="w-node-da64bc9bde0d-5357cf79" href="setting?site=korbit" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                      <a id="w-node-763579e2ebf8-5357cf79" href="setting_status?site=korbit" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                    <div id="w-node-da64bc9bde0f-5357cf79" class="text-block-61">
+                        <input type="checkbox" id="korbit_execFlag" name="func" class="lcs_check"  />
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
 
     <script type="text/javascript">
         
@@ -212,42 +277,40 @@
                 type: "GET",
                 url: "api/manage",
                 success: function(list){
+                    
                     if(list){
+                        
                         for(i=0; i<list.length; i++){
                             if(list[i].flag === 'checked'){
                                 $("#"+list[i].id).lcs_on();
                             }
-                            else if(list[i].flag === 'unchecked'){
-                                $("#"+list[i].id).lcs_off();
-                            }else{ //bot unckecked시 실행
-                                $("#"+list[i].id).lcs_off();
-                            }
+                            // else if(list[i].flag === 'unchecked'){
+                            //     $("#"+list[i].id).lcs_off(false);
+                            // }
                         }
                     }
                     console.log(list);
                     setTimeout(function(){
                         $("#is_on_off").val('true');
-                    }, 200);
+                    }, 500);
                 },
                 error : function(request, status, error) {
                     console.log("error : " + error);
                     setTimeout(function(){
                         $("#is_on_off").val('true');
-                        
-                    }, 200);
+                    }, 500);
                 }
             });
-
-
+    
+    
             $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
-                
+               
+                if($("#is_on_off").val() === 'false'){
+                    
+                    return;
+                }
                 var askType = $(this).attr('name');
                 if(askType === 'bot'){ //봇 on/off
-                    if($("#is_bot_on_off").val() === 'false'){
-                        console.log("봇 onoff 실행XXXX ");
-                        $("#is_bot_on_off").val('true');
-                        return;
-                    }
                     var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                     console.log('field changed status: '+ status );
                     var obj = new Object();
@@ -268,11 +331,6 @@
                         }
                     });
                 }else if(askType === 'func'){ // 기능 on/off 
-                   
-                     if($("#is_on_off").val() === 'false'){
-                        console.log("기능 onoff 실행XXXX ");
-                        return;
-                    }
                     console.log("기능 On/Off");
                     var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                     console.log('field changed status: '+ status );

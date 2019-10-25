@@ -6,150 +6,118 @@
 
     <meta charset="utf-8" />
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
     <title>GMC DefenceBot - 세부설정</title>
 
-    <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css"> -->
 
-    <link rel="stylesheet" type="text/css" href="../Content/sub_1.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/sub_1.css"> -->
 
     <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
 
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
 
-    <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script> -->
 
     <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
 
 </head>
 
-<body style="min-width:1280px;">
+<body class="body-51">
 
-    <div class="setting">
-
-        <div class="m_txt">
-
-            <h4><%=site%> 마진거래 설정</h4>
-
-            <div class="button_box">
-
-                <button type="button" id="storeSet" class="btn btn-primary btn-md">저장</button>
-
-                <button type="button" id="closeWindow" class="btn btn-secondary btn-md">취소</button>
-
-            </div>
-        </div>
-
-        <div class="box box_1">
-
-            <form class="box_1_form">
-               
+        <div class="section-75">
+                <div class="w-container">
+                  <div class="w-layout-grid grid-139">
                 
-                <div class="">
-
-                    <label for="url" class="key_label col-form-label">url</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="url" value='<%=url%>' placeholder="">
-
+                    <div id="w-node-5d38c6c48663-de58f0e8" class="text-block-139">
+                      <h4><%=site%> 마진거래 설정</h4>
                     </div>
-
-                </div>
-
-
-                <div class="">
-
-                    <label for="apiKey" class="key_label col-form-label">apikey</label>
-
-                    <div class="">
-                        <input type="hidden" class="form-control" id="site" value='<%=site%>' placeholder="">
-    
-                        <input type="hidden" class="form-control" id="symbol"  placeholder="">
+                    <button type="button" id="storeSet" class="button-33 w-button">저장</button>
+                    <button type="button" id="closeWindow" class="button-46 w-button">취소</button>
+                  </div>
+                
+                  <div class="w-layout-grid grid-140">
+                    <div class="form-block-7 w-form">
+                      <form class="form-17">
+                        <div class="text-block-140" for="url">url</div>
+                        <input type="text" maxlength="256" id="url" required="" class="text-field-9 w-input">
+                      </form>
+                    </div>
                         
-                        <input type="text" class="form-control" id="apiKey"  placeholder="">
-
-                    </div>
-                </div>
-
-                <div class="">
-
-                    <label for="secreteKey" class="key_label col-form-label">secreteKey</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="secreteKey"  placeholder="">
-
-                    </div>
-
-                </div>
-
-                <div class="">
-
-                        <label for="scriptNo" class="key_label col-form-label">스크립트 번호</label>
-    
-                        <div class="">
-                           
-                            <input type="text" class="form-control" id="scriptNo"  placeholder="">
-    
+                      <div class="form-block-4 w-form">
+                        <form class="form-17">
+                          <div class="text-block-141" for="apiKey">apikey</div>
+                          <input type="hidden" maxlength="256" id="site" value='<%=site%>' class="">
+                          <input type="hidden" class="form-control" id="symbol" placeholder="">
+                          <input type="text" maxlength="256" class="form-control text-field-9 w-input" id="apiKey" placeholder="">
+                        </form>
+                      </div>
+                
+                        <div class="form-block-7 w-form">
+                          <form class="form-17">
+                            <div class="text-block-141" for="secreteKey">secreteKey</div>
+                            <input type="text" maxlength="256" id="secreteKey" required="" class="text-field-9 w-input">
+                          </form>
+                
                         </div>
-                </div>
-
-                <div class="">
-
-                    <label for="leverage" class="key_label col-form-label">레버리지</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="leverage"  placeholder="~배">
-
+                        <div class="form-block-7 w-form">
+                            <form class="form-17">
+                            <div class="text-block-141" for="scriptNo">스크립트 번호</div>
+                            <input type="text" maxlength="256" id="scriptNo" required="" class="text-field-9 w-input">
+                          </form>
+                
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141" for="leverage">레버리지</div>
+                            <input type="text" maxlength="256" id="leverage" required="" class="text-field-9 w-input">
+                          </form>
+                
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141" for="margin">마진</div>
+                            <input type="text" maxlength="256" id="margin" required="" class="text-field-9 w-input">
+                          </form>
+                
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141" for="minOrdCost">주문최소금액</div>
+                            <input type="text" maxlength="256" id="minOrdCost" required="" class="text-field-9 w-input">
+                          </form>
+                
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="ordInterval">주문 인터벌</div>
+                            <input type="text" maxlength="256" id="ordInterval" required="" class="text-field-9 w-input">
+                          </form>
+                
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141" for="minOrdRate">최소주문비율</div>
+                            <input type="text" maxlength="256" id="minOrdRate" required="" class="text-field-9 w-input">
+                          </form>
+                
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="maxOrdRate">최대주문비율</div>
+                            <input type="text" maxlength="256" id="maxOrdRate" required="" class="text-field-9 w-input">
+                          </form>
+                
+                        </div>
+                      </div>
                     </div>
-                </div>
-
-                <div class="">
-
-                    <label for="margin" class="key_label col-form-label">마진</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="margin"  placeholder="%">
-
-                    </div>
-
-                </div>
-
-                <div class="">
-
-                    <label for="margin" class="key_label col-form-label">주문최소금액</label>
-
-                    <div class="">
-
-                        <input type="text" class="form-control" id="minOrdCost"  placeholder="원">
-                    </div>
-                </div>
-
-                <div class="">
-                    <label for="ordInterval" class="key_label col-form-label">주문 인터벌</label>
-                    <div class="">
-                        <input type="text" class="form-control" id="ordInterval"  placeholder="초">
-                    </div>
-                </div>
-
-                <div class="">
-                    <label for="minOrdRate" class="key_label col-form-label">최소주문비율</label>
-                    <div class="">
-                        <input type="text" class="form-control" id="minOrdRate"  placeholder="%">
-                    </div>
-                </div>
-                <div class="">
-                    <label for="maxOrdRate" class="key_label col-form-label">최대주문비율</label>
-                    <div class="">
-                        <input type="text" class="form-control" id="maxOrdRate" placeholder="%">
-                    </div>
-                </div>     
-            </div>
-        </form>
-    </div>
-</div>
+                  </div>
 
 
 

@@ -3,6 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
+    <style>
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+            /*====================*/
+            section {
+                max-width: 960px;
+                margin: 30px auto;
+                padding: 30px;
+            }
+            table {
+                width: 100%;
+            }
+            th,
+            td {
+                padding: 5px;
+                border: 1px solid #ddd;
+            }
+            th {
+                background: #f4f4f4;
+            }
+            .demo02 th {
+                width: 13%;
+            }
+            .demo02 td {
+                text-align: center;
+            }
+            .demo02 td:first-child {
+                text-align: center;
+            }
+            @media only screen and (max-width: 800px) {
+                .demo02 {
+                    display: block;
+                    width: 100%;
+                    margin: 0 -10px;
+                }
+                .demo02 thead {
+                    display: block;
+                    float: left;
+                    overflow-x: scroll;
+                }
+                .demo02 tbody {
+                    display: block;
+                    width: auto;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+                .demo02 th {
+                    display: block;
+                    width: auto;
+                }
+                .demo02 tbody tr {
+                    display: inline-block;
+                    margin: 0 -3px;
+                }
+                .demo02 td {
+                    display: block;
+                }
+            }
+        </style>
+
     <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
@@ -156,35 +226,53 @@
     </script>
     <title>Document</title>
 </head>
-<body>
+<body class="body-37">
     <input type="hidden" id="site" value='<%=site%>' >
     <!-- 조회 <input type="button" id="logSearch" value="조회"/><br> -->
 
-    <h2><%=site%> 거래 내역</h2>
-    <div id="start_asset"></div>
-    <div id="end_asset"></div>
-    <div id="totalBenefit"></div>
-    <div id="totalBenefitRate"></div>
-    <table id="mytable" border="1px">
-        <tr>
-            <td>no</td>
-            <td>날짜</td>
-            <td>시작시간</td>
-            <td>종료시간</td>
-            <td>자산</td>
-            <td>구분</td>
-            <td></td>
-            <td></td>
-            <td>분할횟수</td>
-            <td>시작가격</td>
-            <td>종료가격</td>
-            <td>평균가격</td>
-            <td>수량</td>
-            <td>가치</td>
-            <td>수익율</td>
-        </tr>
-        <tbody>
-        </tbody>
-    </table>
+    <div class="section-62">
+            <div class="w-container">
+              <div class="div-block-80">
+                <div class="text-block-164"><h2><%=site%> 거래 내역</h2></div>
+            </div>
+        
+              <!-- <div class="text-block-165">시작 자산 : <br>총수익 : <br>총수익율 : </div> -->
+        
+              <div class="w-embed">
+                <div class="table-wrapper">
+                    <input type="hidden" id="site" value='<%=site%>' >
+                    <br>
+                    <div id="start_asset"></div>
+                    <div id="end_asset"></div>
+                    <div id="totalBenefit"></div>
+                    <div id="totalBenefitRate"></div>
+                   <br>
+                    <table cellspacing="0" id="mytable">
+                        <thead>
+                            <tr>
+                                <th>no</th>
+                                <th>날짜</th>
+                                <th>시작시간</th>
+                                <th>종료시간</th>
+                                <th>자산</th>
+                                <th>구분</th>
+                                <th></th>
+                                <th></th>
+                                <th>분할횟수</th>
+                                <th>시작가격</th>
+                                <th>종료가격</th>
+                                <th>평균가격</th>
+                                <th>수량</th>
+                                <th>가치</th>
+                                <th>수익율</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+          </div>
 </body>
 </html>
