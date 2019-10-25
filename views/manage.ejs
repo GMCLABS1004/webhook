@@ -37,11 +37,12 @@
                     <div class="w-layout-grid grid-41">
                         <input type="hidden" id="is_on_off" value="false">
                         <input type="hidden" id="is_bot_on_off" value="false">
+                      
                       <div id="w-node-6428824966db-5357cf79" class="text-block-64"><strong class="bold-text-66" >봇</strong></div>
                         <!-- <a class="btn btn-outline-secondary btn-sm mgR10" href="coinisKRWBotDetailSet" role="button" target="_self">세부설정</a> -->
                       <a id="w-node-28f5579adec6-5357cf79" href="log"  class="button-log w-button" role="button" target="_self">로그</a>
                       <a id="w-node-9e158724c4e8-5357cf79" href="avg_order_history?site_type=korean" role="button" target="_self" class="button-8 w-button">거래평균(국내)</a>
-                      <a id="w-node-3ad2b0511a26-5357cf79" id="finance_tag" href="" role="button" target="_self" class="button-8 w-button">재정거래(국내)</a>
+                      <a id="finance_tag" href="http://localhost:3000/" role="button" target="_self" class="button-8 w-button">재정거래(국내)</a>
                       <div id="w-node-8da96091dedb-5357cf79" class="text-block-61">
                           <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check" />
                       </div>
@@ -268,49 +269,52 @@
           </div>
 
     <script type="text/javascript">
-        
         $(document).ready(function (e) {
+         
             $('.lcs_check').lc_switch();
             var finance_url = window.location.origin + ":3000/financialTradeSet";
-            $("#finance_tag").attr("href",finance_url);
+            
+            $("#finance_tag").attr("href", window.location.origin + ":3000/financialTradeSet");
             $.ajax({
                 type: "GET",
                 url: "api/manage",
                 success: function(list){
-                    
                     if(list){
-                        
                         for(i=0; i<list.length; i++){
                             if(list[i].flag === 'checked'){
                                 $("#"+list[i].id).lcs_on();
                             }
-                            // else if(list[i].flag === 'unchecked'){
-                            //     $("#"+list[i].id).lcs_off(false);
-                            // }
+                            else if(list[i].flag === 'unchecked'){
+                                $("#"+list[i].id).lcs_off();
+                            }else{ //bot unckecked시 실행
+                                $("#"+list[i].id).lcs_off();
+                            }
                         }
                     }
                     console.log(list);
                     setTimeout(function(){
                         $("#is_on_off").val('true');
-                    }, 500);
+                    }, 200);
                 },
                 error : function(request, status, error) {
                     console.log("error : " + error);
                     setTimeout(function(){
                         $("#is_on_off").val('true');
-                    }, 500);
+                        
+                    }, 200);
                 }
             });
-    
-    
+
+
             $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
-               
-                if($("#is_on_off").val() === 'false'){
-                    
-                    return;
-                }
+                
                 var askType = $(this).attr('name');
                 if(askType === 'bot'){ //봇 on/off
+                    if($("#is_bot_on_off").val() === 'false'){
+                        console.log("봇 onoff 실행XXXX ");
+                        $("#is_bot_on_off").val('true');
+                        return;
+                    }
                     var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                     console.log('field changed status: '+ status );
                     var obj = new Object();
@@ -331,6 +335,11 @@
                         }
                     });
                 }else if(askType === 'func'){ // 기능 on/off 
+                    
+                    if($("#is_on_off").val() === 'false'){
+                        console.log("기능 onoff 실행XXXX ");
+                        return;
+                    }
                     console.log("기능 On/Off");
                     var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                     console.log('field changed status: '+ status );
