@@ -365,6 +365,15 @@ function marginTrade(){
   }
 }
 
+
+function convert_side_str(side){
+  if(side === 'Buy' ){
+    return 'long';
+  }else if(side === 'NONE'){
+    return 'exit';
+  }
+}
+
 function trade_bithumb(_signal){
   return function(){
     var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
@@ -377,6 +386,7 @@ function trade_bithumb(_signal){
           avail_coin : 0,
           symbol : "",
           isSide : '',
+          pgSide : '',
           side_num : 0,
           ticker : 0,
           ask : [],
@@ -421,6 +431,7 @@ function trade_bithumb(_signal){
           data.ordInterval = res[0].ordInterval * 1000;
           data.minOrdRate = res[0].minOrdRate * 0.01;
           data.maxOrdRate = res[0].maxOrdRate * 0.01;
+          data.pgSide = res[0].side;
           data.side_num = res[0].side_num;
           cb(null, data);
         });
@@ -519,6 +530,14 @@ function trade_bithumb(_signal){
             data.isSide = "Buy";
           }else{
             data.isSide = "NONE";
+          }
+
+          
+          //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
+          //단 셋팅값이 초기값이면 로직실행
+          if(data.pgSide !== convert_side_str(data.isSide) && data.pgSide !== '' ){
+            logger.info("로직실행X, 프로그램포지션 !== 현재포지션");
+            return;
           }
           console.log("avail_coin : "+ data.avail_coin);
           console.log("ticker : "+ data.ticker);
@@ -642,6 +661,7 @@ function trade_coinone(_signal){
           symbol : "",
           side : '',
           side_num : 0,
+          pgSide : '',
           ask : [],
           bid : [],
           avail_coin : 0,
@@ -683,6 +703,7 @@ function trade_coinone(_signal){
           data.ordInterval = res[0].ordInterval * 1000;
           data.minOrdRate = res[0].minOrdRate * 0.01;
           data.maxOrdRate = res[0].maxOrdRate * 0.01;
+          data.pgSide = res[0].side;
           data.side_num = res[0].side_num;
           cb(null, data);
         });
@@ -778,6 +799,13 @@ function trade_coinone(_signal){
                   data.isSide = "Buy"
                 }else{
                   data.isSide = "NONE"
+                }
+
+                //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
+                //단 셋팅값이 초기값('')이면 로직실행
+                if(data.pgSide !== convert_side_str(data.isSide) && data.pgSide !== '' ){
+                  logger.info("로직실행X, 프로그램포지션 !== 현재포지션");
+                  return;
                 }
                 console.log("avail_coin : "+ data.avail_coin);
                 console.log("ticker : "+ data.ticker);
@@ -902,6 +930,7 @@ function trade_upbit(_signal){
           symbol : "",
           side : '',
           side_num : 0,
+          pgSide : '',
           ordType : 'Limit',
           ask : [],
           bid : [],
@@ -945,6 +974,7 @@ function trade_upbit(_signal){
           data.ordInterval = res[0].ordInterval * 1000;
           data.minOrdRate = res[0].minOrdRate * 0.01;
           data.maxOrdRate = res[0].maxOrdRate * 0.01;
+          data.pgSide = res[0].side;
           data.side_num = res[0].side_num;
           cb(null, data);
         });
@@ -1049,6 +1079,13 @@ function trade_upbit(_signal){
               data.isSide = "Buy"
             }else{
               data.isSide = "NONE"
+            }
+
+            //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
+            //단 셋팅값이 초기값('')이면 로직실행
+            if(data.pgSide !== convert_side_str(data.isSide) && data.pgSide !== '' ){
+              logger.info("로직실행X, 프로그램포지션 !== 현재포지션");
+              return;
             }
             console.log("avail_coin : "+ data.avail_coin);
             console.log("ticker : "+ data.ticker);
@@ -1172,6 +1209,8 @@ function trade_korbit(_signal){
           symbol : "",
           side : '',
           side_num : 0,
+          pgSide : '',
+          
           ask : [],
           bid : [],
           avail_coin : 0,
@@ -1228,6 +1267,7 @@ function trade_korbit(_signal){
             data.ordInterval = res[0].ordInterval * 1000;
             data.minOrdRate = res[0].minOrdRate * 0.01;
             data.maxOrdRate = res[0].maxOrdRate * 0.01;
+            data.pgSide = res[0].side;
             data.side_num = res[0].side_num;
             cb(null, data);
           });
@@ -1310,6 +1350,13 @@ function trade_korbit(_signal){
             data.isSide = "Buy"
           }else{
             data.isSide = "NONE"
+          }
+
+          //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
+          //단 셋팅값이 초기값('')이면 로직실행
+          if(data.pgSide !== convert_side_str(data.isSide) && data.pgSide !== '' ){
+            logger.info("로직실행X, 프로그램포지션 !== 현재포지션");
+            return;
           }
           console.log("avail_coin : "+ data.avail_coin);
           console.log("ticker : "+ data.ticker);
@@ -2041,6 +2088,7 @@ function check_is_ordering(site_type, scriptNo, idx){
           console.log(error);
           return;
       }
+
       console.log("idx :" +idx);
       if(idx >= 20){
         console.log("20회 이상주문중 아님, 로직 종료");
@@ -2054,17 +2102,16 @@ function check_is_ordering(site_type, scriptNo, idx){
               list.push(res[i]);
           }
       }
+      
       if(list.length > 0){
           for(i=0; i<list.length; i++){
               if(list[i].isExiting === true || list[i].isEntering === true){
-                  
                   setTimeout(check_order_complete(site_type, scriptNo),2000);
                   return;
               }else{
                 console.log("주문중X");
               }
           }
-
           setTimeout(check_is_ordering(site_type, scriptNo, idx+1 ),500);
       }else{
           console.log("목록없음 로직종료");
@@ -2089,6 +2136,7 @@ function check_order_complete(site_type, scriptNo){
                   list.push(res[i]);
               }
           }
+
           if(list.length > 0){
               for(i=0; i<list.length; i++){
                   if(list[i].isExiting === true || list[i].isEntering === true){
@@ -2120,6 +2168,7 @@ function insert_trade_history(list){
         for(i=0; i<list.length; i++){
           search_list.push({site : list[i].site});
         }
+        
         for(i=0; i<search_list.length; i++){
           console.log(search_list[i]);
           orderDB.find(search_list[i]).sort({start_time : "desc"}).limit(1).exec(function(error,data){
