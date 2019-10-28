@@ -83,16 +83,17 @@
             success: function(json){
                 console.log(json);
                 if(json){
+                    var url = window.location.origin + '/orderHistoryTotal?site='
                     var list = json.list;
                     var last_price = json.last_price;
                     $("#mytable > tbody:last").empty();
                     $("#last_price").html("");
                     $("#last_price").html("현재가 : "+ last_price +"<br><br>");
                     for(i=0; i<list.length; i++){
-                        
+                       
                         $("#mytable > tbody:last").append("<tr>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='left'>" + list[i].site + "</td>");
+                                $("#mytable > tbody:last").append("<td align='left'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptName + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");

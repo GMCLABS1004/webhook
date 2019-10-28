@@ -82,6 +82,7 @@
             url : "api/positionAll_internal",
             success: function(json){
                 console.log(json);
+                var url = window.location.origin + '/orderHistoryTotal?site='
                 if(json){
                     var list = json.list;
                     var last_price = price_comma(json.last_price, "korean");
@@ -91,7 +92,7 @@
                     for(i=0; i<list.length; i++){
                         $("#mytable > tbody:last").append("<tr>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='left'>" + list[i].site + "</td>");
+                                $("#mytable > tbody:last").append("<td align='left'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptName + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
