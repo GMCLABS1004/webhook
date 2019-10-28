@@ -9952,7 +9952,7 @@ opacity: 1;
       margin-bottom: 0px;
       padding: 15px 10px;
       -webkit-box-pack: center;
-      -webkit-justify-content: center;
+      -webkit-justify-content: center; 
       -ms-flex-pack: center;
       justify-content: center;
       -webkit-box-align: center;
