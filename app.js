@@ -17,7 +17,7 @@ var users = require('./routes/users');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var webSetting = require('./webSetting.json');
-var client = redis.createClient();
+var client = redis.createClient({host: webSetting.redis_server, port: 6379});
 var app = express();
 
 mongoose.connect(webSetting.dbPath);
@@ -35,7 +35,7 @@ console.log("redis-server : "+ webSetting.redis_server);
 app.use(session({
   secret: 'ssshhhhh',
   // create new redis store.
-  store: new redisStore({ host: webSetting.redis_server, port: 6379, client: client, ttl :  260}),
+  store: new redisStore({  client: client, ttl :  260}), //host: "52.79.228.147", port: 6379,
   saveUninitialized: false,
   resave: false
 }));
