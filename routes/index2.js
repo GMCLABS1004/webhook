@@ -13,6 +13,7 @@
 // var setting = require("../models/setting");
 // var order = require("../models/order");
 // var orderDB2 = require('../models/order_avg');
+
 // var webSetting = require("../webSetting");
 // var moment = require('moment');
 // var forever = require('forever');
@@ -62,7 +63,7 @@
 //     res.redirect('/manage');
 // });
 
-// router.get('/logout', function (req, res) {
+// router.get('/logout', isAuthenticated, function (req, res) {
 //   req.logout();
 //   res.redirect('/login');
 // });
@@ -70,25 +71,79 @@
 
 
 
-// router.get('/changePW', isAuthenticated, function(req, res) {
+// router.get('/changePW',isAuthenticated,  function(req, res) {
 //   res.render('changePW');
 // });
 
 
 // /* GET home page. */
-// router.get('/', isAuthenticated, function(req, res){
+// router.get('/', isAuthenticated,  function(req, res){
 //   res.redirect('manage');
 // });
 
-// // router.get('/main', isAuthenticated, function(req, res, next){
+// // router.get('/main',  function(req, res, next){
 // //   res.render('main', {user_info : req.user});
 // // });
 
-// router.get('/script', isAuthenticated, function(req, res, next){
+// router.get('/script', isAuthenticated,  function(req, res, next){
 //   res.render('script');
 // });
 
-// router.get('/api/findScript', isAuthenticated, function(req, res, next){
+// router.get('/script2', isAuthenticated,  function(req, res, next){
+//   console.log("scriptNo : "+ req.query.scriptNo);
+//   var scriptNo = Number(req.query.scriptNo);
+//   res.render('script2',{scriptNo : scriptNo});
+// });
+
+// router.post('/api/updateScript', isAuthenticated,  function(req, res, next){
+//   console.log('/api/updateScript');
+//   var data = new Object(req.body);
+//   var scriptNo = Number(req.body.scriptNo);
+//   var data = {
+//     long1 : create_array(req.body.long1),
+//     long2 : create_array(req.body.long2),
+//     long3 : create_array(req.body.long3),
+//     long4 : create_array(req.body.long4),
+//     long5 : create_array(req.body.long5),
+//     short1 : create_array(req.body.short1),
+//     short2 : create_array(req.body.short2),
+//     short3 : create_array(req.body.short3),
+//     short4 : create_array(req.body.short4),
+//     short5 : create_array(req.body.short5)
+//   }
+//   console.log(data);
+//   script.updateOne({scriptNo : scriptNo}, {$set : data}, function(error, bpdy){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     res.send({});
+//   });
+
+//   function create_array(data){
+//     if(data === ""){
+//       return [];
+//     }
+
+//     var body = "["+data+"]";
+//     var json = JSON.parse(body);
+//     return json;
+//   }
+// });
+
+// router.get('/api/findOneScript', isAuthenticated,  function(req, res, next){
+//   var scriptNo = Number(req.query.scriptNo);
+//   script.find({scriptNo :  scriptNo}, function(error, json){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     res.send(json[0]);
+//   });
+// });
+
+
+// router.get('/api/findScript', isAuthenticated,  function(req, res, next){
 //   script.find({}, function(error, json){
 //     if(error){
 //       console.log(error);
@@ -98,7 +153,7 @@
 //   });
 // });
 
-// router.post('/api/insertScript', isAuthenticated, function(req, res, next){
+// router.post('/api/insertScript', isAuthenticated,  function(req, res, next){
 //   console.log('/api/insertScript');
 //   var data = new Object(req.body);
 //   console.log(data);
@@ -108,7 +163,7 @@
 //     version : Number(req.body.version)
 //   }
 
-//   script.insertMany(obj, function(error, body){
+//   script.insertMany(obj, isAuthenticated, function(error, body){
 //     if(error){
 //       console.log(error);
 //       return;
@@ -118,7 +173,7 @@
 //   });
 // });
 
-// router.post('/api/removeScript', isAuthenticated, function(req, res, next){
+// router.post('/api/removeScript', isAuthenticated,  function(req, res, next){
 //   var deleteArr = req.body.deleteArr; //start or stop
 //   var length = deleteArr.length;
 //   console.log(deleteArr)
@@ -135,12 +190,12 @@
 //   res.send({});
 // });
 
-// router.get('/positionAll', isAuthenticated, function(req, res, next){
+// router.get('/positionAll', isAuthenticated,  function(req, res, next){
 //   res.render('positionAll');
 // });
 
 
-// router.get('/api/positionAll', isAuthenticated, function(req, response, next){
+// router.get('/api/positionAll', isAuthenticated,  function(req, response, next){
 //   var list = [];
 //   var last_price = 0;
 //     // console.log(res);
@@ -245,11 +300,11 @@
 //     });
 // });
 
-// router.get('/positionAll_internal', isAuthenticated, function(req, res, next){
+// router.get('/positionAll_internal', isAuthenticated,  function(req, res, next){
 //   res.render('positionAll_internal');
 // });
 
-// router.get('/api/positionAll_internal', isAuthenticated, function(req, response, next){
+// router.get('/api/positionAll_internal', isAuthenticated,  function(req, response, next){
 //   var list = [];
 //   var last_price = 0;
 
@@ -363,6 +418,7 @@
 //           site : set.site,//사이트
 //           scriptNo : set.scriptNo, //스크립트
 //           isSide : "",
+//           side_num : set.side_num,
 //           totalAsset : 0,
 //           size: 0,
 //           value : 0,
@@ -484,6 +540,7 @@
 //           site : set.site,//사이트
 //           scriptNo : set.scriptNo, //스크립트
 //           isSide : "",
+//           side_num : set.side_num,
 //           totalAsset : 0,
 //           size: 0,
 //           value : 0,
@@ -603,6 +660,7 @@
 //           site : set.site,//사이트
 //           scriptNo : set.scriptNo, //스크립트
 //           isSide : "",
+//           side_num : set.side_num,
 //           totalAsset : 0,
 //           size: 0,
 //           value : 0,
@@ -743,6 +801,7 @@
 //             site : set.site,//사이트
 //             scriptNo : set.scriptNo, //스크립트
 //             isSide : "",
+//             side_num : set.side_num,
 //             totalAsset : 0,
 //             size: 0,
 //             value : 0,
@@ -859,6 +918,7 @@
 //           data["leverage"] = set.leverage;
 //           data["margin"] = set.margin;
 //           data["scriptNo"] = set.scriptNo;
+//           data["side_num"] = set.side_num;
 //         }
 //       }
 
@@ -996,16 +1056,35 @@
   
 // }
 
+// router.get('/manage', isAuthenticated,  function(req, res, next){
+//   var options = {
+//     url : webSetting.testnet_url+"/api/manage",
+//     method : "GET",
+//   }
+//   request(options, function(err,responsedata,body){
+//     if(err){
+//       console.log(err);
 
-// router.get('/manage', isAuthenticated, function(req, res, next){
-//   var date = new Date();
-//   console.log("[" + date.toISOString() + "] : " + req.body);
+//     }
+//     console.log()
+//     console.log("api/manage 호출");
+//     console.log(body);
+//     console.log(typeof(body));
+//     console.log( JSON.parse(body));
+//     var json = JSON.parse(body);
+//     res.render('manage', json);
+//   });
+// });
+
+
+// router.get('/api/manage', isAuthenticated,  function(req, res, next){
+
 //   var status = {
 //     isMargin : {execBot : "unchecked", exec_bitmex : "unchecked", exec_bithumb : "unchecked", exec_coinone : "unchecked", exec_upbit : "unchecked" }
 //   }
-
+  
 //   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
-
+  
 //   botArr.push({botName : "marginTrade.js"});
   
 //   setting.find({}, function(error, json){
@@ -1019,7 +1098,7 @@
 //       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
 //       status["isMargin"]["exec_"+json[i].site] = flag;
 //     }
-
+  
 //     forever.list(false, function(err,processes){
 //       if(err){
 //           console.log("err : "+err);
@@ -1040,11 +1119,112 @@
       
 //       status["isMargin"]["execBot"] = botArr[0].isExec;
   
-//       console.log("status2 호출 : " + JSON.stringify(status));
-//       res.render('manage',status);
+//       //console.log("status2 호출 : " + JSON.stringify(status));
+//       res.send(status);
 //     });
 //   });
 // });
+
+// // router.get('/api/manage',  function(req, res, next){
+
+
+// //   var date = new Date();
+// //   console.log("[" + date.toISOString() + "] : " + req.body);
+// //   var status = [];
+
+// //   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
+
+// //   botArr.push({botName : "marginTrade.js"});
+  
+// //   setting.find({}, function(error, json){
+// //     if(error){
+// //       console.log(error);
+// //       return;
+// //     }
+// //     // console.log(json);
+// //     for(i=0; i<json.length; i++){
+// //       var flag = "unchecked";
+// //       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
+// //       status.push({ id : json[i].site+"_execFlag", flag : flag});
+// //     }
+
+// //     forever.list(false, function(err,processes){
+// //       if(err){
+// //           console.log("err : "+err);
+// //           //res.render('financialTradeSet',status);
+// //       }
+// //       else if(processes){
+// //         console.log(processes);
+// //         //실행중인 봇 체크 
+// //         for(i=0; i<botArr.length; i++){
+// //           for(j=0; j<processes.length; j++){
+// //             if(processes[j].file.indexOf(botArr[i].botName) !== -1){
+// //               botArr[i].isExec = "checked"; 
+// //             }
+// //           }
+// //         }
+// //         console.log("botArr : " + JSON.stringify(botArr));
+// //       }
+      
+// //       status.push({id : "marginTrade", flag : botArr[0].isExec});
+      
+// //       //console.log("status2 호출 : " + JSON.stringify(status));
+// //       res.send(status);
+// //     });
+// //   });
+// // });
+
+
+
+
+// // router.get('/manage',  function(req, res, next){
+// //   var date = new Date();
+// //   console.log("[" + date.toISOString() + "] : " + req.body);
+// //   var status = {
+// //     isMargin : {marginTrade : "unchecked", bithumb_execFlag : "unchecked", coinone_execFlag : "unchecked", upbit_execFlag : "unchecked" }
+// //   }
+
+// //   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
+
+// //   botArr.push({botName : "marginTrade.js"});
+  
+// //   setting.find({}, function(error, json){
+// //     if(error){
+// //       console.log(error);
+// //       return;
+// //     }
+// //     console.log(json);
+// //     for(i=0; i<json.length; i++){
+// //       var flag = "unchecked";
+// //       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
+// //       status["isMargin"][json[i].site+"_execFlag"] = flag;
+// //     }
+
+// //     forever.list(false, function(err,processes){
+// //       if(err){
+// //           console.log("err : "+err);
+// //           //res.render('financialTradeSet',status);
+// //       }
+// //       else if(processes){
+// //         console.log(processes);
+// //         //실행중인 봇 체크 
+// //         for(i=0; i<botArr.length; i++){
+// //           for(j=0; j<processes.length; j++){
+// //             if(processes[j].file.indexOf(botArr[i].botName) !== -1){
+// //               botArr[i].isExec = "checked"; 
+// //             }
+// //           }
+// //         }
+// //         console.log("botArr : " + JSON.stringify(botArr));
+// //       }
+      
+// //       status["isMargin"]["marginTrade"] = botArr[0].isExec;
+      
+// //       console.log("status2 호출 : " + JSON.stringify(status));
+// //       res.render('manage',status);
+// //     });
+// //   });
+// // });
 
 
 // router.post('/api/marginTrade', function(req,res){
@@ -1066,7 +1246,7 @@
 //   });
 // });
 
-// router.get('/setting',isAuthenticated, function(req,res){
+// router.get('/setting',  isAuthenticated, function(req,res){
 //   var site = req.query.site;
 //   setting.findOne({site : site},function(error, json){
 //     if(error){
@@ -1078,7 +1258,37 @@
 //   })
 // });
 
-// router.post('/api/setting', isAuthenticated, function(req,res){
+
+
+// router.get('/setting',  isAuthenticated, function(req,res){
+//   var site = req.query.site;
+//   setting.findOne({site : site},function(error, json){
+//     if(error){
+//       res.render('setting',error);
+//       return;
+//     }
+//     console.log(json);
+//     res.render('setting',json);
+//   });
+// });
+
+
+
+// router.get('/api/read_setting',  isAuthenticated, function(req,res){
+//   var site = req.query.site;
+//   setting.findOne({site : site},function(error, json){
+//     if(error){
+//       res.render('setting',error);
+//       return;
+//     }
+//     console.log(json);
+//     res.send(json);
+//   });
+// });
+
+
+
+// router.post('/api/setting',  isAuthenticated,  function(req,res){
 //   var json = new Object(req.body);
 //   var obj = {
 //     url : json.url,
@@ -1102,7 +1312,7 @@
 // });
 
 
-// router.get('/setting_status',isAuthenticated, function(req,res){
+// router.get('/setting_status',  isAuthenticated, function(req,res){
 //   var site = req.query.site;
 //   setting.findOne({site : site},function(error, json){
 //     if(error){
@@ -1114,7 +1324,7 @@
 //   })
 // });
 
-// router.post('/api/setting_status', isAuthenticated, function(req,res){
+// router.post('/api/setting_status',  isAuthenticated,  function(req,res){
 //   var json = new Object(req.body);
 //   console.log(json);
 //   var obj = {
@@ -1131,7 +1341,7 @@
 //   });
 // });
 
-// router.post('/api/botOnOff', isAuthenticated, function(req,res){
+// router.post('/api/botOnOff', isAuthenticated,  function(req,res){
 //     //var botName = "/home/gmc/GMC_DefenceBot/" + req.body.id + ".js"; //봇이름
 //     var botPath = webSetting.botPath;
 //     var botName = botPath + req.body.id + ".js"; //봇이름
@@ -1177,7 +1387,7 @@
 // });
 
 
-// router.post('/api/siteOnOff',isAuthenticated, function(req,res){
+// router.post('/api/siteOnOff', isAuthenticated, function(req,res){
 //   var site = req.body.site;
 //   var execFlag = Boolean(Number(req.body.execFlag));
 //   console.log("site : " + site);
@@ -1192,12 +1402,12 @@
 //   });
 // });
 
-// router.get('/log',function(req, res){
+// router.get('/log',  isAuthenticated, function(req, res){
 //   var site = req.query.site;
 //   res.render('log',{site : site});
 // });
 
-// router.get('/api/log', isAuthenticated, function(req,res){
+// router.get('/api/log',  isAuthenticated,  function(req,res){
 //   var logDate = req.query.logDate;
 //   var site = req.query.site;
 //   var logFileName = "./log/"+site +".log." + logDate;  
@@ -1220,12 +1430,12 @@
 //   }
 // });
 
-// router.get('/orderHistory', isAuthenticated, function(req, res){
+// router.get('/orderHistory',  function(req, res){
 //   var site = req.query.site;
 //   res.render('orderHistory',{site : site});
 // });
 
-// router.get('/api/orderHistory',isAuthenticated, function(req, res){
+// router.get('/api/orderHistory',  isAuthenticated, function(req, res){
 //   console.log("/api/orderHistory 실행");
 //   var site = req.query.site;
 //   var logDate = req.query.logDate;
@@ -1242,13 +1452,13 @@
 //   });
 // });
 
-// router.get('/orderHistoryTotal', isAuthenticated, function(req, res){
+// router.get('/orderHistoryTotal',  isAuthenticated,  function(req, res){
 //   var site = req.query.site;
 //   res.render('orderHistoryTotal',{site : site});
 // });
 
 
-// router.get('/api/orderHistoryTotal',isAuthenticated, function(req, res){
+// router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
 //   console.log("/api/orderHistoryTotal 실행");
 //   var site = req.query.site;
 //   order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
@@ -1261,12 +1471,12 @@
 //   });
 // });
 
-// router.get('/avg_order_history', isAuthenticated, function(req, res){
+// router.get('/avg_order_history',  isAuthenticated,  function(req, res){
 //   var site_type = req.query.site_type;
 //   res.render('avg_order_history',{site_type : site_type});
 // });
 
-// router.get('/api/avg_order_history',isAuthenticated, function(req, res){
+// router.get('/api/avg_order_history',  isAuthenticated, function(req, res){
 //   console.log("/api/avg_order_history 실행");
 //   var site_type = req.query.site_type;
 //   console.log('site_type : '+ site_type);

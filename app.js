@@ -5,6 +5,9 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var redis = require('redis');
+var session = require('express-session');
+var redisStore = require('connect-redis')(session);
 var mongoose = require('mongoose');
 var passport = require('passport') //passport module add
   , LocalStrategy = require('passport-local').Strategy;
@@ -14,6 +17,7 @@ var users = require('./routes/users');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var webSetting = require('./webSetting.json');
+var client = redis.createClient();
 var app = express();
 
 mongoose.connect(webSetting.dbPath);
@@ -21,11 +25,18 @@ mongoose.connect(webSetting.dbPath);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(cookieSession({
-  keys: ['node_yun'],
-  cookie: {
-    maxAge: 1000 * 60 * 60 // 유효기간 1시간
-  }
+// app.use(cookieSession({
+//   keys: ['node_yun'],
+//   cookie: {
+//     maxAge: 1000 * 60 * 60 // 유효기간 1시간
+//   }
+// }));
+app.use(session({
+  secret: 'ssshhhhh',
+  // create new redis store.
+  store: new redisStore({ host: webSetting.redis_server, port: 6379, client: client, ttl :  260}),
+  saveUninitialized: false,
+  resave: false
 }));
 app.use(flash());
 app.use(passport.initialize());

@@ -63,21 +63,22 @@ router.post('/login', passport.authenticate('local', {failureRedirect: '/login',
     res.redirect('/manage');
 });
 
-router.get('/logout', function (req, res) {
+router.get('/logout', isAuthenticated, function (req, res) {
   req.logout();
+  req.session.destroy();
   res.redirect('/login');
 });
 
 
 
 
-router.get('/changePW',  function(req, res) {
+router.get('/changePW',isAuthenticated,  function(req, res) {
   res.render('changePW');
 });
 
 
 /* GET home page. */
-router.get('/',  function(req, res){
+router.get('/', isAuthenticated,  function(req, res){
   res.redirect('manage');
 });
 
@@ -85,17 +86,17 @@ router.get('/',  function(req, res){
 //   res.render('main', {user_info : req.user});
 // });
 
-router.get('/script',  function(req, res, next){
+router.get('/script', isAuthenticated,  function(req, res, next){
   res.render('script');
 });
 
-router.get('/script2',  function(req, res, next){
+router.get('/script2', isAuthenticated,  function(req, res, next){
   console.log("scriptNo : "+ req.query.scriptNo);
   var scriptNo = Number(req.query.scriptNo);
   res.render('script2',{scriptNo : scriptNo});
 });
 
-router.post('/api/updateScript',  function(req, res, next){
+router.post('/api/updateScript', isAuthenticated,  function(req, res, next){
   console.log('/api/updateScript');
   var data = new Object(req.body);
   var scriptNo = Number(req.body.scriptNo);
@@ -131,7 +132,7 @@ router.post('/api/updateScript',  function(req, res, next){
   }
 });
 
-router.get('/api/findOneScript',  function(req, res, next){
+router.get('/api/findOneScript', isAuthenticated,  function(req, res, next){
   var scriptNo = Number(req.query.scriptNo);
   script.find({scriptNo :  scriptNo}, function(error, json){
     if(error){
@@ -143,7 +144,7 @@ router.get('/api/findOneScript',  function(req, res, next){
 });
 
 
-router.get('/api/findScript',  function(req, res, next){
+router.get('/api/findScript', isAuthenticated,  function(req, res, next){
   script.find({}, function(error, json){
     if(error){
       console.log(error);
@@ -153,7 +154,7 @@ router.get('/api/findScript',  function(req, res, next){
   });
 });
 
-router.post('/api/insertScript',  function(req, res, next){
+router.post('/api/insertScript', isAuthenticated,  function(req, res, next){
   console.log('/api/insertScript');
   var data = new Object(req.body);
   console.log(data);
@@ -163,7 +164,7 @@ router.post('/api/insertScript',  function(req, res, next){
     version : Number(req.body.version)
   }
 
-  script.insertMany(obj, function(error, body){
+  script.insertMany(obj, isAuthenticated, function(error, body){
     if(error){
       console.log(error);
       return;
@@ -173,7 +174,7 @@ router.post('/api/insertScript',  function(req, res, next){
   });
 });
 
-router.post('/api/removeScript',  function(req, res, next){
+router.post('/api/removeScript', isAuthenticated,  function(req, res, next){
   var deleteArr = req.body.deleteArr; //start or stop
   var length = deleteArr.length;
   console.log(deleteArr)
@@ -190,12 +191,12 @@ router.post('/api/removeScript',  function(req, res, next){
   res.send({});
 });
 
-router.get('/positionAll',  function(req, res, next){
+router.get('/positionAll', isAuthenticated,  function(req, res, next){
   res.render('positionAll');
 });
 
 
-router.get('/api/positionAll',  function(req, response, next){
+router.get('/api/positionAll', isAuthenticated,  function(req, response, next){
   var list = [];
   var last_price = 0;
     // console.log(res);
@@ -300,11 +301,11 @@ router.get('/api/positionAll',  function(req, response, next){
     });
 });
 
-router.get('/positionAll_internal',  function(req, res, next){
+router.get('/positionAll_internal', isAuthenticated,  function(req, res, next){
   res.render('positionAll_internal');
 });
 
-router.get('/api/positionAll_internal',  function(req, response, next){
+router.get('/api/positionAll_internal', isAuthenticated,  function(req, response, next){
   var list = [];
   var last_price = 0;
 
@@ -1056,7 +1057,7 @@ function bitmex_position_parse(site, obj){
   
 }
 
-router.get('/manage',  function(req, res, next){
+router.get('/manage', isAuthenticated,  function(req, res, next){
   var options = {
     url : webSetting.testnet_url+"/api/manage",
     method : "GET",
@@ -1064,7 +1065,6 @@ router.get('/manage',  function(req, res, next){
   request(options, function(err,responsedata,body){
     if(err){
       console.log(err);
-
     }
     console.log()
     console.log("api/manage 호출");
@@ -1246,7 +1246,7 @@ router.post('/api/marginTrade', function(req,res){
   });
 });
 
-router.get('/setting', function(req,res){
+router.get('/setting',  isAuthenticated, function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
     if(error){
@@ -1260,7 +1260,7 @@ router.get('/setting', function(req,res){
 
 
 
-router.get('/setting', function(req,res){
+router.get('/setting',  isAuthenticated, function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
     if(error){
@@ -1274,7 +1274,7 @@ router.get('/setting', function(req,res){
 
 
 
-router.get('/api/read_setting', function(req,res){
+router.get('/api/read_setting',  isAuthenticated, function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
     if(error){
@@ -1288,7 +1288,7 @@ router.get('/api/read_setting', function(req,res){
 
 
 
-router.post('/api/setting',  function(req,res){
+router.post('/api/setting',  isAuthenticated,  function(req,res){
   var json = new Object(req.body);
   var obj = {
     url : json.url,
@@ -1312,7 +1312,7 @@ router.post('/api/setting',  function(req,res){
 });
 
 
-router.get('/setting_status', function(req,res){
+router.get('/setting_status',  isAuthenticated, function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
     if(error){
@@ -1324,7 +1324,7 @@ router.get('/setting_status', function(req,res){
   })
 });
 
-router.post('/api/setting_status',  function(req,res){
+router.post('/api/setting_status',  isAuthenticated,  function(req,res){
   var json = new Object(req.body);
   console.log(json);
   var obj = {
@@ -1341,7 +1341,7 @@ router.post('/api/setting_status',  function(req,res){
   });
 });
 
-router.post('/api/botOnOff',  function(req,res){
+router.post('/api/botOnOff', isAuthenticated,  function(req,res){
     //var botName = "/home/gmc/GMC_DefenceBot/" + req.body.id + ".js"; //봇이름
     var botPath = webSetting.botPath;
     var botName = botPath + req.body.id + ".js"; //봇이름
@@ -1387,7 +1387,7 @@ router.post('/api/botOnOff',  function(req,res){
 });
 
 
-router.post('/api/siteOnOff', function(req,res){
+router.post('/api/siteOnOff', isAuthenticated, function(req,res){
   var site = req.body.site;
   var execFlag = Boolean(Number(req.body.execFlag));
   console.log("site : " + site);
@@ -1402,12 +1402,12 @@ router.post('/api/siteOnOff', function(req,res){
   });
 });
 
-router.get('/log',function(req, res){
+router.get('/log',  isAuthenticated, function(req, res){
   var site = req.query.site;
   res.render('log',{site : site});
 });
 
-router.get('/api/log',  function(req,res){
+router.get('/api/log',  isAuthenticated,  function(req,res){
   var logDate = req.query.logDate;
   var site = req.query.site;
   var logFileName = "./log/"+site +".log." + logDate;  
@@ -1435,7 +1435,7 @@ router.get('/orderHistory',  function(req, res){
   res.render('orderHistory',{site : site});
 });
 
-router.get('/api/orderHistory', function(req, res){
+router.get('/api/orderHistory',  isAuthenticated, function(req, res){
   console.log("/api/orderHistory 실행");
   var site = req.query.site;
   var logDate = req.query.logDate;
@@ -1452,13 +1452,13 @@ router.get('/api/orderHistory', function(req, res){
   });
 });
 
-router.get('/orderHistoryTotal',  function(req, res){
+router.get('/orderHistoryTotal',  isAuthenticated,  function(req, res){
   var site = req.query.site;
   res.render('orderHistoryTotal',{site : site});
 });
 
 
-router.get('/api/orderHistoryTotal', function(req, res){
+router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
   console.log("/api/orderHistoryTotal 실행");
   var site = req.query.site;
   order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
@@ -1471,12 +1471,12 @@ router.get('/api/orderHistoryTotal', function(req, res){
   });
 });
 
-router.get('/avg_order_history',  function(req, res){
+router.get('/avg_order_history',  isAuthenticated,  function(req, res){
   var site_type = req.query.site_type;
   res.render('avg_order_history',{site_type : site_type});
 });
 
-router.get('/api/avg_order_history', function(req, res){
+router.get('/api/avg_order_history',  isAuthenticated, function(req, res){
   console.log("/api/avg_order_history 실행");
   var site_type = req.query.site_type;
   console.log('site_type : '+ site_type);
