@@ -2418,7 +2418,7 @@ function create_history_data(order_list, _signal){
     console.log("주문시간 :" + list[i].start_time );
     console.log("주문시간 :" +list[i].start_time.getTime());
     //신호온 이후 주문데이터만 필터링
-    if((_signal.timestamp.getTime() + (1000 * 60 * 60 * 9)) <= list[i].start_time.getTime()){
+    if((_signal.timestamp.getTime()) <= list[i].start_time.getTime()){
       list2.push(list[i]);
     }
   }
