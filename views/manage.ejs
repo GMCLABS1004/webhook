@@ -20,38 +20,37 @@
 </head>
 
 <body class="body-10">
-        <div class="section-19">
-                <div class="container-31 w-container">
-                  <div class="">
-                    <div class="w-layout-grid grid-18">
-                        <a  href="script" id="w-node-0478bd28aab8-5357cf79" class="button-log w-button">스크립트 설정</a>
-        
-                      <a href="positionAll"  id="w-node-e0b6b8eb9240-5357cf79" class="button-log w-button">포지션(해외)</a>
-                      <a href="positionAll_internal"  id="w-node-38c14d03ad5f-5357cf79" class="button-log w-button">포지션(국내)</a>
-                    </div>
-                    </div>
+  <div class="section-19">
+          <div class="container-31 w-container">
+            <div class="">
+              <div class="w-layout-grid grid-18">
+                  <a  href="script" id="w-node-0478bd28aab8-5357cf79" class="button-log w-button">스크립트 설정</a>
+  
+                <a href="positionAll"  id="w-node-e0b6b8eb9240-5357cf79" class="button-log w-button">포지션(해외)</a>
+                <a href="positionAll_internal"  id="w-node-38c14d03ad5f-5357cf79" class="button-log w-button">포지션(국내)</a>
+              </div>
+              </div>
+          </div>
+          <br><hr style="border: solid 1px #efefef;"><br>
+          <div class="container-31 w-container">
+            <div class="div-grid">
+              <div class="w-layout-grid grid-41">
+                  <input type="hidden" id="is_on_off" value="false">
+                  <input type="hidden" id="is_bot_on_off" value="false">
+                
+                <div id="w-node-6428824966db-5357cf79" class="text-block-64"><strong class="bold-text-66" >봇</strong></div>
+                  <!-- <a class="btn btn-outline-secondary btn-sm mgR10" href="coinisKRWBotDetailSet" role="button" target="_self">세부설정</a> -->
+                <a id="w-node-28f5579adec6-5357cf79" href="log"  class="button-log w-button" role="button" target="_self">로그</a>
+                <a id="w-node-9e158724c4e8-5357cf79" href="avg_order_history?site_type=korean" role="button" target="_self" class="button-8 w-button">거래평균(국내)</a>
+                <div id="w-node-3ad2b0511a26-5357cf79">
+                <a id="finance_tag" href="" role="button" target="_self" class="button-8 w-button w-node-8da96091dedb-5357cf79">재정거래(국내)</a>
+              </div>
+                <div id="w-node-59cf0b18cdd4-5357cf79" class="text-block-61">
+                    <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check" <%=isMargin.execBot%>/>
                 </div>
-                <br><hr style="border: solid 1px #efefef;"><br>
-                <div class="container-31 w-container">
-                  <div class="div-grid">
-                    <div class="w-layout-grid grid-41">
-                        <input type="hidden" id="is_on_off" value="false">
-                        <input type="hidden" id="is_bot_on_off" value="false">
-                      
-                      <div id="w-node-6428824966db-5357cf79" class="text-block-64"><strong class="bold-text-66" >봇</strong></div>
-                        <!-- <a class="btn btn-outline-secondary btn-sm mgR10" href="coinisKRWBotDetailSet" role="button" target="_self">세부설정</a> -->
-                      <a id="w-node-28f5579adec6-5357cf79" href="log"  class="button-log w-button" role="button" target="_self">로그</a>
-                      <a id="w-node-9e158724c4e8-5357cf79" href="avg_order_history?site_type=korean" role="button" target="_self" class="button-8 w-button">거래평균(국내)</a>
-
-                      <div id="w-node-3ad2b0511a26-5357cf79">
-                        <a id="finance_tag" href="" role="button" target="_self" class="button-8 w-button">재정거래(국내)</a>
-                      </div>
-                      <div id="w-node-8da96091dedb-5357cf79" class="text-block-61">
-                          <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check"  <%=isMargin.execBot%> />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              </div>
+            </div>
+          </div>
         
             <div class="container-31 w-container">
                 <div class="div-grid">
