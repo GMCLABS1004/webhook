@@ -31,6 +31,7 @@ app.set('view engine', 'ejs');
 //     maxAge: 1000 * 60 * 60 // 유효기간 1시간
 //   }
 // }));
+console.log("redis-server : "+ webSetting.redis_server);
 app.use(session({
   secret: 'ssshhhhh',
   // create new redis store.
