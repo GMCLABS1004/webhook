@@ -2308,15 +2308,23 @@ function insert_trade_history(list, _signal){
         var flag = '';
         if(obj.type === 'exit'){
           flag = 'stop'
+          console.log("재정거래 OFF!!!!")
+          console.log("재정거래 OFF!!!!")
         }else if(obj.type === 'long'){
           flag = 'start'
+          console.log("재정거래 ON!!!!")
+          console.log("재정거래 ON!!!!")
         }
+
+       
         var options = getFinanceBotOffOption("BTC_KRW", flag);
         request(options, function(error, response, body){
           if(error){
             console.log(error);
             return;
           }
+          console.log("재정거래 ON/OFF완료!!!!")
+          console.log("재정거래 ON/OFF완료!!!!")
           console.log(body);
           cb(null, obj);
         });
