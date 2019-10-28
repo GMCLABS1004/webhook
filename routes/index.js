@@ -13,6 +13,7 @@ var signal = require("../models/signal");
 var setting = require("../models/setting");
 var order = require("../models/order");
 var orderDB2 = require('../models/order_avg');
+
 var webSetting = require("../webSetting");
 var moment = require('moment');
 var forever = require('forever');
@@ -1056,18 +1057,34 @@ function bitmex_position_parse(site, obj){
 }
 
 router.get('/manage',  function(req, res, next){
-  res.render('manage');
+  var options = {
+    url : webSetting.testnet_url+"/api/manage",
+    method : "GET",
+  }
+  request(options, function(err,responsedata,body){
+    if(err){
+      console.log(err);
+
+    }
+    console.log()
+    console.log("api/manage 호출");
+    console.log(body);
+    console.log(typeof(body));
+    console.log( JSON.parse(body));
+    var json = JSON.parse(body);
+    res.render('manage', json);
+  });
 });
 
 
-
 router.get('/api/manage',  function(req, res, next){
-  var date = new Date();
-  console.log("[" + date.toISOString() + "] : " + req.body);
-  var status = [];
 
+  var status = {
+    isMargin : {execBot : "unchecked", exec_bitmex : "unchecked", exec_bithumb : "unchecked", exec_coinone : "unchecked", exec_upbit : "unchecked" }
+  }
+  
   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
-
+  
   botArr.push({botName : "marginTrade.js"});
   
   setting.find({}, function(error, json){
@@ -1075,17 +1092,17 @@ router.get('/api/manage',  function(req, res, next){
       console.log(error);
       return;
     }
-    // console.log(json);
+    console.log(json);
     for(i=0; i<json.length; i++){
       var flag = "unchecked";
       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
-      status.push({ id : json[i].site+"_execFlag", flag : flag});
+      status["isMargin"]["exec_"+json[i].site] = flag;
     }
-
+  
     forever.list(false, function(err,processes){
       if(err){
           console.log("err : "+err);
-          //res.render('financialTradeSet',status);
+          res.render('financialTradeSet',status);
       }
       else if(processes){
         console.log(processes);
@@ -1100,13 +1117,62 @@ router.get('/api/manage',  function(req, res, next){
         console.log("botArr : " + JSON.stringify(botArr));
       }
       
-      status.push({id : "marginTrade", flag : botArr[0].isExec});
-      
+      status["isMargin"]["execBot"] = botArr[0].isExec;
+  
       //console.log("status2 호출 : " + JSON.stringify(status));
       res.send(status);
     });
   });
 });
+
+// router.get('/api/manage',  function(req, res, next){
+
+
+//   var date = new Date();
+//   console.log("[" + date.toISOString() + "] : " + req.body);
+//   var status = [];
+
+//   var botArr = new Array(); // isBot1 isBot2 isDefBot isAutoCancleBot
+
+//   botArr.push({botName : "marginTrade.js"});
+  
+//   setting.find({}, function(error, json){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     // console.log(json);
+//     for(i=0; i<json.length; i++){
+//       var flag = "unchecked";
+//       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
+//       status.push({ id : json[i].site+"_execFlag", flag : flag});
+//     }
+
+//     forever.list(false, function(err,processes){
+//       if(err){
+//           console.log("err : "+err);
+//           //res.render('financialTradeSet',status);
+//       }
+//       else if(processes){
+//         console.log(processes);
+//         //실행중인 봇 체크 
+//         for(i=0; i<botArr.length; i++){
+//           for(j=0; j<processes.length; j++){
+//             if(processes[j].file.indexOf(botArr[i].botName) !== -1){
+//               botArr[i].isExec = "checked"; 
+//             }
+//           }
+//         }
+//         console.log("botArr : " + JSON.stringify(botArr));
+//       }
+      
+//       status.push({id : "marginTrade", flag : botArr[0].isExec});
+      
+//       //console.log("status2 호출 : " + JSON.stringify(status));
+//       res.send(status);
+//     });
+//   });
+// });
 
 
 

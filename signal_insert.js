@@ -9,7 +9,7 @@ mongoose.connect(webSetting.dbPath, function(error){
         return;
     }
     var sigData = {
-        scriptNo : 302,
+        scriptNo : 2,
         side : "Buy",
         side_num : 1,
         log : "",
