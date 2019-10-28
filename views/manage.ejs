@@ -10,7 +10,7 @@
     <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
     <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
     <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
-    
+
     <!-- <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css"> -->
     <!-- <link rel="stylesheet" type="text/css" href="../Content/sub.css"> -->
     <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
@@ -273,7 +273,8 @@
         $(document).ready(function (e) {
          
             $('.lcs_check').lc_switch();
-
+            var finance_url = window.location.origin + ":3000/financialTradeSet";
+            $("#finance_tag").attr("href",finance_url);
             $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
                
                 var askType = $(this).attr('name');
