@@ -3,5 +3,6 @@
     "dbPath" : "mongodb://127.0.0.1:27017/marginTrade",
     "dbPath2" : "mongodb://127.0.0.1:27017/finance",
     "testnet_url" : "http://127.0.0.1",
-    "redis-server" : "localhost"
+    "redis_exec" : false,
+    "redis-server" : "52.79.228.147"
 }

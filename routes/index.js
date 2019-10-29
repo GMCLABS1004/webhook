@@ -65,7 +65,10 @@ router.post('/login', passport.authenticate('local', {failureRedirect: '/login',
 
 router.get('/logout', isAuthenticated, function (req, res) {
   req.logout();
-  req.session.destroy();
+  if(webSetting.redis_exec){
+    req.session.destroy();
+  }
+  
   res.redirect('/login');
 });
 

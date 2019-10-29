@@ -17,7 +17,10 @@ var users = require('./routes/users');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var webSetting = require('./webSetting.json');
-var client = redis.createClient({host: webSetting.redis_server, port: 6379});
+if(webSetting.redis_exec){
+  var client = redis.createClient({host: webSetting.redis_server, port: 6379});
+}
+console.log("redis exec :" + webSetting.redis_exec)
 var app = express();
 
 mongoose.connect(webSetting.dbPath);
@@ -25,20 +28,23 @@ mongoose.connect(webSetting.dbPath);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-// app.use(cookieSession({
-//   keys: ['node_yun'],
-//   cookie: {
-//     maxAge: 1000 * 60 * 60 // 유효기간 1시간
-//   }
-// }));
-console.log("redis-server : "+ webSetting.redis_server);
-app.use(session({
-  secret: 'ssshhhhh',
-  // create new redis store.
-  store: new redisStore({  client: client, ttl :  260}), //host: "52.79.228.147", port: 6379,
-  saveUninitialized: false,
-  resave: false
-}));
+
+if(webSetting.redis_exec){
+  app.use(session({
+    secret: 'ssshhhhh',
+    // create new redis store.
+    store: new redisStore({  client: client, ttl :  260}), //host: webSetting.redis, port: 6379,
+    saveUninitialized: false,
+    resave: false
+  }));
+}else{
+  app.use(cookieSession({
+    keys: ['node_yun'],
+    cookie: {
+      maxAge: 1000 * 60 * 60 // 유효기간 1시간
+    }
+  }));
+}
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
