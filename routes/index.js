@@ -405,8 +405,24 @@ function getPosition_korea(set, cb){
         console.log(error);
         return;
       }
-      
-      cb(null, data);      
+
+      //최초자산 조회
+      order.find({site : set.site}).sort({start_time : "asc"}).limit(1).exec(function(error, body){
+        if(error){
+          console.log(error);
+          //res.send(error);
+          return;
+        }
+        console.log(body);
+        if(body.length > 0){
+          console.log("")
+          data["totalAsset_before"] = body[0].totalAsset;
+        }else{
+          data["totalAsset_before"] = data.totalAsset;
+        }
+        cb(null, data);
+      });
+     
     }), 0);
   }
 }
@@ -938,7 +954,24 @@ function getPosition_bitmex(set, cb){
           }
           var json = JSON.parse(body);
           data.walletBalance = json.walletBalance / 100000000;
-          cb(null, data);
+          
+          //최초자산 조회
+          order.find({site : set.site}).sort({start_time : "asc"}).limit(1).exec(function(error, body){
+            if(error){
+              console.log(error);
+              //res.send(error);
+              return;
+            }
+            console.log(body);
+            if(body.length > 0){
+              console.log("")
+              data["walletBalance_before"] = body[0].totalAsset;
+            }else{
+              data["walletBalance_before"] = data.walletBalance;
+            }
+            cb(null, data);
+          });
+          
       });
     })
   }
