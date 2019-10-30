@@ -50,7 +50,7 @@ var isAuthenticated = function(req, res, next) {
   // console.log("isAuthenticated call!!!");
   // console.log(req);
   // console.log(req.isAuthenticated());
-  if (req.isAuthenticated())
+  if(req.isAuthenticated())
     return next();
   res.redirect('/login');
 };
@@ -170,7 +170,7 @@ router.post('/api/insertScript', isAuthenticated,  function(req, res, next){
     version : Number(req.body.version)
   }
 
-  script.insertMany(obj, isAuthenticated, function(error, body){
+  script.insertMany(obj, function(error, body){
     if(error){
       console.log(error);
       return;
