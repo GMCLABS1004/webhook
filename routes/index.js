@@ -47,6 +47,9 @@ passport.use(new LocalStrategy({
 }));
 
 var isAuthenticated = function(req, res, next) {
+  console.log("isAuthenticated call!!!");
+  console.log(req);
+  console.log(req.isAuthenticated());
   if (req.isAuthenticated())
     return next();
   res.redirect('/login');
@@ -1069,7 +1072,6 @@ router.get('/manage', isAuthenticated,  function(req, res, next){
     if(err){
       console.log(err);
     }
-    console.log()
     console.log("api/manage 호출");
     console.log(body);
     console.log(typeof(body));

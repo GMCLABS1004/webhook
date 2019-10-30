@@ -277,7 +277,7 @@
             var finance_url = window.location.origin + ":3000/financialTradeSet";
             $("#finance_tag").attr("href",finance_url);
             $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
-               
+                
                 var askType = $(this).attr('name');
                 console.log("name : " +askType)
                 console.log("name : " +$(this).attr('id'));

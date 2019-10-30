@@ -32,6 +32,7 @@ app.set('view engine', 'ejs');
 if(webSetting.redis_exec){
   app.use(session({
     secret: 'ssshhhhh',
+    
     // create new redis store.
     store: new redisStore({  client: client, ttl :  260}), //host: webSetting.redis, port: 6379,
     saveUninitialized: false,
@@ -56,7 +57,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/remote', usersRouter);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
