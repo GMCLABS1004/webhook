@@ -106,7 +106,6 @@
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + isPosition(list[i].size) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='center'>" + list[i].side_num + "</td>");
-                                $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].walletBalance_before, list[i].site) + "</td>");
                                 $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].walletBalance, list[i].site) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
                                 $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
@@ -233,8 +232,7 @@
                                 <th>스크립트 번호</th>
                                 <th>포지션</th>
                                 <th>side num</th>
-                                <th>총자산(과거)</th>
-                                <th>총자산(현재)</th>
+                                <th>총자산</th>
                                 <th>수량</th>
                                 <th>가치</th>
                                 <th>진입가격</th>
