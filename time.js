@@ -14,7 +14,7 @@ mongoose.connect(webSetting.dbPath, function(error){
             console.log(error);
             return;
         }
-        
+        console.log()
     });
 });
 

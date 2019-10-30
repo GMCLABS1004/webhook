@@ -2,7 +2,7 @@
     "botPath" : "/home/ubuntu/webhook/",
     "dbPath" : "mongodb://127.0.0.1:27017/marginTrade",
     "dbPath2" : "mongodb://127.0.0.1:27017/finance",
-    "testnet_url" : "http://127.0.0.1",
+    "url" : "http://127.0.0.1",
     "redis_exec" : true,
     "redis_server" : "52.79.228.147"
 }

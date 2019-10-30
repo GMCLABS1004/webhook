@@ -405,7 +405,7 @@ function getPosition_korea(set, cb){
         console.log(error);
         return;
       }
-
+      
       //최초자산 조회
       order.find({site : set.site}).sort({start_time : "asc"}).limit(1).exec(function(error, body){
         if(error){
@@ -1098,7 +1098,7 @@ function bitmex_position_parse(site, obj){
 
 router.get('/manage', isAuthenticated,  function(req, res, next){
   var options = {
-    url : webSetting.testnet_url+"/api/manage",
+    url : webSetting.url+"/api/manage",
     method : "GET",
   }
   request(options, function(err,responsedata,body){
