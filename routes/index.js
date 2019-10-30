@@ -47,9 +47,9 @@ passport.use(new LocalStrategy({
 }));
 
 var isAuthenticated = function(req, res, next) {
-  console.log("isAuthenticated call!!!");
-  console.log(req);
-  console.log(req.isAuthenticated());
+  // console.log("isAuthenticated call!!!");
+  // console.log(req);
+  // console.log(req.isAuthenticated());
   if (req.isAuthenticated())
     return next();
   res.redirect('/login');
