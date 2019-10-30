@@ -34,7 +34,7 @@ if(webSetting.redis_exec){
     secret: 'ssshhhhh',
     
     // create new redis store.
-    store: new redisStore({  client: client, ttl :  260}), //host: webSetting.redis, port: 6379,
+    store: new redisStore({  client: client, ttl :  1000 * 60 * 60}), //host: webSetting.redis, port: 6379,
     saveUninitialized: false,
     resave: false
   }));
