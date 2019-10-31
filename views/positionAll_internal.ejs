@@ -85,18 +85,18 @@
                 var url = window.location.origin + '/orderHistoryTotal?site='
                 if(json){
                     var list = json.list;
-                    var total = 0;
-                    var total_before =0;
+                    var end_asset = 0;
+                    var start_asset =0;
                     var last_price = price_comma(json.last_price, "korean");
                     $("#mytable > tbody:last").empty();
                     $("#last_price").html("");
-                    $("#total").html("");
-                    $("#total_before").html("");
+                    $("#end_asset").html("");
+                    $("#start_asset").html("");
 
                     $("#last_price").html("현재가 : "+ last_price +"<br>");
                     for(i=0; i<list.length; i++){
-                        total += list[i].totalAsset;
-                        total_before += list[i].totalAsset_before;
+                        end_asset += list[i].totalAsset;
+                        start_asset += list[i].totalAsset_before;
 
                         $("#mytable > tbody:last").append("<tr>");
                                 $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
@@ -115,8 +115,12 @@
                                 $("#mytable > tbody:last").append("<td align='right'>" + roePer_comma(list[i].benefitRate) + "</td>");                         
                         $("#mytable > tbody:last").append("<tr>");
                     }
-                    $("#total_before").html("과거자산 : "+ asset_comma(total_before, 'bithumb') +"<br>");
-                    $("#total").html("현재자산 : "+ asset_comma(total, 'bithumb') +"<br>");
+                    var totalBenefit = (end_asset - start_asset);
+                    var totalBenefitRate = ((totalBenefit/start_asset) *100);
+                    $("#start_asset").html("시작 자산 : "+ asset_comma(start_asset, 'bithumb') +"<br>");
+                    $("#end_asset").html("최근 자산 : "+ asset_comma(end_asset, 'bithumb') +"<br>");
+                    $("#totalBenefit").html("총수익 : " + asset_comma(totalBenefit, 'bithumb')  +"<br>");
+                    $("#totalBenefitRate").html("총수익율 : " + benefit_comma(totalBenefitRate)  +"<br>");
                 }
             },
             error : function(request, status, error) {
@@ -221,8 +225,10 @@
                         <br>
                 
                         <div id="last_price"></div>
-                        <div id="total_before"></div>
-                        <div id="total"></div>
+                        <div id="start_asset"></div>
+                        <div id="end_asset"></div>
+                        <div id="totalBenefit"></div>
+                        <div id="totalBenefitRate"></div>
                         <table id="mytable" border="1px">
                             <thead>
                                 <tr>
