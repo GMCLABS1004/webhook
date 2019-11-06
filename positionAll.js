@@ -14,7 +14,7 @@ mongoose.connect(webSetting.dbPath, function(error){
     }
 });
 
-setInterval(positionAll(), 5000);
+setInterval(positionAll(), 10000);
 
 function positionAll(){
     return function(){
