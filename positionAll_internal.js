@@ -33,23 +33,23 @@ function positionAll_internal(){
             console.log(error);
             return;
           }
-          console.log(set_list);
+          //console.log(set_list);
           var list=[];
           if(set_list.length ===0){
             response.send({last_price :0, list : list});
             return;
           }
-          console.log(set_list.length);
+          //console.log(set_list.length);
           //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
           for(i=0; i<set_list.length; i++){
-            console.log("positionAll_internal");
+            //console.log("positionAll_internal");
             setTimeout(getPosition_korea(set_list[i], function(error, data){
               if(error){
                 console.log(error);
                 return;
               }
               list.push(data);
-              console.log(data);
+              //console.log(data);
               if(list.length === set_list.length){
                 //스크립트 이름 넣기
                 readScriptInfo(list, function(error, new_list){
@@ -71,7 +71,7 @@ function positionAll_internal(){
                                 console.log(error);
                                 return;
                             }
-                            console.log(body);
+                            //console.log(body);
                         }
                     )
                 });
@@ -137,7 +137,7 @@ function readScriptInfo(list, cb){
       else if(set.site === 'upbit') predicate = getPosition_upbit;
       else if(set.site === 'korbit') predicate = getPosition_korbit;
   
-      console.log("getPosition_korea");
+      //console.log("getPosition_korea");
       //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
       setTimeout(predicate(set, function(error, data){
         if(error){
@@ -152,9 +152,9 @@ function readScriptInfo(list, cb){
             //res.send(error);
             return;
           }
-          console.log(body);
+          //console.log(body);
           if(body.length > 0){
-            console.log("")
+           // console.log("")
             data["totalAsset_before"] = body[0].totalAsset;
           }else{
             data["totalAsset_before"] = data.totalAsset;
@@ -173,7 +173,7 @@ function readScriptInfo(list, cb){
       var total_btc =0;
       async.waterfall([
         function init(cb){
-          console.log("getPosition_coinone");
+          //console.log("getPosition_coinone");
           //사이트, 스크립트, 마진, 레버리지
           bithumAPI = new BithumAPI(set.apiKey, set.secreteKey);
           var data = {
@@ -295,7 +295,7 @@ function readScriptInfo(list, cb){
       var total_btc =0;
       async.waterfall([
         function init(cb){
-          console.log("getPosition_coinone");
+          //console.log("getPosition_coinone");
           //사이트, 스크립트, 마진, 레버리지
           coinone = new coinoneAPI(set.apiKey, set.secreteKey);
           var data = {
@@ -415,7 +415,7 @@ function readScriptInfo(list, cb){
       var total_btc =0;
       async.waterfall([
         function init(cb){
-          console.log("getPosition_upbit");
+          //console.log("getPosition_upbit");
           //사이트, 스크립트, 마진, 레버리지
           upbit = new upbitAPI(set.apiKey, set.secreteKey);
           var data = {
@@ -543,7 +543,7 @@ function readScriptInfo(list, cb){
       var total_btc =0;
       async.waterfall([
         function init(cb){
-          console.log("getPosition_korbit");
+          //console.log("getPosition_korbit");
           //사이트, 스크립트, 마진, 레버리지
           korbit = new korbitAPI(set.apiKey, set.secreteKey);
           korbit.access_token(function(error, response, body){

@@ -114,7 +114,7 @@ function positionAll(){
             // console.log("waterfall 결과");
             // console.log(list);
             
-            console.log('last_price : '+ last_price);
+            //console.log('last_price : '+ last_price);
             list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
                 return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
             });
@@ -129,7 +129,7 @@ function positionAll(){
                         console.log(error);
                         return;
                     }
-                    console.log(body);
+                    //console.log(body);
                 }
             )
         });
@@ -184,7 +184,7 @@ function getPosition_bitmex(set, cb){
               }
              // console.log(body);
               if(body.length > 0){
-                console.log("")
+                //console.log("")
                 data["walletBalance_before"] = body[0].totalAsset;
               }else{
                 data["walletBalance_before"] = data.walletBalance;
