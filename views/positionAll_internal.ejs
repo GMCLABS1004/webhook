@@ -77,56 +77,66 @@
     
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script>
-        $.ajax({
-            method : "GET",
-            url : "api/positionAll_internal",
-            success: function(json){
-                console.log(json);
-                var url = window.location.origin + '/orderHistoryTotal?site='
-                if(json){
-                    var list = json.list;
-                    var end_asset = 0;
-                    var start_asset =0;
-                    var last_price = price_comma(json.last_price, "korean");
-                    $("#mytable > tbody:last").empty();
-                    $("#last_price").html("");
-                    $("#end_asset").html("");
-                    $("#start_asset").html("");
 
-                    $("#last_price").html("현재가 : "+ last_price +"<br>");
-                    for(i=0; i<list.length; i++){
-                        end_asset += list[i].totalAsset;
-                        start_asset += list[i].totalAsset_before;
+        setTimeout(positionAll_internal(), 0);
+        setInterval(positionAll_internal(), 3000);
+        function positionAll_internal(){
+            return function(){
+                $.ajax({
+                    method : "GET",
+                    url : "api/positionAll_internal",
+                    success: function(json){
+                        console.log(json);
+                        var url = window.location.origin + '/orderHistoryTotal?site='
+                        if(json){
+                            var list = json.list;
+                            var end_asset = 0;
+                            var start_asset =0;
+                            var last_price = price_comma(json.last_price, "korean");
+                            $("#mytable > tbody:last").empty();
+                            $("#last_price").html("");
+                            $("#end_asset").html("");
+                            $("#start_asset").html("");
+                            $("#totalBenefit").html("");
+                            $("#totalBenefitRate").html("");
+                            
+                            $("#last_price").html("현재가 : "+ last_price +"<br>");
+                            for(i=0; i<list.length; i++){
+                                end_asset += list[i].totalAsset;
+                                start_asset += list[i].totalAsset_before;
 
-                        $("#mytable > tbody:last").append("<tr>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='left'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptName + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].isSide + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].side_num + "</td>");  
-                                $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].totalAsset, list[i].site) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
-                                $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].price, list[i].site) + "</td>");  
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].margin + "</td>");
-                                $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>");                          
-                                $("#mytable > tbody:last").append("<td align='right'>" + roePer_comma(list[i].benefitRate) + "</td>");                         
-                        $("#mytable > tbody:last").append("<tr>");
+                                $("#mytable > tbody:last").append("<tr>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='left'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptName + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].isSide + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].side_num + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].totalAsset, list[i].site) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].price, list[i].site) + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].margin + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>");                          
+                                        $("#mytable > tbody:last").append("<td align='right'>" + roePer_comma(list[i].benefitRate) + "</td>");                         
+                                $("#mytable > tbody:last").append("<tr>");
+                            }
+                            var totalBenefit = (end_asset - start_asset);
+                            var totalBenefitRate = ((totalBenefit/start_asset) *100);
+                            $("#start_asset").html("시작 자산 : "+ asset_comma(start_asset, 'bithumb') +"<br>");
+                            $("#end_asset").html("최근 자산 : "+ asset_comma(end_asset, 'bithumb') +"<br>");
+                            $("#totalBenefit").html("총수익 : " + asset_comma(totalBenefit, 'bithumb')  +"<br>");
+                            $("#totalBenefitRate").html("총수익율 : " + benefit_comma(totalBenefitRate)  +"<br>");
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
                     }
-                    var totalBenefit = (end_asset - start_asset);
-                    var totalBenefitRate = ((totalBenefit/start_asset) *100);
-                    $("#start_asset").html("시작 자산 : "+ asset_comma(start_asset, 'bithumb') +"<br>");
-                    $("#end_asset").html("최근 자산 : "+ asset_comma(end_asset, 'bithumb') +"<br>");
-                    $("#totalBenefit").html("총수익 : " + asset_comma(totalBenefit, 'bithumb')  +"<br>");
-                    $("#totalBenefitRate").html("총수익율 : " + benefit_comma(totalBenefitRate)  +"<br>");
-                }
-            },
-            error : function(request, status, error) {
-                console.log("error : " + error);
+                });
             }
-        });
+        }
+       
         function isPosition(size){
             if(size > 0){
                 return "long"

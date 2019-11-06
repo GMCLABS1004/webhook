@@ -30,7 +30,20 @@ module.exports = class korbitAPI{
         
         });
     }
-
+    
+    ticker_detail_all(callback){
+        
+        var options = {
+            method : 'GET',
+            url : 'https://api.korbit.co.kr/v1/ticker/detailed/all'
+        }
+        
+        request(options,function(error, response, body){
+            
+            callback(error, response, body);
+        
+        });
+    }
     /**
      * 
      * @param {String} currency_pair : "btc_krw" 

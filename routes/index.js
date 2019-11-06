@@ -13,6 +13,7 @@ var signal = require("../models/signal");
 var setting = require("../models/setting");
 var order = require("../models/order");
 var orderDB2 = require('../models/order_avg');
+var position = require("../models/position");
 
 var webSetting = require("../webSetting");
 var moment = require('moment');
@@ -202,158 +203,182 @@ router.get('/positionAll', isAuthenticated,  function(req, res, next){
 });
 
 
-router.get('/api/positionAll', isAuthenticated,  function(req, response, next){
-  var list = [];
-  var last_price = 0;
-    // console.log(res);
-    async.waterfall([
-      function readSetting(cb){
-        var set_list =[];
-        setting.find({execFlag : true},function(error,res){
-          if(error){
-            console.log(error);
-            return;
-          }
-          console.log("readSetting");
-          console.log(res);
+router.get('/api/positionAll', isAuthenticated,  function(req, res){
+  position.find({site_type : "oversee"}, function(error, json){
+    if(error){
+      console.log(error);
+      res.send(error);
+      return;
+    }
+    console.log(json);
+    res.send(json[0]);
+  });
+})
+
+// router.get('/api/positionAll', isAuthenticated,  function(req, response, next){
+//   var list = [];
+//   var last_price = 0;
+//     // console.log(res);
+//     async.waterfall([
+//       function readSetting(cb){
+//         var set_list =[];
+//         setting.find({execFlag : true},function(error,res){
+//           if(error){
+//             console.log(error);
+//             return;
+//           }
+//           console.log("readSetting");
+//           console.log(res);
         
-          for(i=0; i<res.length; i++){
-            if(res[i].site.indexOf('bitmex') !== -1){
-              set_list.push(res[i]);    
-            }
-          }
-          cb(null, set_list);
-        });
-      },
-      function ticker(set_list, cb){
+//           for(i=0; i<res.length; i++){
+//             if(res[i].site.indexOf('bitmex') !== -1){
+//               set_list.push(res[i]);    
+//             }
+//           }
+//           cb(null, set_list);
+//         });
+//       },
+//       function ticker(set_list, cb){
         
-        if(set_list.length > 0){
+//         if(set_list.length > 0){
           
-          var requestOptions = setRequestHeader(set_list[0].url, set_list[0].apiKey, set_list[0].secreteKey,'GET','trade','symbol=XBTUSD&count=1&reverse=true');
-          request(requestOptions, function(err,responsedata,body){
-            if(err){
-              console.log(err);
-            }
-            console.log("ticker");
-            console.log(body);
+//           var requestOptions = setRequestHeader(set_list[0].url, set_list[0].apiKey, set_list[0].secreteKey,'GET','trade','symbol=XBTUSD&count=1&reverse=true');
+//           request(requestOptions, function(err,responsedata,body){
+//             if(err){
+//               console.log(err);
+//             }
+//             console.log("ticker");
+//             console.log(body);
           
-            var obj = JSON.parse(body);
-            last_price = obj[0].price;
-            cb(null, set_list); 
-          })
-        }else{
-          cb(null, set_list);
-        }
-      },
-      function getPosition(set_list, cb){
-        for(i=0; i<set_list.length; i++){
-          setTimeout(getPosition_bitmex(set_list[i], function(error, data){
-            if(error){
-              console.log(error);
-              return;
-            }
-            console.log("getPosition");
-            console.log(data);
-            // console.log("data : ");
-            // console.log(data);
+//             var obj = JSON.parse(body);
+//             last_price = obj[0].price;
+//             cb(null, set_list); 
+//           })
+//         }else{
+//           cb(null, set_list);
+//         }
+//       },
+//       function getPosition(set_list, cb){
+//         for(i=0; i<set_list.length; i++){
+//           setTimeout(getPosition_bitmex(set_list[i], function(error, data){
+//             if(error){
+//               console.log(error);
+//               return;
+//             }
+//             console.log("getPosition");
+//             console.log(data);
+//             // console.log("data : ");
+//             // console.log(data);
 
-            list.push(data);
-            if(set_list.length === list.length){
+//             list.push(data);
+//             if(set_list.length === list.length){
 
-              cb(null);
-            }
-          }), 0);
-        }
-      },
-      function readScriptInfo(cb){
-        if(list.length === 0){
-          return cb(null);
-        }
+//               cb(null);
+//             }
+//           }), 0);
+//         }
+//       },
+//       function readScriptInfo(cb){
+//         if(list.length === 0){
+//           return cb(null);
+//         }
 
-        script.find({}, function(error, res){
-          if(error){
-            console.log(error);
-            return;
-          }
+//         script.find({}, function(error, res){
+//           if(error){
+//             console.log(error);
+//             return;
+//           }
 
-          for(i=0; i<list.length; i++){
-            list[i].scriptName = "";
-            list[i].version = "";
-          }
+//           for(i=0; i<list.length; i++){
+//             list[i].scriptName = "";
+//             list[i].version = "";
+//           }
 
-          for(i=0; i<list.length; i++){
-            for(j=0; j<res.length; j<j++){
-              if(list[i].scriptNo === res[j].scriptNo){
-                list[i].scriptName = res[j].scriptName
-                list[i].version = res[j].version;
-              }
-            }
-          }
-          cb(null);
-        })
-      }
-    ], function(error, results){
-      if(error){
-        console.log(error);
-      }
-      console.log("waterfall 결과");
-      console.log(list);
+//           for(i=0; i<list.length; i++){
+//             for(j=0; j<res.length; j<j++){
+//               if(list[i].scriptNo === res[j].scriptNo){
+//                 list[i].scriptName = res[j].scriptName
+//                 list[i].version = res[j].version;
+//               }
+//             }
+//           }
+//           cb(null);
+//         })
+//       }
+//     ], function(error, results){
+//       if(error){
+//         console.log(error);
+//       }
+//       console.log("waterfall 결과");
+//       console.log(list);
       
-      console.log('last_price : '+ last_price);
-      list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
-        return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
-      });
-      response.send({last_price : last_price, list : list});
-    });
-});
+//       console.log('last_price : '+ last_price);
+//       list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
+//         return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
+//       });
+//       response.send({last_price : last_price, list : list});
+//     });
+// });
 
 router.get('/positionAll_internal', isAuthenticated,  function(req, res, next){
   res.render('positionAll_internal');
 });
-
-router.get('/api/positionAll_internal', isAuthenticated,  function(req, response, next){
-  var list = [];
-  var last_price = 0;
-
-  //실제로 동작중인 국내거래소 셋팅값을 가져와라
-  setting.find({execFlag : true, site_type : "korean"},function(error, set_list){
+router.get('/api/positionAll_internal', isAuthenticated,  function(req, res, next){
+  position.find({site_type : "oversee"}, function(error, json){
     if(error){
       console.log(error);
+      res.send(error);
       return;
     }
-    console.log(set_list);
-    var list=[];
-    if(set_list.length ===0){
-      response.send({last_price :0, list : list});
-      return;
-    }
-    console.log(set_list.length);
-    //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
-    for(i=0; i<set_list.length; i++){
-      console.log("positionAll_internal");
-      setTimeout(getPosition_korea(set_list[i], function(error, data){
-        if(error){
-          console.log(error);
-          return;
-        }
-        list.push(data);
-        console.log(data);
-        if(list.length === set_list.length){
-          //스크립트 이름 넣기
-          readScriptInfo(list, function(error, new_list){
-            if(error){
-              console.log(error);
-              return;
-            }
-            //abcd 순 정렬
-            new_list.sort(ascending);
-            response.send({last_price : list[0].ticker, list : list});
-          });
-        }
-      }), 0);
-    }
+    console.log(json);
+    res.send(json[0]);
   });
-});
+
+})
+
+// router.get('/api/positionAll_internal', isAuthenticated,  function(req, response, next){
+//   var list = [];
+//   var last_price = 0;
+
+//   //실제로 동작중인 국내거래소 셋팅값을 가져와라
+//   setting.find({execFlag : true, site_type : "korean"},function(error, set_list){
+//     if(error){
+//       console.log(error);
+//       return;
+//     }
+//     console.log(set_list);
+//     var list=[];
+//     if(set_list.length ===0){
+//       response.send({last_price :0, list : list});
+//       return;
+//     }
+//     console.log(set_list.length);
+//     //빗썸 셋팅값이 1개 이상이면 갯수만큼 포지션 정보 생성
+//     for(i=0; i<set_list.length; i++){
+//       console.log("positionAll_internal");
+//       setTimeout(getPosition_korea(set_list[i], function(error, data){
+//         if(error){
+//           console.log(error);
+//           return;
+//         }
+//         list.push(data);
+//         console.log(data);
+//         if(list.length === set_list.length){
+//           //스크립트 이름 넣기
+//           readScriptInfo(list, function(error, new_list){
+//             if(error){
+//               console.log(error);
+//               return;
+//             }
+//             //abcd 순 정렬
+//             new_list.sort(ascending);
+//             response.send({last_price : list[0].ticker, list : list});
+//           });
+//         }
+//       }), 0);
+//     }
+//   });
+// });
 
 function readScriptInfo(list, cb){
   if(list.length === 0){
@@ -987,6 +1012,7 @@ function fixed4(num){
   var str2 = arr[1].slice(0,4);
   return Number(arr[0] + '.' + str2);
 }
+
 function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
   path = '/api/v1/'+ endpoint;
   expires = new Date().getTime() + (60 * 1000); // 1 min in the future
