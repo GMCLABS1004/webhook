@@ -14,7 +14,7 @@ mongoose.connect(webSetting.dbPath, function(error){
     }
 });
 
-setInterval(positionAll(), 3000);
+setInterval(positionAll(), 5000);
 
 function positionAll(){
     return function(){
@@ -50,9 +50,11 @@ function positionAll(){
                 console.log(err);
               }
             //   console.log("ticker");
-            //   console.log(body);
-            
+               //console.log(body);
+
+               console.log(responsedata.headers);//.dict.x-ratelimit-remaining
               var obj = JSON.parse(body);
+              console.log(body);
               last_price = obj[0].price;
               cb(null, set_list); 
             })
