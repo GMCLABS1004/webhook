@@ -324,7 +324,7 @@ router.get('/positionAll_internal', isAuthenticated,  function(req, res, next){
   res.render('positionAll_internal');
 });
 router.get('/api/positionAll_internal', isAuthenticated,  function(req, res, next){
-  position.find({site_type : "oversee"}, function(error, json){
+  position.find({site_type : "korean"}, function(error, json){
     if(error){
       console.log(error);
       res.send(error);
