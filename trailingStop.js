@@ -44,7 +44,7 @@ var obj = {
 }
 
 //long-> exit 예제
-setTimeout(trailingStop(8900, obj.entryPrice*0.9, obj.entryPrice*1.1, obj), 1000);
+setTimeout(trailingStop(8980, obj.entryPrice*0.9, obj.entryPrice*1.1, obj), 1000);
 
 
 function trailingStop(last_price, lowPrice, highPrice, obj){
