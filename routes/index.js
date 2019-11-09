@@ -1364,7 +1364,14 @@ router.post('/api/setting',  isAuthenticated,  function(req,res){
     minOrdCost : Number(json.minOrdCost),
     ordInterval : Number(json.ordInterval),
     minOrdRate : Number(json.minOrdRate),
-    maxOrdRate : Number(json.maxOrdRate)
+    maxOrdRate : Number(json.maxOrdRate),
+    isTrailingStop : Boolean(json.isTrailingStop),
+    trailingHighRate : Number(json.trailingHighRate),
+    trailingLowRate : Number(json.trailingLowRate),
+    trailFeeRate : Number(json.trailFeeRate),
+    entryPrice : Number(json.entryPrice),
+    highPrice : Number(json.highPrice),
+    lowPrice : Number(json.lowPrice)
   }
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
@@ -1524,7 +1531,7 @@ router.get('/orderHistoryTotal',  isAuthenticated,  function(req, res){
 
 router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
   console.log("/api/orderHistoryTotal 실행");
-  var site = req.query.site;
+  var site = req.query.site; //.skip(0).limit(20)
   order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
     if(error){
       console.log(error);

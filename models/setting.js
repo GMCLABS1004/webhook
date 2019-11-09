@@ -19,6 +19,13 @@ var settingSchema = new Schema({
     execFlag : {type:Boolean, default : false}, //실행 on/off
     isExiting :  {type:Boolean, default : false}, //탈출중인지 여부
     isEntering :  {type:Boolean, default : false}, //진입중인지 여부
+    isTrailingStop : {type:Boolean, default : false}, //트레일링 스탑 실행 여부
+    trailingHighRate : {type:Number, default : 0}, //고점 대비 하락비율, 현재가 > entryPrice + 고점 대비 하락가격,  고점 대비 하락가격 = (highPrice - entryPrice) * trailingHighRate
+    trailingLowRate : {type:Number, default : 0}, //고점 대비 하락비율, 현재가 > entryPrice + 고점 대비 하락가격,  고점 대비 하락가격 = (highPrice - entryPrice) * trailingHighRate
+    trailFeeRate : {type:Number, default : 0},
+    entryPrice : {type:Number, default : 0}, //진입가격
+    highPrice : {type:Number, default : 0}, //진입후 ticker중 가장 높은 가격 업데이트
+    lowPrice : {type:Number, default : 0}, //진입후 ticker중 가장 낮은 가격 업데이트
 });
 
 module.exports = mongoose.model('setting', settingSchema,'setting');

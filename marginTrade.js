@@ -47,7 +47,6 @@ var logfileName2_1 = './log/bitmex3' +'.log'; //로그파일 경로1
 var logfileName2_2 = './log/bitmex3' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName2_1, logfileName2_2, function(loggerHandle){ logger_bitmex3 = loggerHandle; logger_bitmex3.info("비트멕스3");}); //logger 생성
 
-
 var logger_bitmex4;
 var logfileName3_1 = './log/bitmex4' +'.log'; //로그파일 경로1
 var logfileName3_2 = './log/bitmex4' +'.debug.log'; //로그파일 경로2
@@ -655,7 +654,7 @@ function trade_bithumb(_signal){
           console.log("빗썸탈출");
           setTimeout(div_exit_bithumb(bithumAPI, obj, logger_bithumb), 3000);
           cb(null, data);
-         
+          
         }
       }
     ],function(error, data){
@@ -1721,6 +1720,7 @@ function trade_bitmex(_signal, siteName){
                 minAmtRate : data.minOrdRate, //최소주문비율  
                 maxAmtRate : data.minOrdRate, //최대주문비율 
                 start_time : start_time,
+                type_log : _signal.type_log,
                 isOrdered : false, //주문시도 여부
                 isSuccess : false, //주문성공 여부
                 isContinue : false, //주문분할 계속할지 여부
@@ -1782,6 +1782,7 @@ function trade_bitmex(_signal, siteName){
                 start_price : 0,
                 end_price : 0,
                 start_time : start_time,
+                type_log : _signal.type_log,
                 isOrdered : false, //주문시도 여부
                 isSuccess : false, //주문성공 여부
                 isContinue : false, //주문분할 계속할지 여부
@@ -1814,6 +1815,7 @@ function trade_bitmex(_signal, siteName){
               start_price : 0,
               end_price : 0,
               start_time : start_time,
+              type_log : _signal.type_log,
               isOrdered : false, //주문시도 여부
               isSuccess : false, //주문성공 여부
               isContinue : false, //주문분할 계속할지 여부
@@ -1877,7 +1879,8 @@ function trade_bitmex(_signal, siteName){
             msg : "div1",
             start_price : 0,
             end_price : 0,
-            start_time : start_time
+            start_time : start_time,
+            type_log : _signal.type_log,
         }
         console.log("진입주문전");
         //console.log(obj);
@@ -2145,7 +2148,6 @@ function amount_comma(num){
   }
 }
 
-
 function check_is_ordering(site_type, _signal, idx){
   return function(){
     settings.find({},function(error, res){
@@ -2184,7 +2186,6 @@ function check_is_ordering(site_type, _signal, idx){
     });
   }
 }
-
 
 function check_order_complete(site_type, _signal){
   return function(){
@@ -2357,7 +2358,6 @@ function insert_trade_history(list, _signal){
     });
   }
 }
-
 
 // function insert_trade_history(list){
 //   return function(){

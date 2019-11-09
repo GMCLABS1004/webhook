@@ -34,7 +34,7 @@
         <div class="section-75">
                 <div class="w-container">
                   <div class="w-layout-grid grid-139">
-                
+                    
                     <div id="w-node-5d38c6c48663-de58f0e8" class="text-block-139">
                       <h4><%=site%> 마진거래 설정</h4>
                     </div>
@@ -70,7 +70,7 @@
                             <form class="form-17">
                             <div class="text-block-141" for="scriptNo">스크립트 번호</div>
                             <input type="text" maxlength="256" id="scriptNo" required="" class="text-field-9 w-input">
-                          </form>
+                        </form>
                 
                         </div>
                         <div class="form-block-7 w-form">
@@ -99,21 +99,61 @@
                             <div class="text-block-141"  for="ordInterval">주문 인터벌</div>
                             <input type="text" maxlength="256" id="ordInterval" required="" class="text-field-9 w-input">
                           </form>
-                
                         </div>
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
                             <div class="text-block-141" for="minOrdRate">최소주문비율</div>
                             <input type="text" maxlength="256" id="minOrdRate" required="" class="text-field-9 w-input">
                           </form>
-                
                         </div>
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
                             <div class="text-block-141"  for="maxOrdRate">최대주문비율</div>
                             <input type="text" maxlength="256" id="maxOrdRate" required="" class="text-field-9 w-input">
                           </form>
-                
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="isTrailingStop">트레일링스탑 실행</div>
+                            <input type="text" maxlength="256" id="isTrailingStop" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="trailingHighRate">고점 대비 하락 비율</div>
+                            <input type="text" maxlength="256" id="trailingHighRate" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="trailingLowRate">저점 대비 상승 비율</div>
+                            <input type="text" maxlength="256" id="trailingLowRate" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="trailFeeRate"">수수료 비율(%)</div>
+                            <input type="text" maxlength="256" id="trailFeeRate" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="entryPrice">진입</div>
+                            <input type="text" maxlength="256" id="entryPrice" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="highPrice">고점</div>
+                            <input type="text" maxlength="256" id="highPrice" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="lowPrice">저점</div>
+                            <input type="text" maxlength="256" id="lowPrice" required="" class="text-field-9 w-input">
+                          </form>
                         </div>
                       </div>
                     </div>
@@ -143,7 +183,15 @@
                     minOrdCost : $("#minOrdCost").val(),
                     ordInterval : $("#ordInterval").val(),
                     minOrdRate : $("#minOrdRate").val(),
-                    maxOrdRate : $("#maxOrdRate").val()
+                    maxOrdRate : $("#maxOrdRate").val(),
+                    
+                    isTrailingStop : $("#isTrailingStop").val(),
+                    trailingHighRate : $("#trailingHighRate").val(), 
+                    trailingLowRate : $("#trailingLowRate").val(), 
+                    trailFeeRate: $("#trailFeeRate").val(), 
+                    entryPrice : $("#entryPrice").val(),
+                    highPrice : $("#highPrice").val(),
+                    lowPrice : $("#lowPrice").val(),
                 }
                 console.log(JSON.stringify(obj));
                 $.ajax({
@@ -169,16 +217,23 @@
                     if(json){
                         console.log("read_setting실행");
                         console.log(json);
-                        $("#url").val(json.url),
-                        $("#apiKey").val(json.apiKey),
-                        $("#secreteKey").val(json.secreteKey),
-                        $("#scriptNo").val(json.scriptNo),
-                        $("#leverage").val(json.leverage),
-                        $("#margin").val(json.margin),
-                        $("#minOrdCost").val(json.minOrdCost),
-                        $("#ordInterval").val(json.ordInterval),
-                        $("#minOrdRate").val(json.minOrdRate),
-                        $("#maxOrdRate").val(json.maxOrdRate)
+                        $("#url").val(json.url);
+                        $("#apiKey").val(json.apiKey);
+                        $("#secreteKey").val(json.secreteKey);
+                        $("#scriptNo").val(json.scriptNo);
+                        $("#leverage").val(json.leverage);
+                        $("#margin").val(json.margin);
+                        $("#minOrdCost").val(json.minOrdCost);
+                        $("#ordInterval").val(json.ordInterval);
+                        $("#minOrdRate").val(json.minOrdRate);
+                        $("#maxOrdRate").val(json.maxOrdRate);
+                        $("#isTrailingStop").val(json.isTrailingStop);
+                        $("#trailingHighRate").val(json.trailingHighRate);
+                        $("#trailingLowRate").val(json.trailingLowRate);
+                        $("#trailFeeRate").val(json.trailFeeRate);
+                        $("#entryPrice").val(json.entryPrice);
+                        $("#highPrice").val(json.highPrice);
+                        $("#lowPrice").val(json.lowPrice);
                     }
                 },
                 error : function(request, status, error){
