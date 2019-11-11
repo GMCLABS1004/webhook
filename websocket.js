@@ -162,10 +162,12 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             if(obj.side === 'long'){//isPosition === 'long'
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
                 console.log("-----------------long exit--------------");
-                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
-                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
+                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee < last_price < entryPrice + alpha");
+                console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
                     signal.insertMany({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
@@ -173,10 +175,13 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }else if(obj.side === 'short'){ //isPosition === 'short'
                 console.log("-----------------short exit--------------");
                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
-                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
-                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
+                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha < last_price < entryPrice - trailFee");
+                console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - trailFee));
+                
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
                     console.log({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
                     signal.insertMany({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
@@ -187,11 +192,13 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             if(obj.side === 'long'){ //isPosition === 'exit' && 
                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
                 console.log("-----------------long entry--------------");
-                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
-                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
-                
+                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha < last_price < entryPrice - trailFee");
+                console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - trailFee));
+
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
                     console.log({scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
                     signal.insertMany({scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
@@ -199,10 +206,13 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }else if(obj.side === 'short' ){ //isPosition === 'exit' && 
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
                 console.log("-----------------short entry--------------");
-                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
-                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
+                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee < last_price < entryPrice + alpha");
+                console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
+                
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
                     signal.insertMany({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
