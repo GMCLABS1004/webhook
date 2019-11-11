@@ -1,6 +1,7 @@
 
 'use strict';
 var ticker = require('./models/ticker');
+var signal = require('./models/signal'); 
 var settings = require("./models/setting");
 var mongoose = require('mongoose');
 var webSetting = require('./webSetting.json');
