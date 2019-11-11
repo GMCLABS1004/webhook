@@ -28,9 +28,9 @@ const client = new BitMEXClient(
 // handle errors here. If no 'error' callback is attached. errors will crash the client.
 
 client.on('error', console.error);
-client.on('open', () => console.log('Connection opened.'));
-client.on('close', () => console.log('Connection closed.'));
-client.on('initialize', () => console.log('Client initialized, data is flowing.'));
+client.on('open', () => console.log("[" + getCurrentTimeString() +"] " + 'Connection opened.'));
+client.on('close', () => console.log("[" + getCurrentTimeString() +"] " + 'Connection closed.'));
+client.on('initialize', () => console.log("[" + getCurrentTimeString() +"] " + 'Client initialized, data is flowing.'));
 var last_price = 0;
 
 client.addStream('XBTUSD', 'trade', function(data, symbol, tableName) {
@@ -48,7 +48,6 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName) {
   // Do something with the table data...
 });
 
-
 function update_ticker(last_price){
     return function(){
         ticker.findOneAndUpdate(
@@ -62,10 +61,10 @@ function update_ticker(last_price){
             {upsert : true},
             function(error, doc, res){
                 if(error){
-                    console.log(error);
+                    console.log("[" + getCurrentTimeString() +"] " + error);
                     return;
                 }
-                console.log("update price : "+last_price);
+                console.log("[" + getCurrentTimeString() +"] " + "update price : "+last_price);
                 //console.log(doc);
             }
         );
@@ -76,9 +75,10 @@ function update_low_high_price(last_price){
     return function(){
         settings.find({execFlag: true, site_type : "oversee", isTrailingStop : true}, function(error, json){
             if(error){
-                console.log(error);
+                console.log("[" + getCurrentTimeString() +"] " + error);
                 return;
             }
+
             var check_list = [] //
             for(var i=0; i<json.length; i++){
                 var obj = new Object(json[i]);
@@ -86,7 +86,7 @@ function update_low_high_price(last_price){
                 var highPrice = obj.highPrice;
                 //고점 업데이트
                 if(obj.highPrice < last_price){
-                    console.log("고점 업데이트");
+                    console.log("[" + getCurrentTimeString() +"] " + "고점 업데이트");
                     console.log(obj.highPrice + "->" + last_price);
                     highPrice = last_price;
                     settings.findByIdAndUpdate(
@@ -103,7 +103,7 @@ function update_low_high_price(last_price){
 
                 //저점 업데이트
                 if(last_price < obj.lowPrice){
-                    console.log("저점 업데이트");
+                    console.log("[" + getCurrentTimeString() +"] " + "저점 업데이트");
                     console.log(obj.lowPrice + "->" + last_price);
                     lowPrice = last_price;
                     settings.findByIdAndUpdate(
@@ -149,11 +149,11 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             var side_num = obj.side_num;
             var alpha = 0;
             
-            console.log("highPrice : "+ highPrice);
-            console.log("entryPrice : "+ entryPrice);
-            console.log("highPrice - entryPrice : "+ (highPrice - entryPrice));
-            console.log("trailingHighRate : "+ trailingHighRate);
-            console.log("trailFee :"+ trailFee);
+            console.log("[" + getCurrentTimeString() +"] " + "highPrice : "+ highPrice);
+            console.log("[" + getCurrentTimeString() +"] " + "entryPrice : "+ entryPrice);
+            console.log("[" + getCurrentTimeString() +"] " + "highPrice - entryPrice : "+ (highPrice - entryPrice));
+            console.log("[" + getCurrentTimeString() +"] " + "trailingHighRate : "+ trailingHighRate);
+            console.log("[" + getCurrentTimeString() +"] " + "trailFee :"+ trailFee);
             // console.log("val : "+ (highPrice - entryPrice) * trailingHighRate)
             // console.log("entryPrice + val : "+ (entryPrice+val) )
             console.log(obj.side);
@@ -162,10 +162,10 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             if(obj.side === 'long'){//isPosition === 'long'
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
                 console.log("-----------------long exit--------------");
-                console.log("alpha : "+alpha);
-                console.log("entryPrice + alpha : "+ (entryPrice + alpha));
-                console.log("last_price : "+ (last_price));
-                console.log("entryPrice + trailFee : "+ (entryPrice + trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
+                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
                     signal.insertMany({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
@@ -173,10 +173,10 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }else if(obj.side === 'short'){ //isPosition === 'short'
                 console.log("-----------------short exit--------------");
                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
-                console.log("alpha : "+alpha);
-                console.log("entryPrice - alpha : "+ (entryPrice - alpha));
-                console.log("last_price : "+ (last_price));
-                console.log("entryPrice - trailFee : "+ (entryPrice - trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
+                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
                     console.log({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
                     signal.insertMany({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
@@ -187,10 +187,10 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             if(obj.side === 'long'){ //isPosition === 'exit' && 
                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
                 console.log("-----------------long entry--------------");
-                console.log("alpha : "+alpha);
-                console.log("entryPrice - alpha : "+ (entryPrice - alpha));
-                console.log("last_price : "+ (last_price));
-                console.log("entryPrice - trailFee : "+ (entryPrice - trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
+                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
                 
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
                     console.log({scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
@@ -199,10 +199,10 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }else if(obj.side === 'short' ){ //isPosition === 'exit' && 
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
                 console.log("-----------------short entry--------------");
-                console.log("alpha : "+alpha);
-                console.log("entryPrice + alpha : "+ (entryPrice + alpha));
-                console.log("last_price : "+ (last_price));
-                console.log("entryPrice + trailFee : "+ (entryPrice + trailFee));
+                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
+                console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
                     signal.insertMany({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
@@ -290,15 +290,15 @@ function position(data, cb){
         //console.log(json);
         for(var i=0; i<json.length; i++){
             if(json[i].currentQty > 0 && json[i].symbol==='XBTUSD'){
-                console.log("매수");
+                console.log("[" + getCurrentTimeString() +"] " + "매수");
                 isSide = "long";
                 
             }else if(json[i].currentQty < 0 && json[i].symbol==='XBTUSD'){
-                console.log("매도");
+                console.log("[" + getCurrentTimeString() +"] " + "매도");
                 isSide = "short";
             }
         }
-        console.log("isSide : "+ isSide)
+        console.log("[" + getCurrentTimeString() +"] " + "isSide : "+ isSide)
         cb(isSide);
     });
   }
@@ -345,3 +345,11 @@ function position(data, cb){
     return requestOptions;
 }
   
+
+function getCurrentTimeString(){
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var CurrentDateTime = date+' '+time;
+    return CurrentDateTime;
+}
