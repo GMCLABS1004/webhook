@@ -148,12 +148,18 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             var scriptNo = obj.scriptNo;
             var side_num = obj.side_num;
             var alpha = 0;
-            
+            console.log("[" + getCurrentTimeString() +"] " + "------------------------");
+            console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ last_price);
             console.log("[" + getCurrentTimeString() +"] " + "highPrice : "+ highPrice);
             console.log("[" + getCurrentTimeString() +"] " + "entryPrice : "+ entryPrice);
-            console.log("[" + getCurrentTimeString() +"] " + "highPrice - entryPrice : "+ (highPrice - entryPrice));
-            console.log("[" + getCurrentTimeString() +"] " + "trailingHighRate : "+ trailingHighRate);
-            console.log("[" + getCurrentTimeString() +"] " + "trailFee :"+ trailFee);
+            console.log("[" + getCurrentTimeString() +"] " + "lowPrice : "+ lowPrice);
+            console.log("[" + getCurrentTimeString() +"] " + "highPrice - entryPrice : "+ (highPrice - entryPrice) + " * "+ trailingHighRate + " = " + ((highPrice - entryPrice) * trailingHighRate));
+            console.log("[" + getCurrentTimeString() +"] " + "lowPrice - entryPrice : "+ (lowPrice - entryPrice) + " * "+ trailingLowRate + " = " + ((lowPrice - entryPrice) * trailingLowRate));
+            console.log("[" + getCurrentTimeString() +"] " + "trailFee : "+ trailFee);
+
+
+            // console.log("[" + getCurrentTimeString() +"] " + "trailingHighRate : "+ trailingHighRate);
+            // console.log("[" + getCurrentTimeString() +"] " + "trailFee :"+ trailFee);
             // console.log("val : "+ (highPrice - entryPrice) * trailingHighRate)
             // console.log("entryPrice + val : "+ (entryPrice+val) )
             console.log(obj.side);
@@ -162,7 +168,7 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             if(obj.side === 'long'){//isPosition === 'long'
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
                 console.log("-----------------long exit--------------");
-                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+ alpha);
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
                 // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
@@ -175,7 +181,7 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }else if(obj.side === 'short'){ //isPosition === 'short'
                 console.log("-----------------short exit--------------");
                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
-                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
                 // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
@@ -192,7 +198,7 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             if(obj.side === 'long'){ //isPosition === 'exit' && 
                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
                 console.log("-----------------long entry--------------");
-                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+               // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
                 // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
@@ -206,18 +212,19 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }else if(obj.side === 'short' ){ //isPosition === 'exit' && 
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
                 console.log("-----------------short entry--------------");
-                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                //console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
                 // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
                 console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee < last_price < entryPrice + alpha");
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
-                
+
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
                     signal.insertMany({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
                 }
             }
+            console.log("");
         //});
     }
 }
