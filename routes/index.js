@@ -210,7 +210,7 @@ router.get('/api/positionAll', isAuthenticated,  function(req, res){
       res.send(error);
       return;
     }
-    console.log(json);
+    //console.log(json);
     res.send(json[0]);
   });
 })
@@ -1310,6 +1310,29 @@ router.post('/api/marginTrade', function(req,res){
   });
 });
 
+
+router.post('/api/manual_order',isAuthenticated, function(req,res){
+  var sigData = {
+    site :  req.body.site,
+    scriptNo : Number(req.body.scriptNo),
+    side : req.body.side,
+    side_num : Number(req.body.side_num),
+    type_log : req.body.type_log,
+    timestamp : new Date().getTime() + (1000 * 60 * 60 * 9)
+  }
+  
+  console.log(sigData);
+  signal.insertMany(sigData, function(error, data){
+    if(error){
+      console.log(error);
+      res.send(error);
+      return;
+    }
+    console.log(data);
+    res.send({msg : '신호생성완료'});
+  });
+});
+
 router.get('/setting',  isAuthenticated, function(req,res){
   var site = req.query.site;
   setting.findOne({site : site},function(error, json){
@@ -1354,7 +1377,7 @@ router.get('/api/read_setting',  isAuthenticated, function(req,res){
 
 router.post('/api/setting',  isAuthenticated,  function(req,res){
   var json = new Object(req.body);
-  var obj = {
+  var obj ={
     url : json.url,
     apiKey : json.apiKey,
     secreteKey : json.secreteKey,

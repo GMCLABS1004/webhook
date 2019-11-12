@@ -85,7 +85,7 @@
                     method : "GET",
                     url : "api/positionAll",
                     success: function(json){
-                        console.log(json);
+                        //console.log(json);
                         if(json){
                             var url = window.location.origin + '/orderHistoryTotal?site='
                             var list = json.list;
@@ -119,6 +119,27 @@
                                         $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='center'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</td>");                         
                                         $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].realisedPnl.toFixed(4), list[i].site) + "</td>");                         
+                                        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
+                                        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
+                                        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
+
+                                        var obj = {
+                                            site : list[i].site,
+                                            scriptNo : Number(list[i].scriptNo),
+                                            side_num : Number(list[i].side_num),
+                                            type_log : 'manual',
+                                            side : "",
+                                        }
+                                        obj["side"] = "Buy";
+                                        //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
+                                        obj["side"] = "Sell";
+                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매도" +"</a>" + "</td>");
+                                        console.log(reverse_position(list[i].size));
+                                        obj["side"] = reverse_position(list[i].size);
+                                        obj["side_option"] = "Exit";
+                                        console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
                                 $("#mytable > tbody:last").append("<tr>");
                             }
                             var totalBenefit = (end_asset - start_asset);
@@ -134,8 +155,36 @@
                     }
                 });
             }
-
         }
+
+        function manual_order(obj){
+            console.log("manual_order 호출");
+            console.log(obj)
+            var data= JSON.parse(obj);
+            if(data["side"] !== "Exit" && data["side_option"] === "Exit"){
+                data["side"] = data["side"] + " " + "Exit"
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: "api/manual_order",
+                dataType: "json",
+                data : data,
+                success: function(body) {
+                    if(body){
+                        console.log(JSON.stringify(body));
+                        alert(body.msg);
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log("error : " + error);
+                }
+            });
+        }
+
+
+
+
         function isPosition(size){
             if(size > 0){
                 return "long"
@@ -144,8 +193,21 @@
             }else{
                 return "";
             }
-
         }
+
+        function reverse_position(size){
+            if(size > 0){
+                //console.log("Buy");
+                return 'Buy'
+            }else if(size < 0){
+               // console.log("Sell");
+                return 'Sell';
+            }else{
+                //console.log("Exit");
+                return 'none';
+            }
+        }
+
         function asset_comma(num, site){
             var site_type='';
             if(site.indexOf("bitmex") !== -1){
@@ -253,6 +315,9 @@
                                 <th>레버리지</th>
                                 <th>미실현손익</th>
                                 <th>실현손익</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>

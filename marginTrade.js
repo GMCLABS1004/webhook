@@ -327,8 +327,8 @@ function marginTrade(){
         console.log(error);
         return;
       }
-     
-     
+
+                                                                        ``
       if(res.length > 0){
         console.log("");
         console.log("");
@@ -337,27 +337,33 @@ function marginTrade(){
         // console.log("신호");
         // console.log(res);
         console.log("-----신호목록-----");
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex1'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex2'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex3'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex4'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex5'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex6'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex7'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex8'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex9'), 0);
-        setTimeout(trade_bitmex(new Object(res[0]), 'bitmex10'), 0);
-        
-        //어떤 거래소가 진입 or 탈출하는가
-        //모든거래소 거래가 언제 끝나는가
-        setTimeout(trade_bithumb(new Object(res[0])), 0);
-        setTimeout(trade_coinone(new Object(res[0])), 0);
-        setTimeout(trade_upbit(new Object(res[0])), 0);
-        setTimeout(trade_korbit(new Object(res[0])), 0);
-        setTimeout(check_is_ordering("korean", new Object(res[0]), 0),500);
+        if(res[0].site === 'ALL'){
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex1'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex2'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex3'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex4'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex5'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex6'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex7'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex8'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex9'), 0);
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex10'), 0);
+          
+          //어떤 거래소가 진입 or 탈출하는가
+          //모든거래소 거래가 언제 끝나는가
+          setTimeout(trade_bithumb(new Object(res[0])), 0);
+          setTimeout(trade_coinone(new Object(res[0])), 0);
+          setTimeout(trade_upbit(new Object(res[0])), 0);
+          setTimeout(trade_korbit(new Object(res[0])), 0);
+          setTimeout(check_is_ordering("korean", new Object(res[0]), 0),500);
+          
+        }else{ //특정계정에만 주문실행
+          console.log("특정계정에만 주문 실행");
+          setTimeout(trade_bitmex(new Object(res[0]), res[0].site), 0);
+        }
 
-        //신호 삭제
-        signal.findByIdAndRemove(res[0]._id, function(error, res){
+         //신호 삭제
+         signal.findByIdAndRemove(res[0]._id, function(error, res){
           if(error){
             console.log(error);
             return;

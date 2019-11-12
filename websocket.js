@@ -52,7 +52,8 @@ function update_ticker(last_price){
     return function(){
         ticker.findOneAndUpdate(
             {site : "bitmex", site_type : "oversee"},
-            {$set : 
+            {
+                $set : 
                 {
                     last_price : last_price,
                     timestamp : new Date().getTime() + (1000 * 60 * 60 * 9)
@@ -117,19 +118,21 @@ function update_low_high_price(last_price){
                         }
                     )
                 }
+                
+                setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
 
-                var exec_trail = true;
-                for(var j=0; j<check_list.length; j++){
-                    if(check_list[j] === obj.scriptNo){
-                        exec_trail=false;
-                    }
-                }
+                // var exec_trail = true;
+                // for(var j=0; j<check_list.length; j++){
+                //     if(check_list[j] === obj.scriptNo){
+                //         exec_trail=false;
+                //     }
+                // }
 
-                if(exec_trail === true){
-                    //트레일링 스탑 실행
-                    setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
-                    check_list.push(obj.scriptNo);
-                }
+                // if(exec_trail === true){
+                //     //트레일링 스탑 실행
+                //     setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
+                //     check_list.push(obj.scriptNo);
+                // }
             }
         });
     }
@@ -139,8 +142,9 @@ function update_low_high_price(last_price){
 function trailingStop(last_price, lowPrice, highPrice, obj){
     return function(){
         //position(obj, function(isPosition){
-            
+            console.log(obj.site+" 트레일링 스탑 실행");
             //console.log("isPosition :" + isPosition);
+            var site = obj.site;
             var entryPrice = obj.entryPrice; //진입가격
             var trailingHighRate = obj.trailingHighRate * 0.01; 
             var trailingLowRate = obj.trailingLowRate * 0.01; 
@@ -175,8 +179,8 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee < last_price < entryPrice + alpha");
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
-                    console.log({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
-                    signal.insertMany({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
+                    console.log({site : site, scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
+                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
                 }
             }else if(obj.side === 'short'){ //isPosition === 'short'
                 console.log("-----------------short exit--------------");
@@ -189,8 +193,8 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - trailFee));
                 
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
-                    console.log({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
-                    signal.insertMany({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
+                    console.log({site : site, scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
+                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
                 }
             }
             
@@ -206,8 +210,8 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - trailFee));
 
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
-                    console.log({scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
-                    signal.insertMany({scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
+                    console.log({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
+                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
                 }
             }else if(obj.side === 'short' ){ //isPosition === 'exit' && 
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
@@ -218,10 +222,10 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
                 console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee < last_price < entryPrice + alpha");
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
-
+                
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
-                    console.log({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short rentry"});
-                    signal.insertMany({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short rentry"});
+                    console.log({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short rentry"});
+                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short rentry"});
                 }
             }
             console.log("");
