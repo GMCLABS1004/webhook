@@ -12,18 +12,9 @@ const BitMEXClient = require('bitmex-realtime-api');
 // See 'options' reference below
 
 const client = new BitMEXClient(
-    [
-        {
-            testnet: true,
-            // apiKeyID: '-2YJMJOGLRMvUgaBD1_KzbLt',
-            // apiKeySecret: 'aEvaHawjJK5bU3ePZqNtzSt7I6smHfelkDRV6YS_lmmQffwd',
-         }
-        //  {
-        //     testnet: true,
-        //     apiKeyID: '7SKvgnAUMiz6rzLl2Tjd8WZm',
-        //     apiKeySecret: '_9JeB-IrVckCdWJFbt6X2kgHmrOlJQKObca4WQpOGRHd03ZA',
-        //  },
-    ]
+    {
+        testnet: true
+    }
 );
 // handle errors here. If no 'error' callback is attached. errors will crash the client.
 
@@ -38,10 +29,13 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName) {
   //console.log("update price1 : "+data[0].price);
   
   if(tableName === 'trade'){
-    if(last_price !== data[0].price){ //
-        last_price = data[0].price;
-        setTimeout(update_ticker(data[0].price), 0);
-        setTimeout(update_low_high_price(data[0].price), 0);
+    //console.log(data);
+    //console.log(data[0].price);
+    //console.log(data[data.length-1].price);
+    if(last_price !== data[data.length-1].price){ //
+        last_price = data[data.length-1].price;
+       // setTimeout(update_ticker(data[0].price), 0);
+       // setTimeout(update_low_high_price(data[0].price), 0);
     }
   }
   //console.log(data);
