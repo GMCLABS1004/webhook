@@ -1377,6 +1377,7 @@ router.get('/api/read_setting',  isAuthenticated, function(req,res){
 
 router.post('/api/setting',  isAuthenticated,  function(req,res){
   var json = new Object(req.body);
+
   var obj ={
     url : json.url,
     apiKey : json.apiKey,
@@ -1388,14 +1389,18 @@ router.post('/api/setting',  isAuthenticated,  function(req,res){
     ordInterval : Number(json.ordInterval),
     minOrdRate : Number(json.minOrdRate),
     maxOrdRate : Number(json.maxOrdRate),
-    isTrailingStop : Boolean(json.isTrailingStop),
+    isTrailingStop : ((json.isTrailingStop === "true")? true : false),
     trailingHighRate : Number(json.trailingHighRate),
     trailingLowRate : Number(json.trailingLowRate),
     trailFeeRate : Number(json.trailFeeRate),
-    entryPrice : Number(json.entryPrice),
-    highPrice : Number(json.highPrice),
-    lowPrice : Number(json.lowPrice)
+    // entryPrice : Number(json.entryPrice),
+    // highPrice : Number(json.highPrice),
+    // lowPrice : Number(json.lowPrice)
   }
+  console.log("/api/setting");
+  console.log(json.isTrailingStop);
+  console.log(Boolean(json.isTrailingStop));
+  console.log(obj);
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
       console.log(error);
