@@ -5,6 +5,7 @@ var signal = require('./models/signal');
 var settings = require("./models/setting");
 var mongoose = require('mongoose');
 var webSetting = require('./webSetting.json');
+var setting = require('./websocket.json');
 var crypto = require('crypto');
 var request = require('request');
 mongoose.connect(webSetting.dbPath);
@@ -13,7 +14,7 @@ const BitMEXClient = require('bitmex-realtime-api');
 
 const client = new BitMEXClient(
     {
-        testnet: true
+        testnet: setting.testnet
     }
 );
 // handle errors here. If no 'error' callback is attached. errors will crash the client.
