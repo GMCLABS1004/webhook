@@ -34,8 +34,8 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName) {
     //console.log(data[data.length-1].price);
     if(last_price !== data[data.length-1].price){ //
         last_price = data[data.length-1].price;
-       // setTimeout(update_ticker(data[0].price), 0);
-       // setTimeout(update_low_high_price(data[0].price), 0);
+       setTimeout(update_ticker(data[0].price), 0);
+       setTimeout(update_low_high_price(data[0].price), 0);
     }
   }
   //console.log(data);
