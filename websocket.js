@@ -109,6 +109,7 @@ function update_low_high_price(last_price){
                                 console.log(error);
                                 return;
                             }
+                            console.log(res.site + " 저점 업데이트 : " + last_price);
                         }
                     )
                 }
