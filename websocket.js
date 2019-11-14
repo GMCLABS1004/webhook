@@ -220,8 +220,8 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
                 
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
-                    console.log({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "rentry"});
-                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "rentry"});
+                    console.log({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry"});
+                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry"});
                 }
             }
             console.log("");
