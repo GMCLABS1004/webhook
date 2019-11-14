@@ -164,6 +164,7 @@ function getPosition_bitmex(set, cb){
             data["margin"] = set.margin;
             data["scriptNo"] = set.scriptNo;
             data["side_num"] = set.side_num;
+            data["pgSide"] = set.side;
           }
         }
   

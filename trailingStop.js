@@ -44,8 +44,12 @@ mongoose.connect(webSetting.dbPath, function(error){
 // }
 
 
-// signal.insertMany({site : 'bitmex1', scriptNo : 302 , side : "Buy Exit", side_num : 1, type_log : "trailing Stop"});
-// signal.insertMany({site : 'bitmex2', scriptNo : 302 , side : "Sell Exit", side_num : 1, type_log : "trailing Stop"});
+// signal.insertMany({site : 'bitmex1', scriptNo : 302 , side : "Buy Exit", side_num : 1, type_log : "trailingStop"});
+// signal.insertMany({site : 'bitmex1', scriptNo : 302 , side : "Buy", side_num : 1, type_log : "reentry"});
+
+signal.insertMany({site : 'bitmex1', scriptNo : 302 , side : "Sell Exit", side_num : 1, type_log : "trailingStop"});
+signal.insertMany({site : 'bitmex1', scriptNo : 302 , side : "Sell", side_num : 1, type_log : "reentry"});
+
 
 
 
@@ -58,7 +62,7 @@ settings.find({execFlag: true, site_type : "oversee", isTrailingStop : true}, fu
     var check_list = [] //
     console.log(json);
     for(var i=0; i<json.length; i++){
-        setTimeout(trailingStop(9800, json[i].entryPrice*0.9, json[i].entryPrice*1.1, json[i]), 1000);
+       // setTimeout(trailingStop(9800, json[i].entryPrice*0.9, json[i].entryPrice*1.1, json[i]), 1000);
     }
 })
 
