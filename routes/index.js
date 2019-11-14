@@ -1161,6 +1161,11 @@ router.get('/api/manage',  function(req, res, next){
       var flag = "unchecked";
       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
       status["isMargin"]["exec_"+json[i].site] = flag;
+
+
+      var flag2 = "unchecked";
+      (json[i].isTrailingStop === true)? flag2 = "checked" : flag2 = "unchecked"
+      status["isMargin"]["execTrail_"+json[i].site] = flag2;
     }
   
     forever.list(false, function(err,processes){
@@ -1389,18 +1394,18 @@ router.post('/api/setting',  isAuthenticated,  function(req,res){
     ordInterval : Number(json.ordInterval),
     minOrdRate : Number(json.minOrdRate),
     maxOrdRate : Number(json.maxOrdRate),
-    isTrailingStop : ((json.isTrailingStop === "true")? true : false),
-    trailingHighRate : Number(json.trailingHighRate),
-    trailingLowRate : Number(json.trailingLowRate),
-    trailFeeRate : Number(json.trailFeeRate),
+    // isTrailingStop : ((json.isTrailingStop === "true")? true : false),
+    // trailingHighRate : Number(json.trailingHighRate),
+    // trailingLowRate : Number(json.trailingLowRate),
+    // trailFeeRate : Number(json.trailFeeRate),
     // entryPrice : Number(json.entryPrice),
     // highPrice : Number(json.highPrice),
     // lowPrice : Number(json.lowPrice)
   }
-  console.log("/api/setting");
-  console.log(json.isTrailingStop);
-  console.log(Boolean(json.isTrailingStop));
-  console.log(obj);
+  // console.log("/api/setting");
+  // console.log(json.isTrailingStop);
+  // console.log(Boolean(json.isTrailingStop));
+  // console.log(obj);
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
       console.log(error);
@@ -1429,6 +1434,37 @@ router.post('/api/setting_status',  isAuthenticated,  function(req,res){
   var obj = {
     side : json.side,
     side_num : Number(json.side_num)
+  }
+  setting.updateOne({site : json.site},{$set : obj}, function(error,body){
+    if(error){
+      console.log(error);
+      return;
+    }
+    console.log(body);
+    res.send({"msg" : "설정업데이트 성공"});
+  });
+});
+
+
+router.get('/setting_trailing',  isAuthenticated, function(req,res){
+  var site = req.query.site;
+  setting.findOne({site : site},function(error, json){
+    if(error){
+      res.render('setting',error);
+      return;
+    }
+    
+    res.render('setting_trailing',json);
+  })
+});
+
+router.post('/api/setting_trailing',  isAuthenticated,  function(req,res){
+  var json = new Object(req.body);
+  console.log(json);
+  var obj = {
+    trailingHighRate : Number(json.trailingHighRate),
+    trailingLowRate : Number(json.trailingLowRate),
+    trailFeeRate : Number(json.trailFeeRate)
   }
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
@@ -1493,6 +1529,22 @@ router.post('/api/siteOnOff', isAuthenticated, function(req,res){
   console.log("execFlag : " + execFlag);
 
   setting.updateOne({site : site},{$set : {execFlag : execFlag}},function(error, body){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send({});
+  });
+});
+
+
+router.post('/api/trailingOnOff', isAuthenticated, function(req,res){
+  var site = req.body.site;
+  var isTrailingStop = Boolean(Number(req.body.isTrailingStop));
+  console.log("site : " + site);
+  console.log("isTrailingStop : " + isTrailingStop);
+
+  setting.updateOne({site : site},{$set : {isTrailingStop : isTrailingStop}},function(error, body){
     if(error){
       console.log(error);
       return;

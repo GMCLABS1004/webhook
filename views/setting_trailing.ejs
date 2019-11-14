@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <title>GMC DefenceBot - 세부설정</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="../Content/sub_1.css"> -->
+
+    <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
+
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+
+    <!-- <script type="text/javascript" src="../Scripts/bootstrap.min.js"></script> -->
+
+    <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
+
+</head>
+
+<body class="body-51">
+        <div class="section-75">
+        <div class="w-container">
+                <div class="w-layout-grid grid-139">
+                   
+                  <div id="w-node-5d38c6c48663-de58f0e8" class="text-block-139">
+                        <h4><%=site%> 트레일링 스탑 설정</h4>
+                  </div>
+                  <button type="button" id="storeSet" class="button-33 w-button">저장</button>
+    
+                  <button type="button" id="closeWindow" class="button-46 w-button">취소</button>
+    
+                </div>
+              
+                <div class="w-layout-grid grid-140">
+    
+                  <div class="form-block-7 w-form">
+
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="trailingHighRate">고점 대비 하락 비율</div>
+                            <input type="hidden" class="text-field-9 w-input" id="site" value='<%=site%>' readonly placeholder="">
+                            <input type="text" maxlength="256" id="trailingHighRate" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="trailingLowRate">저점 대비 상승 비율</div>
+                            <input type="text" maxlength="256" id="trailingLowRate" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="trailFeeRate"">수수료 비율(%)</div>
+                            <input type="text" maxlength="256" id="trailFeeRate" required="" class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="entryPrice">진입</div>
+                            <input type="text" maxlength="256" id="entryPrice" required="" readonly class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="highPrice">고점</div>
+                            <input type="text" maxlength="256" id="highPrice" required="" readonly class="text-field-9 w-input">
+                          </form>
+                        </div>
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="lowPrice">저점</div>
+                            <input type="text" maxlength="256" id="lowPrice" required="" readonly class="text-field-9 w-input">
+                          </form>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function (e) {
+
+            $('.lcs_check').lc_switch();
+            $("#closeWindow").click(function(){
+                //window.close();
+                history.back();
+            });
+            $("#storeSet").click(function(){
+                var obj={
+                    site : $("#site").val(),
+                    isTrailingStop : $("#isTrailingStop").val(),
+                    trailingHighRate : $("#trailingHighRate").val(), 
+                    trailingLowRate : $("#trailingLowRate").val(), 
+                    trailFeeRate: $("#trailFeeRate").val()
+                }
+                console.log(JSON.stringify(obj));
+                $.ajax({
+                    type: "POST",
+                    url: "api/setting_trailing",
+                    dataType: "json",
+                    data : obj,
+                    success: function(body) {
+                        if(body){
+                            alert(body.msg);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            });
+
+            $.ajax({
+                type : "GET",
+                url : 'api/read_setting?site='+$("#site").val(),
+                success : function(json){
+                    if(json){
+                        console.log("read_setting실행");
+                        console.log(json);
+                        $("#isTrailingStop").val(json.isTrailingStop);
+                        $("#trailingHighRate").val(json.trailingHighRate);
+                        $("#trailingLowRate").val(json.trailingLowRate);
+                        $("#trailFeeRate").val(json.trailFeeRate);
+                        $("#entryPrice").val(json.entryPrice);
+                        $("#highPrice").val(json.highPrice);
+                        $("#lowPrice").val(json.lowPrice);
+                    }
+                },
+                error : function(request, status, error){
+                    console.log("error : "+error);
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

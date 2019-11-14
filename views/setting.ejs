@@ -92,7 +92,6 @@
                             <div class="text-block-141" for="minOrdCost">주문최소금액</div>
                             <input type="text" maxlength="256" id="minOrdCost" required="" class="text-field-9 w-input">
                           </form>
-                
                         </div>
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
@@ -115,7 +114,7 @@
                         
                         
 
-                        <div class="form-block-7 w-form">
+                        <!-- <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
                             <div class="text-block-141"  for="isTrailingStop">트레일링스탑 실행 <input type="button" id="onoffTrailingStop" value="버튼""> </div> 
                             <input type="text" maxlength="256" id="isTrailingStop" required="" readonly class="text-field-9 w-input">
@@ -159,7 +158,7 @@
                           </form>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
 
 
@@ -174,14 +173,14 @@
                 history.back();
             });
 
-            $("#onoffTrailingStop").click(function(){
-              console.log("onoffTrailingStop");
-              if($("#isTrailingStop").val() === "true"){
-                $("#isTrailingStop").val("false");
-              }else if($("#isTrailingStop").val() === "false"){
-                $("#isTrailingStop").val("true");
-              }
-            });
+            // $("#onoffTrailingStop").click(function(){
+            //   console.log("onoffTrailingStop");
+            //   if($("#isTrailingStop").val() === "true"){
+            //     $("#isTrailingStop").val("false");
+            //   }else if($("#isTrailingStop").val() === "false"){
+            //     $("#isTrailingStop").val("true");
+            //   }
+            // });
 
             $("#storeSet").click(function(){
                 console.log( $("#isTrailingStop").val());
@@ -199,13 +198,13 @@
                     minOrdRate : $("#minOrdRate").val(),
                     maxOrdRate : $("#maxOrdRate").val(),
                     
-                    isTrailingStop : $("#isTrailingStop").val(),
-                    trailingHighRate : $("#trailingHighRate").val(), 
-                    trailingLowRate : $("#trailingLowRate").val(), 
-                    trailFeeRate: $("#trailFeeRate").val(), 
-                    entryPrice : $("#entryPrice").val(),
-                    highPrice : $("#highPrice").val(),
-                    lowPrice : $("#lowPrice").val(),
+                    // isTrailingStop : $("#isTrailingStop").val(),
+                    // trailingHighRate : $("#trailingHighRate").val(), 
+                    // trailingLowRate : $("#trailingLowRate").val(), 
+                    // trailFeeRate: $("#trailFeeRate").val(), 
+                    // entryPrice : $("#entryPrice").val(),
+                    // highPrice : $("#highPrice").val(),
+                    // lowPrice : $("#lowPrice").val(),
                 }
                 console.log(JSON.stringify(obj));
                 $.ajax({
@@ -223,7 +222,7 @@
                     }
                 });
             });
-
+            
             $.ajax({
                 type : "GET",
                 url : 'api/read_setting?site='+$("#site").val(),
@@ -241,13 +240,13 @@
                         $("#ordInterval").val(json.ordInterval);
                         $("#minOrdRate").val(json.minOrdRate);
                         $("#maxOrdRate").val(json.maxOrdRate);
-                        $("#isTrailingStop").val(json.isTrailingStop);
-                        $("#trailingHighRate").val(json.trailingHighRate);
-                        $("#trailingLowRate").val(json.trailingLowRate);
-                        $("#trailFeeRate").val(json.trailFeeRate);
-                        $("#entryPrice").val(json.entryPrice);
-                        $("#highPrice").val(json.highPrice);
-                        $("#lowPrice").val(json.lowPrice);
+                        // $("#isTrailingStop").val(json.isTrailingStop);
+                        // $("#trailingHighRate").val(json.trailingHighRate);
+                        // $("#trailingLowRate").val(json.trailingLowRate);
+                        // $("#trailFeeRate").val(json.trailFeeRate);
+                        // $("#entryPrice").val(json.entryPrice);
+                        // $("#highPrice").val(json.highPrice);
+                        // $("#lowPrice").val(json.lowPrice);
                     }
                 },
                 error : function(request, status, error){
