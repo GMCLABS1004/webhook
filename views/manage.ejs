@@ -22,16 +22,16 @@
 <body class="body-10">
   <div class="section-19">
           <div class="container-31 w-container">
-            <div class="">
+            <div class="div-block-40">
               <div class="w-layout-grid grid-18">
-                  <a  href="script" id="w-node-0478bd28aab8-5357cf79" class="button-log w-button">스크립트 설정</a>
-  
-                <a href="positionAll"  id="w-node-e0b6b8eb9240-5357cf79" class="button-log w-button">포지션(해외)</a>
-                <a href="positionAll_internal"  id="w-node-38c14d03ad5f-5357cf79" class="button-log w-button">포지션(국내)</a>
+                <a  href="script" id="w-node-0478bd28aab8-5357cf79" class="button--position w-button">스크립트 설정</a>
+                <a href="positionAll"  id="w-node-e0b6b8eb9240-5357cf79" class="button--position w-button">포지션(해외)</a>
+                <a href="positionAll_internal"  id="w-node-38c14d03ad5f-5357cf79" class="button--position w-button">포지션(국내)</a>
               </div>
               </div>
           </div>
-          <br><hr style="border: solid 1px #efefef;"><br>
+          <!-- <br><hr style="border: solid 1px #efefef;"><br> -->
+          
           <div class="container-31 w-container">
             <div class="div-grid">
               <div class="w-layout-grid grid-41">
@@ -45,7 +45,7 @@
                 <div id="w-node-3ad2b0511a26-5357cf79">
                 <a id="finance_tag" href="" role="button" target="_self" class="button-8 w-button w-node-8da96091dedb-5357cf79">재정거래(국내)</a>
               </div>
-                <div id="w-node-59cf0b18cdd4-5357cf79" class="text-block-61">
+                <div id="w-node-cdddd3c665b6-5357cf79" class="text-block-61">
                     <input type="checkbox" id="marginTrade" name="bot" class="lcs_check setting_check" <%=isMargin.execBot%>/>
                 </div>
               </div>
@@ -55,17 +55,19 @@
             <div class="container-31 w-container">
                 <div class="div-grid">
                   <div class="w-layout-grid grid-17">
-                    <div id="w-node-59cf0b18cdc6-5357cf79" class="text-block-60"><br>
+                    <div id="w-node-27c51dca7d71-5357cf79" class="text-block-60"><br>
                       <strong class="bold-text-24">비맥1</strong><br>‍
                       </div>
-                      <a id="w-node-59cf0b18cdce-5357cf79" href="log?site=bitmex1" class="button-log w-button"  role="button" target="_self">로그</a>
-                      <a id="w-node-59cf0b18cdd0-5357cf79" href="orderHistoryTotal?site=bitmex1" class="button-8 w-button"  role="button" target="_self">거래내역</a>
-                      <a id="w-node-59cf0b18cdd2-5357cf79" href="setting?site=bitmex1" class="button-8 w-button"  role="button" target="_self">세부설정 </a>
-                      <a id="w-node-b6d9216376a9-5357cf79" href="setting_status?site=bitmex1" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                      <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex1" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                      <a id="w-node-27c51dca7d78-5357cf79" href="log?site=bitmex1" class="button-log w-button"  role="button" target="_self">로그</a>
+                      <a id="w-node-27c51dca7d7a-5357cf79" href="orderHistoryTotal?site=bitmex1" class="button-8 w-button"  role="button" target="_self">거래내역</a>
+                      <a id="w-node-27c51dca7d7c-5357cf79" href="setting?site=bitmex1" class="button-8 w-button"  role="button" target="_self">세부설정 </a>
+                      <a id="w-node-1cde50804a71-5357cf79" href="setting_status?site=bitmex1" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                      <a id="w-node-c267429c0d39-5357cf79" href="setting_trailing?site=bitmex1" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
-                    <div id="w-node-59cf0b18cdd4-5357cf79" class="text-block-61">
-                        <input type="checkbox" id="bitmex1_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex1%>/>&nbsp;&nbsp;&nbsp;
+                    <div id="w-node-5e442dc90481-5357cf79" class="text-block-61">
+                        <input type="checkbox" id="bitmex1_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex1%>/>
+                    </div>
+                    <div id="w-node-27c51dca7d7e-5357cf79" class="text-block-61">
                         <input type="checkbox" id="bitmex1_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex1%>/>
                     </div>
                   </div>
@@ -82,9 +84,11 @@
                     <a id="w-node-59cf0b18cdd0-5357cf79" href="orderHistoryTotal?site=bitmex2" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-59cf0b18cdd2-5357cf79" href="setting?site=bitmex2" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-b6d9216376a9-5357cf79" href="setting_status?site=bitmex2" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex2" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-4cf9ce55f054-5357cf79" href="setting_trailing?site=bitmex2" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
                     <div id="w-node-59cf0b18cdd4-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex2_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex2%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex2_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex2%>/>
+                  </div>
+                  <div id="w-node-fc86c611951d-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex2_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex2%>/>
                   </div>
                 </div>
@@ -101,10 +105,12 @@
                     <a id="w-node-e162363a79c3-5357cf79" href="orderHistoryTotal?site=bitmex3" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-e162363a79c5-5357cf79" href="setting?site=bitmex3" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-13f7cae0c6bf-5357cf79" href="setting_status?site=bitmex3" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex3" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-310e5bc47892-5357cf79" href="setting_trailing?site=bitmex3" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-e162363a79c7-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex3_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex3%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex3_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex3%>/>
+                  </div>
+                  <div id="w-node-b44aff8dcbce-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex3_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex3%>/>
                   </div>
                 </div>
@@ -120,10 +126,12 @@
                   <a id="w-node-bb5475603958-5357cf79" href="orderHistoryTotal?site=bitmex4" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-bb547560395a-5357cf79" href="setting?site=bitmex4" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-69e9bb11f21c-5357cf79" href="setting_status?site=bitmex4" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex4" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-82caa4b74273-5357cf79" href="setting_trailing?site=bitmex4" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-bb547560395c-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex4_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex4%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex4_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex4%>/>
+                  </div>
+                  <div id="w-node-b4c63616a534-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex4_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex4%>/>
                   </div>
                 </div>
@@ -138,10 +146,12 @@
                   <a id="w-node-607a61841f50-5357cf79" href="orderHistoryTotal?site=bitmex5" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-607a61841f52-5357cf79" href="setting?site=bitmex5" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-c66e1b9c51e5-5357cf79" href="setting_status?site=bitmex5" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex5" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-9e1e856c589c-5357cf79" href="setting_trailing?site=bitmex5" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-607a61841f54-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex5_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex5%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex5_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex5%>/>
+                  </div>
+                  <div id="w-node-71c425b88d26-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex5_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex5%>/>
                   </div>
                 </div>
@@ -156,10 +166,12 @@
                     <a id="w-node-c56e1fc2c314-5357cf79" href="orderHistoryTotal?site=bitmex6" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-c56e1fc2c316-5357cf79" href="setting?site=bitmex6" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-df12c29a2910-5357cf79" href="setting_status?site=bitmex6" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex6" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-e9d0e2a30195-5357cf79" href="setting_trailing?site=bitmex6" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-c56e1fc2c318-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex6_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex6%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex6_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex6%>/>
+                  </div>
+                  <div id="w-node-d70e9317423b-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex6_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex6%>/>
                   </div>
                 </div>
@@ -173,11 +185,13 @@
                   </div><a id="w-node-a31c697d0cd6-5357cf79"  href="log?site=bitme7" class="button-log w-button" role="button" target="_self">로그</a>
                   <a id="w-node-a31c697d0cd8-5357cf79" href="log?site=bitmex7" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-a31c697d0cda-5357cf79" href="log?site=bitmex7log?site=bitmex7log?site=bitmex7log?site=bitmex7log?site=bitmex7" class="button-8 w-button" role="button" target="_self">세부설정 </a>
-                    <a id="w-node-f33d643a7edf-5357cf79" href="setting_status?site=bitmex7" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex7" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-e811df44a1e3-5357cf79" href="setting_status?site=bitmex7" class="button-8 w-button" role="button" target="_self">상태설정</a>
+                    <a id="w-node-350dc80d0e60-5357cf79" href="setting_trailing?site=bitmex7" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-a31c697d0cdc-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex7_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex7%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex7_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex7%>/>
+                  </div>
+                  <div id="w-node-372ad9bd33e1-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex7_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex7%>/>
                   </div>
                 </div>
@@ -192,10 +206,12 @@
                   <a id="w-node-60c28abfe383-5357cf79" href="orderHistoryTotal?site=bitmex8" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-60c28abfe385-5357cf79" href="setting?site=bitmex8" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-f33d643a7edf-5357cf79" href="setting_status?site=bitmex8" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex8" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-fbd48884c5d6-5357cf79" href="setting_trailing?site=bitmex8" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-60c28abfe387-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex8_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex8%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex8_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex8%>/>
+                  </div>
+                  <div id="w-node-2dfcf5a82e8a-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex8_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex8%>/>
                   </div>
                 </div>
@@ -210,10 +226,12 @@
                   <a id="w-node-9c78f4d2d877-5357cf79" href="orderHistoryTotal?site=bitmex9" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-9c78f4d2d879-5357cf79" href="setting?site=bitmex9" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-f7f2f325bb74-5357cf79" href="setting_status?site=bitmex9" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex9" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-8c1091c78db4-5357cf79" href="setting_trailing?site=bitmex9" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
-                  <div id="w-node-9c78f4d2d87b-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex9_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex9%>/>&nbsp;&nbsp;&nbsp;
+                  <div id="w-node-6186969ebfc5-5357cf79" class="text-block-61">
+                      <input type="checkbox" id="bitmex9_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex9%>/>
+                  </div>
+                  <div id="w-node-2c896808fefa-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex9_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex9%>/>
                   </div>
                 </div>
@@ -228,10 +246,12 @@
                   <a id="w-node-6186969ebfc1-5357cf79" href="orderHistoryTotal?site=bitmex10" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-6186969ebfc3-5357cf79" href="setting?site=bitmex10" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-2e3638ec746e-5357cf79" href="setting_status?site=bitmex10" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bitmex10" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-2d669c6d653a-5357cf79" href="setting_trailing?site=bitmex10" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-6186969ebfc5-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bitmex10_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex10%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bitmex10_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bitmex10%>/>
+                  </div>
+                  <div id="w-node-2c896808fefa-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bitmex10_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bitmex10%>/>
                   </div>
                 </div>
@@ -249,10 +269,12 @@
                   <a id="w-node-8cb573001e3b-5357cf79" href="orderHistoryTotal?site=bithumb" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-8cb573001e3d-5357cf79" href="setting?site=bithumb" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-bd61527155ec-5357cf79" href="setting_status?site=bithumb" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=bithumb" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-3bf637371402-5357cf79" href="setting_trailing?site=bithumb" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-8cb573001e3f-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="bithumb_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bithumb%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="bithumb_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_bithumb%>/>
+                  </div>
+                  <div id="w-node-46fd26889762-5357cf79" class="text-block-61">
                       <input type="checkbox" id="bithumb_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_bithumb%>/>
                   </div>
                 </div>
@@ -267,10 +289,12 @@
                   <a id="w-node-3cc7d1938419-5357cf79" href="orderHistoryTotal?site=coinone" class="button-8 w-button" role="button" target="_self">거래내역</a>
                     <a id="w-node-3cc7d193841b-5357cf79" href="setting?site=coinone" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                     <a id="w-node-2fe00f8464b6-5357cf79" href="setting_status?site=coinone" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                    <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=coinone" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                    <a id="w-node-714bb519a006-5357cf79" href="setting_trailing?site=coinone" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                   <div id="w-node-3cc7d193841d-5357cf79" class="text-block-61">
-                      <input type="checkbox" id="coinone_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_coinone%>/>&nbsp;&nbsp;&nbsp;
+                      <input type="checkbox" id="coinone_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_coinone%>/>
+                  </div>
+                  <div id="w-node-64997d824499-5357cf79" class="text-block-61">
                       <input type="checkbox" id="coinone_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_coinone%>/>
                   </div>
                 </div>
@@ -284,10 +308,12 @@
                     <a id="w-node-da64bc9bde0b-5357cf79" href="orderHistoryTotal?site=upbit" class="button-8 w-button" role="button" target="_self">거래내역</a>
                       <a id="w-node-da64bc9bde0d-5357cf79" href="setting?site=upbit" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                       <a id="w-node-8067893b4796-5357cf79" href="setting_status?site=upbit" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                      <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=upbit" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                      <a id="w-node-e6b71f3722aa-5357cf79" href="setting_trailing?site=upbit" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
                     <div id="w-node-da64bc9bde0f-5357cf79" class="text-block-61">
-                        <input type="checkbox" id="upbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_upbit%>/>&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" id="upbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_upbit%>/>
+                    </div>
+                    <div id="w-node-81a5239a4c8d-5357cf79" class="text-block-61">
                         <input type="checkbox" id="upbit_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_upbit%>/>
                     </div>
                   </div>
@@ -297,14 +323,16 @@
                 <div class="div-grid">
                   <div class="w-layout-grid grid-17">
                     <div id="w-node-da64bc9bde05-5357cf79" class="text-block-60"><br><strong class="bold-text-26" >코빗</strong>
-                    </div><a id="w-node-da64bc9bde09-5357cf79"  href="log?site=korbit" class="button-log w-button" role="button" target="_self">로그</a>
-                    <a id="w-node-da64bc9bde0b-5357cf79" href="orderHistoryTotal?site=korbit" class="button-8 w-button" role="button" target="_self">거래내역</a>
-                      <a id="w-node-da64bc9bde0d-5357cf79" href="setting?site=korbit" class="button-8 w-button" role="button" target="_self">세부설정 </a>
+                    </div><a id="w-node-347e9d72ef14-5357cf79"  href="log?site=korbit" class="button-log w-button" role="button" target="_self">로그</a>
+                    <a id="w-node-347e9d72ef16-5357cf79" href="orderHistoryTotal?site=korbit" class="button-8 w-button" role="button" target="_self">거래내역</a>
+                      <a id="w-node-347e9d72ef18-5357cf79" href="setting?site=korbit" class="button-8 w-button" role="button" target="_self">세부설정 </a>
                       <a id="w-node-763579e2ebf8-5357cf79" href="setting_status?site=korbit" class="button-8 w-button" role="button" target="_self">상태설정</a>
-                      <a id="w-node-b6d9216376a9-5357cf79" href="setting_trailing?site=korbit" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
+                      <a id="w-node-922fbbd36a8e-5357cf79" href="setting_trailing?site=korbit" class="button-8 w-button" role="button" target="_self">트레일링스탑 설정</a>
 
-                    <div id="w-node-da64bc9bde0f-5357cf79" class="text-block-61">
-                        <input type="checkbox" id="korbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_korbit%>/>&nbsp;&nbsp;&nbsp;
+                    <div id="w-node-347e9d72ef1a-5357cf79" class="text-block-61">
+                        <input type="checkbox" id="korbit_execFlag" name="func" class="lcs_check"  <%=isMargin.exec_korbit%>/>
+                    </div>
+                    <div id="w-node-ce17cf94f2ac-5357cf79" class="text-block-61">
                         <input type="checkbox" id="korbit_isTrailingStop" name="trailing" class="lcs_check"  <%=isMargin.execTrail_korbit%>/>
                     </div>
                   </div>
