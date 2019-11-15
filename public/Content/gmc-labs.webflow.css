@@ -164,8 +164,6 @@ filter: alpha(opacity=65);
 cursor: default;
 }
 
-
-
 .w-layout-grid {
   display: -ms-grid;
   display: grid;
