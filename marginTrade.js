@@ -158,6 +158,7 @@ mongoose.connect(webSetting.dbPath, function(error){
         console.log(err);
         return;
     }
+    
     //console.log(res);
     if(res.length === 0){ //없으면 환경설정 생성
       var obj = [
