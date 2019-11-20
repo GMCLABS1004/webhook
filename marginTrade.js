@@ -1636,14 +1636,17 @@ function trade_bitmex(_signal, siteName){
           
           if(
               (_signal.site ==='ALL' && _signal.type_log ==='') && //트레이딩뷰에서 신호줬는데
-              (res[0].side === 'long' && _signal.side ==='Sell Exit') || // long, Sell Exit 혹은
-              (res[0].side === 'short' && _signal.side ==='Buy Exit') //Sell, Buy Exit 
+              (
+                (res[0].side === 'long' && _signal.side ==='Sell Exit') || // long, Sell Exit 혹은
+                (res[0].side === 'short' && _signal.side ==='Buy Exit') //Sell, Buy Exit  //인 경우는 상태변경XX
+              )
           ){
-            console.log("신호변경X"); //인 경우는 상태변경XX
+            console.log("신호변경X"); 
           }else if(_signal.site ==='ALL' && _signal.type_log ===''){ //나머지 트레이딩뷰에서 신호준거는 주문여부 관계없이 바로 side 업데이트
             settings.updateOne(
               {site : data.site}, 
-              {$set :
+              {
+                $set :
                 {
                   side : getType(_signal.side)
                 }
