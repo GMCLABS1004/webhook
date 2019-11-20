@@ -69,12 +69,12 @@ function update_ticker(last_price){
 
 function update_low_high_price(last_price){
     return function(){
-        settings.find({execFlag: true, site_type : "oversee", isTrailingStop : true}, function(error, json){
+        settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
             if(error){
                 console.log("[" + getCurrentTimeString() +"] " + error);
                 return;
             }
-            
+
             var check_list = [] //
             for(var i=0; i<json.length; i++){
                 var obj = new Object(json[i]);
