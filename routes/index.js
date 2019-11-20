@@ -1460,7 +1460,7 @@ router.get('/setting_trailing',  isAuthenticated, function(req,res){
 
 router.post('/api/setting_trailing',  isAuthenticated,  function(req,res){
   var json = new Object(req.body);
-  console.log(json);
+  
   var obj = {
     trailingHighRate : Number(json.trailingHighRate),
     trailingLowRate : Number(json.trailingLowRate),
@@ -1469,6 +1469,7 @@ router.post('/api/setting_trailing',  isAuthenticated,  function(req,res){
     highPrice : Number(json.highPrice),
     lowPrice : Number(json.lowPrice)
   }
+  console.log(obj);
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
       console.log(error);
