@@ -732,14 +732,14 @@ function trade_coinone(_signal){
           data.pgSide = res[0].side;
           data.side_num = res[0].side_num;
           
-            //최신신호로 바꿈
-          settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
-            if(error){
-                console.log(error);
-                return;
-            }
-            console.log(res);
-          });
+          //최신신호로 바꿈
+          // settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
+          //   if(error){
+          //       console.log(error);
+          //       return;
+          //   }
+          //   console.log(res);
+          // });
           cb(null, data);
         });
       },
@@ -1909,7 +1909,7 @@ function trade_bitmex(_signal, siteName){
         }else if(_signal.type_log ==='manual' && _signal.side === 'Buy' ){
           order_flag= true;
         }
-        
+
         if(order_flag === false){
           return cb(null, data);
         }
