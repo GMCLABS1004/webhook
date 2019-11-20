@@ -1546,6 +1546,8 @@ function getType(side){
       return 'long'
   }else if(side ==='Sell' || side ==='ask'){
       return 'short'
+  }else if(side ==='Buy Exit' || side ==='Sell Exit', side ==='Exit'){
+    return 'exit';
   }
 }
 
