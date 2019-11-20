@@ -68,19 +68,19 @@
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
                             <div class="text-block-141"  for="entryPrice">진입</div>
-                            <input type="text" maxlength="256" id="entryPrice" required="" readonly class="text-field-9 w-input">
+                            <input type="text" maxlength="256" id="entryPrice" required="" class="text-field-9 w-input">
                           </form>
                         </div>
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
                             <div class="text-block-141"  for="highPrice">고점</div>
-                            <input type="text" maxlength="256" id="highPrice" required="" readonly class="text-field-9 w-input">
+                            <input type="text" maxlength="256" id="highPrice" required="" class="text-field-9 w-input">
                           </form>
                         </div>
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
                             <div class="text-block-141"  for="lowPrice">저점</div>
-                            <input type="text" maxlength="256" id="lowPrice" required="" readonly class="text-field-9 w-input">
+                            <input type="text" maxlength="256" id="lowPrice" required="" class="text-field-9 w-input">
                           </form>
                         </div>
                       </div>
@@ -106,7 +106,10 @@
                     isTrailingStop : $("#isTrailingStop").val(),
                     trailingHighRate : $("#trailingHighRate").val(), 
                     trailingLowRate : $("#trailingLowRate").val(), 
-                    trailFeeRate: $("#trailFeeRate").val()
+                    trailFeeRate: $("#trailFeeRate").val(),
+                    entryPrice : $("#entryPrice").val(),
+                    highPrice : $("#highPrice").val(),
+                    lowPrice : $("#lowPrice").val()
                 }
                 console.log(JSON.stringify(obj));
                 $.ajax({

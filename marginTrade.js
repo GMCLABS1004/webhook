@@ -1623,7 +1623,7 @@ function trade_bitmex(_signal, siteName){
             //console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
-
+          
           data.url = res[0].url;
           data.symbol = res[0].symbol;
           data.apiKey = res[0].apiKey;

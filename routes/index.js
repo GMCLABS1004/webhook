@@ -1317,7 +1317,7 @@ router.post('/api/marginTrade', function(req,res){
 
 
 router.post('/api/manual_order',isAuthenticated, function(req,res){
-  var sigData = {
+  var sigData ={
     site :  req.body.site,
     scriptNo : Number(req.body.scriptNo),
     side : req.body.side,
@@ -1464,7 +1464,10 @@ router.post('/api/setting_trailing',  isAuthenticated,  function(req,res){
   var obj = {
     trailingHighRate : Number(json.trailingHighRate),
     trailingLowRate : Number(json.trailingLowRate),
-    trailFeeRate : Number(json.trailFeeRate)
+    trailFeeRate : Number(json.trailFeeRate),
+    entryPrice : Number(json.entryPrice),
+    highPrice : Number(json.highPrice),
+    lowPrice : Number(json.lowPrice)
   }
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
