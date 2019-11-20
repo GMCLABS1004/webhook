@@ -35,8 +35,8 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName) {
     //console.log(data[data.length-1].price);
     if(last_price !== data[data.length-1].price){ //
         last_price = data[data.length-1].price;
-       setTimeout(update_ticker(data[0].price), 0);
-       setTimeout(update_low_high_price(data[0].price), 0);
+       setTimeout(update_ticker(last_price), 0);
+       setTimeout(update_low_high_price(last_price), 0);
     }
   }
   //console.log(data);
@@ -74,7 +74,7 @@ function update_low_high_price(last_price){
                 console.log("[" + getCurrentTimeString() +"] " + error);
                 return;
             }
-
+            
             var check_list = [] //
             for(var i=0; i<json.length; i++){
                 var obj = new Object(json[i]);
