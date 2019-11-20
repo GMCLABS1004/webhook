@@ -1626,6 +1626,7 @@ router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
   });
 });
 
+
 router.get('/avg_order_history',  isAuthenticated,  function(req, res){
   var site_type = req.query.site_type;
   res.render('avg_order_history',{site_type : site_type});

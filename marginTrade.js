@@ -1541,6 +1541,13 @@ function trade_korbit(_signal){
   }
 }
 
+function getType(side){
+  if(side ==='Buy' || side ==='bid'){
+      return 'long'
+  }else if(side ==='Sell' || side ==='ask'){
+      return 'short'
+  }
+}
 
 function trade_bitmex(_signal, siteName){
   return function(){
@@ -1624,6 +1631,23 @@ function trade_bitmex(_signal, siteName){
             return; 
           }
           
+          
+          //트레이딩뷰에서 신호준거는 주문여부 관계없이 바로 side 업데이트
+          if(_signal.site ==='ALL' && _signal.type_log ===''){
+            settings.updateOne(
+              {site : data.site}, 
+              {$set :
+                {
+                  side : getType(_signal.side)
+                }
+              }, function(error, res){
+                if(error){
+                    console.log(error);
+                    return;
+                }
+            });
+          }
+        
           data.url = res[0].url;
           data.symbol = res[0].symbol;
           data.apiKey = res[0].apiKey;
@@ -1877,12 +1901,15 @@ function trade_bitmex(_signal, siteName){
           order_flag= true;
         }else if(_signal.type_log === '' && data.pgSide === 'Sell' && data.isSide === 'Sell' && _signal.side === 'Buy'){
           order_flag= true;
-        }else if(_signal.type_log ==='manual' && _signal.side === 'Sell' ){
+        }else if(_signal.type_log === '' && data.pgSide === 'Exit' && data.isSide === 'none' && (_signal.side === 'Buy' || _signal.side === 'Sell')){
+          order_flag= true;
+        }
+        else if(_signal.type_log ==='manual' && _signal.side === 'Sell' ){
           order_flag= true;
         }else if(_signal.type_log ==='manual' && _signal.side === 'Buy' ){
           order_flag= true;
         }
-
+        
         if(order_flag === false){
           return cb(null, data);
         }
