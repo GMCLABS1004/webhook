@@ -25,7 +25,7 @@ client.on('close', () => console.log("[" + getCurrentTimeString() +"] " + 'Conne
 client.on('initialize', () => console.log("[" + getCurrentTimeString() +"] " + 'Client initialized, data is flowing.'));
 var last_price = 0;
 
-client.addStream('XBTUSD', 'trade', function(data, symbol, tableName) {
+client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
   //console.log(`Got update for ${tableName}:${symbol}. Current state:\n${JSON.stringify(data).slice(0, 100)}...`);
   //console.log("update price1 : "+data[0].price);
   
@@ -33,7 +33,9 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName) {
     //console.log(data);
     //console.log(data[0].price);
     //console.log(data[data.length-1].price);
+    
     if(last_price !== data[data.length-1].price){ //
+        console.log(block_signal);
         last_price = data[data.length-1].price;
        setTimeout(update_ticker(last_price), 0);
        setTimeout(update_low_high_price(last_price), 0);
@@ -176,7 +178,9 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({site : site, scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
-                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
+                    if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop", timestamp : new Date().getTime()})){
+                        signal.insertMany({site : site, scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
+                    }
                 }
             }else if(obj.side === 'short'){ //isPosition === 'short'
                 console.log("-----------------short exit--------------");
@@ -190,7 +194,9 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
                     console.log({site : site, scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
-                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
+                    if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop", timestamp : new Date().getTime()})){
+                        signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
+                    }
                 }
             }
             
@@ -207,7 +213,9 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
 
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
                     console.log({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry"});
-                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry"});
+                    if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry", timestamp : new Date().getTime()})){
+                        signal.insertMany({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry"});
+                    }
                 }
             }else if(obj.side === 'short' ){ //isPosition === 'exit' && 
                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
@@ -221,7 +229,9 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 
                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry"});
-                    signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry"});
+                    if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry", timestamp : new Date().getTime()})){
+                        signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry"});
+                    }
                 }
             }
             console.log("");
@@ -369,4 +379,45 @@ function getCurrentTimeString(){
     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var CurrentDateTime = date+' '+time;
     return CurrentDateTime;
+}
+
+var block_signal = [];
+function is_insert_signal(signal){
+    //console.log(block_signal);
+    var removeIdx = -1;
+    var before = -1;
+    for(i=0; i<block_signal.length; i++){
+        //동일 신호 검색
+        if(block_signal[i].type_log === signal.type_log && block_signal[i].scriptNo === signal.scriptNo && block_signal[i].side === signal.side && block_signal[i].side_num === signal.side_num && block_signal[i].site === signal.site){
+            before = block_signal[i].timestamp;
+            current = signal.timestamp;
+            
+            if((current - before) >= (1000 * 60)){ //1분이상된 신호 
+
+                removeIdx = i; //인덱스 기억 
+                
+            }else{
+                 console.log("신호무시");
+                // console.log(block_signal);
+                return false; //1분이하 신호 -> 신호무시
+            }
+        }
+    }
+
+    if(removeIdx === -1){ //신호가 처음인 경우
+        block_signal.push(signal); //신호 입력
+         console.log("첫신호입력");
+        // console.log(block_signal);
+        return true;
+    }
+
+    if(removeIdx >= 0){ //찾았는데 1분이상 경과된 신호
+        block_signal.splice(removeIdx, 1); //이전신호 지우고
+        block_signal.push(signal); //새신호로 입력
+         console.log("신호갱신");
+        // console.log(block_signal);
+        return true;
+    }
+
+    return false; 
 }

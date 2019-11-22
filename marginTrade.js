@@ -362,9 +362,9 @@ function marginTrade(){
           console.log("특정계정에만 주문 실행");
           setTimeout(trade_bitmex(new Object(res[0]), res[0].site), 0);
         }
-
-         //신호 삭제
-         signal.findByIdAndRemove(res[0]._id, function(error, res){
+        
+        //신호 삭제
+        signal.findByIdAndRemove(res[0]._id, function(error, res){
           if(error){
             console.log(error);
             return;

@@ -870,7 +870,7 @@ function getPosition_korbit(set, cb){
               console.log("코빗 balance 값 조회 error1 : " + error);
               return;;
           }
-         
+          
           try{
               var json = JSON.parse(body);
           }catch(error){
