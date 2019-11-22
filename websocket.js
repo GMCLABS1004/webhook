@@ -386,6 +386,7 @@ function is_insert_signal(signal){
     //console.log(block_signal);
     var removeIdx = -1;
     var before = -1;
+    var current = -1;
     for(var i=0; i<block_signal.length; i++){
         //동일 신호 검색
         if(block_signal[i].type_log === signal.type_log && block_signal[i].scriptNo === signal.scriptNo && block_signal[i].side === signal.side && block_signal[i].side_num === signal.side_num && block_signal[i].site === signal.site){
