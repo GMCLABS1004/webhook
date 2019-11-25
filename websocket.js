@@ -117,7 +117,10 @@ function update_low_high_price(last_price){
                     )
                 }
                 
-                setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
+                if(json[i].isTrailingStop === true){
+                    setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
+                }
+               
 
                 // var exec_trail = true;
                 // for(var j=0; j<check_list.length; j++){
