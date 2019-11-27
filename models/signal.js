@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var signalSchema = new Schema({
-
     scriptNo : {type:Number, default : 1},       
     side : {type:String, default : ""}, //Buy || Sell || Exit
     side_num : {type:Number, default : 0},

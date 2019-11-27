@@ -158,6 +158,7 @@ mongoose.connect(webSetting.dbPath, function(error){
         console.log(err);
         return;
     }
+    
     //console.log(res);
     if(res.length === 0){ //없으면 환경설정 생성
       var obj = [
@@ -361,9 +362,9 @@ function marginTrade(){
           console.log("특정계정에만 주문 실행");
           setTimeout(trade_bitmex(new Object(res[0]), res[0].site), 0);
         }
-
-         //신호 삭제
-         signal.findByIdAndRemove(res[0]._id, function(error, res){
+        
+        //신호 삭제
+        signal.findByIdAndRemove(res[0]._id, function(error, res){
           if(error){
             console.log(error);
             return;
@@ -731,14 +732,14 @@ function trade_coinone(_signal){
           data.pgSide = res[0].side;
           data.side_num = res[0].side_num;
           
-            //최신신호로 바꿈
-          settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
-            if(error){
-                console.log(error);
-                return;
-            }
-            console.log(res);
-          });
+          //최신신호로 바꿈
+          // settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
+          //   if(error){
+          //       console.log(error);
+          //       return;
+          //   }
+          //   console.log(res);
+          // });
           cb(null, data);
         });
       },
@@ -1540,6 +1541,15 @@ function trade_korbit(_signal){
   }
 }
 
+function getType(side){
+  if(side ==='Buy' || side ==='bid'){
+      return 'long'
+  }else if(side ==='Sell' || side ==='ask'){
+      return 'short'
+  }else if(side ==='Buy Exit' || side ==='Sell Exit' || side ==='Exit'){
+    return 'exit';
+  }
+}
 
 function trade_bitmex(_signal, siteName){
   return function(){
@@ -1622,7 +1632,32 @@ function trade_bitmex(_signal, siteName){
             //console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
-
+          
+          
+          if(
+              (_signal.site ==='ALL' && _signal.type_log ==='') && //트레이딩뷰에서 신호줬는데
+              (
+                (res[0].side === 'long' && _signal.side ==='Sell Exit') || // long, Sell Exit 혹은
+                (res[0].side === 'short' && _signal.side ==='Buy Exit') //Sell, Buy Exit  //인 경우는 상태변경XX
+              )
+          ){
+            console.log("신호변경X"); 
+          }else if(_signal.site ==='ALL' && _signal.type_log ===''){ //나머지 트레이딩뷰에서 신호준거는 주문여부 관계없이 바로 side 업데이트
+            settings.updateOne(
+              {site : data.site}, 
+              {
+                $set :
+                {
+                  side : getType(_signal.side)
+                }
+              }, function(error, res){
+                if(error){
+                    console.log(error);
+                    return;
+                }
+            });
+          }
+        
           data.url = res[0].url;
           data.symbol = res[0].symbol;
           data.apiKey = res[0].apiKey;
@@ -1876,7 +1911,10 @@ function trade_bitmex(_signal, siteName){
           order_flag= true;
         }else if(_signal.type_log === '' && data.pgSide === 'Sell' && data.isSide === 'Sell' && _signal.side === 'Buy'){
           order_flag= true;
-        }else if(_signal.type_log ==='manual' && _signal.side === 'Sell' ){
+        }else if(_signal.type_log === '' && data.pgSide === 'Exit' && data.isSide === 'none' && (_signal.side === 'Buy' || _signal.side === 'Sell')){
+          order_flag= true;
+        }
+        else if(_signal.type_log ==='manual' && _signal.side === 'Sell' ){
           order_flag= true;
         }else if(_signal.type_log ==='manual' && _signal.side === 'Buy' ){
           order_flag= true;

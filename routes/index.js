@@ -870,7 +870,7 @@ function getPosition_korbit(set, cb){
               console.log("코빗 balance 값 조회 error1 : " + error);
               return;;
           }
-         
+          
           try{
               var json = JSON.parse(body);
           }catch(error){
@@ -1317,7 +1317,7 @@ router.post('/api/marginTrade', function(req,res){
 
 
 router.post('/api/manual_order',isAuthenticated, function(req,res){
-  var sigData = {
+  var sigData ={
     site :  req.body.site,
     scriptNo : Number(req.body.scriptNo),
     side : req.body.side,
@@ -1460,12 +1460,16 @@ router.get('/setting_trailing',  isAuthenticated, function(req,res){
 
 router.post('/api/setting_trailing',  isAuthenticated,  function(req,res){
   var json = new Object(req.body);
-  console.log(json);
+  
   var obj = {
     trailingHighRate : Number(json.trailingHighRate),
     trailingLowRate : Number(json.trailingLowRate),
-    trailFeeRate : Number(json.trailFeeRate)
+    trailFeeRate : Number(json.trailFeeRate),
+    entryPrice : Number(json.entryPrice),
+    highPrice : Number(json.highPrice),
+    lowPrice : Number(json.lowPrice)
   }
+  console.log(obj);
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
     if(error){
       console.log(error);
@@ -1621,6 +1625,7 @@ router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
     res.send(result);
   });
 });
+
 
 router.get('/avg_order_history',  isAuthenticated,  function(req, res){
   var site_type = req.query.site_type;
