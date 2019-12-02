@@ -48,8 +48,15 @@
                                 start_asset += list[i].walletBalance_before;
                                 
                                 $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
-                                        $("#mytable > tbody:last").append("<td align='left'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
+                                        $("#mytable > tbody:last").append("<td colspan='2' class='ID01'><span>" + (i+1) + "</span></td>"); 
+                                        $("#mytable > tbody:last").append("<td></td>");
+                                        $("#mytable > tbody:last").append("<td></td>");
+                                        $("#mytable > tbody:last").append("<td></td>");
+                                        $("#mytable > tbody:last").append("<td class='___3099'><a class='____1_A63_Rectangle_7'><strong>매수</strong></a></td>");
+                                        $("#mytable > tbody:last").append("<td class='___3099'><a class='____1_A63_Rectangle_7'><strong>매수</strong></a></td>");
+                                        $("#mytable > tbody:last").append("<td class='___3099'><a class='____1_A63_Rectangle_7'><strong>매수</strong></a></td></tr>");
+
+                                        $("#mytable > tbody:last").append("<tr><td colspan='2' class=BITMEX01><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptName + "</td>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
@@ -68,24 +75,24 @@
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
 
-                                        var obj = {
-                                            site : list[i].site,
-                                            scriptNo : Number(list[i].scriptNo),
-                                            side_num : Number(list[i].side_num),
-                                            type_log : 'manual',
-                                            side : "",
-                                        }
-                                        obj["side"] = "Buy";
-                                        //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
-                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
-                                        obj["side"] = "Sell";
-                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매도" +"</a>" + "</td>");
-                                        //console.log(reverse_position(list[i].size));
-                                        obj["side"] = reverse_position(list[i].size);
-                                        obj["side_option"] = "Exit";
-                                        //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
-                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
-                                $("#mytable > tbody:last").append("<tr>");
+                                //         var obj = {
+                                //             site : list[i].site,
+                                //             scriptNo : Number(list[i].scriptNo),
+                                //             side_num : Number(list[i].side_num),
+                                //             type_log : 'manual',
+                                //             side : "",
+                                //         }
+                                //         obj["side"] = "Buy";
+                                //         //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
+                                //         $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
+                                //         obj["side"] = "Sell";
+                                //         $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매도" +"</a>" + "</td>");
+                                //         //console.log(reverse_position(list[i].size));
+                                //         obj["side"] = reverse_position(list[i].size);
+                                //         obj["side_option"] = "Exit";
+                                //         //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
+                                //         $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
+                                // $("#mytable > tbody:last").append("<tr>");
                             }
                             var totalBenefit = (end_asset - start_asset);
                             var totalBenefitRate = ((totalBenefit/start_asset) *100);
@@ -229,8 +236,6 @@
 
 </head>
 <body>
-
-  
   <div class="section-62">
     <div class="w-container">
       <h2 class="bitmexTitle">비트맥스 포지션</h2>
@@ -272,7 +277,7 @@
             <div class="____1463">
               <table id="mytable">
                   <!-- <tr>
-                      <td colspan="2" id="ID01"><span>01</span></td>
+                      <td colspan="2" class="ID01"><span>01</span></td>
                       <td></td>
                       <td></td>
                       <td></td>
@@ -281,25 +286,25 @@
                       <td id="___3101"><a class="____1_A63_Rectangle_8"><strong>탈출</strong></a></td>
                     </tr>
                     <tr>
-                      <td colspan="2" id="BITMEX01"><span>BITMEX01</span></td>
-                      <td colspan="4" id="ID6XMA_ALT_V01_____"><span>6XMA ALT V01[컨버트]</span></td>
-                      <td id="ID6"><span>6</span></td>
-                      <td id="ID302"><span>302</span></td>
+                      <td colspan="2" class="BITMEX01"><span>BITMEX01</span></td>
+                      <td colspan="4" class="ID6XMA_ALT_V01_____"><span>6XMA ALT V01[컨버트]</span></td>
+                      <td class="ID6"><span>6</span></td>
+                      <td class="ID302"><span>302</span></td>
                     </tr>
                     <tr>
-                      <td id="ID95_"><span>95%</span></td>
-                      <td id="ID2X"><span>2X</span></td>
-                      <td colspan="2" id="ID1_31862731"><span>1.31862731</span></td>
-                      <td colspan="2" id="_21_917"><span>-21,917</span></td>
-                      <td colspan="2" id="_2_5102"><span>-2.5102</span></td>
+                      <td class="ID95_"><span>95%</span></td>
+                      <td class="ID2X"><span>2X</span></td>
+                      <td colspan="2" class="ID1_31862731"><span>1.31862731</span></td>
+                      <td colspan="2" class="_21_917"><span>-21,917</span></td>
+                      <td colspan="2" class="_2_5102"><span>-2.5102</span></td>
                     </tr>
                     <tr>
                       <td></td>
                       <td></td>
-                      <td id="ID8_736_0"><span>8,736.0</span></td>
-                      <td id="short"><span>short</span></td>
-                      <td id="ID1"><span>1</span></td>
-                      <td colspan="3" id="ID0_0018_0_07__"><span>0.0018(0.07%)</span></td>
+                      <td class="ID8_736_0"><span>8,736.0</span></td>
+                      <td class="short"><span>short</span></td>
+                      <td class="ID1"><span>1</span></td>
+                      <td colspan="3" class="ID0_0018_0_07__"><span>0.0018(0.07%)</span></td>
                     </tr> -->
                     <tbody>
 

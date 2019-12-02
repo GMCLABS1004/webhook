@@ -84,7 +84,7 @@ th {
 }
 
 
-#ID01 {
+.ID01 {
 	/* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
 	overflow: visible;
 	white-space: nowrap;
@@ -96,19 +96,19 @@ th {
 	color: rgba(0,0,0,1);
 }
 
-#___3099 {
+.___3099 {
   width: 100px;
   overflow: visible;
   text-align: right;
 }
 
-#___3100 {
+.___3100 {
   width: 100px;
   overflow: visible;
   text-align: right;
 }
 
-#___3101 {
+.___3101 {
   width: 100px;
   overflow: visible;
   text-align: right;
@@ -134,7 +134,7 @@ th {
 	  }
 }
 
-#BITMEX01 {
+.BITMEX01 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
@@ -145,7 +145,7 @@ th {
 	color: rgba(0,0,0,1);
 }
 
-#ID6XMA_ALT_V01_____ {
+.ID6XMA_ALT_V01_____ {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
@@ -156,7 +156,7 @@ th {
 	color: rgba(112,112,112,1);
 }
 
-#ID6 {
+.ID6 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: right;
@@ -167,7 +167,7 @@ th {
 	color: rgba(112,112,112,1);
 }
 
-#ID302 {
+.ID302 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: right;
@@ -178,7 +178,7 @@ th {
 	color: rgba(107,153,0,1);
 }
 
-#ID95_ {
+.ID95_ {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
@@ -189,7 +189,7 @@ th {
 	color: rgba(140,140,140,1);
 }
 
-#ID2X {
+.ID2X {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
@@ -200,7 +200,7 @@ th {
 	color: rgba(140,140,140,1);
 }
 
-#ID1_31862731 {
+.ID1_31862731 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
@@ -211,7 +211,7 @@ th {
 	color: rgba(140,140,140,1);
 }
 
-#_21_917 {
+._21_917 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: right;
@@ -222,7 +222,7 @@ th {
 	color: rgba(112,112,112,1);
 }
 
-#_2_5102 {
+._2_5102 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: right;
@@ -233,7 +233,7 @@ th {
 	color: rgba(112,112,112,1);
 }
 
-#ID8_736_0 {
+.ID8_736_0 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
@@ -244,7 +244,7 @@ th {
 	color: rgba(0,0,0,1);
 }
 
-#short {
+.short {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
@@ -255,7 +255,7 @@ th {
 	color: rgba(255,0,0,1);
 }
 
-#ID1 {
+.ID1 {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: center;
@@ -266,7 +266,7 @@ th {
 	color: rgba(255,94,0,1);
 }
 
-#ID0_0018_0_07__ {
+.ID0_0018_0_07__ {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: right;
