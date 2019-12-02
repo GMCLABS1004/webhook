@@ -154,6 +154,7 @@
                     success: function(body) {
                         if(body){
                             alert(body.msg);
+                            location.href =  window.location.origin + '/script';
                         }
                     },
                     error : function(request, status, error) {
