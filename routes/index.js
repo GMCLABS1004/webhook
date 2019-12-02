@@ -47,6 +47,22 @@ passport.use(new LocalStrategy({
   });
 }));
 
+
+// table
+router.get('/positionAll_table', function(req, res, next){
+  res.render('positionAll_table');
+});
+router.get('/avg_order_history_table',   function(req, res, next){
+  res.render('avg_order_history_table');
+});
+router.get('/position_internal_table',   function(req, res, next){
+  res.render('position_internal_table');
+});
+router.get('/history_table',   function(req, res, next){
+  res.render('history_table');
+});
+
+
 var isAuthenticated = function(req, res, next) {
   // console.log("isAuthenticated call!!!");
   // console.log(req);
