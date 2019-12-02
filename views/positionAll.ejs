@@ -85,13 +85,15 @@
                     method : "GET",
                     url : "api/positionAll",
                     success: function(json){
-                        //console.log(json);
+                        console.log(json);
                         if(json){
                             var url = window.location.origin + '/orderHistoryTotal?site='
                             var list = json.list;
                             var last_price = json.last_price;
                             var end_asset = 0;
                             var start_asset =0;
+                            
+                            var unrealisedPnlSum =0;
                             $("#mytable > tbody:last").empty();
                             $("#last_price").html("");
                             $("#end_asset").html("");
@@ -102,7 +104,7 @@
                             for(i=0; i<list.length; i++){
                                 end_asset += list[i].walletBalance;
                                 start_asset += list[i].walletBalance_before;
-                                
+                                unrealisedPnlSum += list[i].unrealisedPnl;
                                 $("#mytable > tbody:last").append("<tr>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='left'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
@@ -119,7 +121,7 @@
                                         $("#mytable > tbody:last").append("<td align='center'>" + list[i].margin + "</td>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='center'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</td>");                         
-                                        $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].realisedPnl.toFixed(4), list[i].site) + "</td>");                         
+                                        //$("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].realisedPnl.toFixed(4), list[i].site) + "</td>");                         
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
@@ -136,12 +138,29 @@
                                         $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
                                         obj["side"] = "Sell";
                                         $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매도" +"</a>" + "</td>");
-                                        console.log(reverse_position(list[i].size));
+                                        //console.log(reverse_position(list[i].size));
                                         obj["side"] = reverse_position(list[i].size);
                                         obj["side_option"] = "Exit";
-                                        console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
+                                        //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
                                 $("#mytable > tbody:last").append("<tr>");
+
+                                if(i === list.length-1){
+                                    var unrealisedPnlSumPer =    (unrealisedPnlSum / end_asset).toFixed(4); //
+                                    //console.log("unrealisedPnlSumPer : "+ unrealisedPnlSumPer);
+                                    if(unrealisedPnlSumPer === NaN){
+                                        unrealisedPnlSumPer =0;
+                                    }
+                                    $("#mytable > tbody:last").append("<tr>");
+                                       
+                                        
+                                        $("#mytable > tbody:last").append("<td style='background-color: #f4f4f4;' align='center' colspan ='7'>" + "" + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td style='background-color: #f4f4f4;' align='right'><strong>" + asset_comma(end_asset, list[i].site) + "</strong></td>"); 
+                                        $("#mytable > tbody:last").append("<td style='background-color: #f4f4f4;' align='center' colspan ='5'>" + "" + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td style='background-color: #f4f4f4;' align='center'><strong>" + value_comma(unrealisedPnlSum, list[i].site) +"(" + roePer_comma(unrealisedPnlSumPer)+"%)" + "</strong></td>");                       
+                                        $("#mytable > tbody:last").append("<td style='background-color: #f4f4f4;' align='center' colspan ='3'>" + "" + "</td>"); 
+                                    $("#mytable > tbody:last").append("<tr>");
+                                }
                             }
                             var totalBenefit = (end_asset - start_asset);
                             var totalBenefitRate = ((totalBenefit/start_asset) *100);
@@ -159,8 +178,8 @@
         }
 
         function manual_order(obj){
-            console.log("manual_order 호출");
-            console.log(obj)
+            //console.log("manual_order 호출");
+            //console.log(obj)
             var data= JSON.parse(obj);
             if(data["side"] !== "Exit" && data["side_option"] === "Exit"){
                 data["side"] = data["side"] + " " + "Exit"
@@ -316,7 +335,7 @@
                                 <th>마진</th>
                                 <th>레버리지</th>
                                 <th>미실현손익</th>
-                                <th>실현손익</th>
+                                <!-- <th>실현손익</th> -->
                                 <th></th>
                                 <th></th>
                                 <th></th>
