@@ -55,8 +55,8 @@ router.get('/positionAll_table', function(req, res, next){
 router.get('/avg_order_history_table',   function(req, res, next){
   res.render('avg_order_history_table');
 });
-router.get('/position_internal_table',   function(req, res, next){
-  res.render('position_internal_table');
+router.get('/positionAll_internal_table',   function(req, res, next){
+  res.render('positionAll_internal_table');
 });
 router.get('/history_table',   function(req, res, next){
   res.render('history_table');
