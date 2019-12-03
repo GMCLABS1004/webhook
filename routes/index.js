@@ -1467,17 +1467,56 @@ router.post('/api/setting_status',  isAuthenticated,  function(req,res){
 
 
 router.get('/setting_trailing',  isAuthenticated, function(req,res){
-  var site = req.query.site;
-  setting.findOne({site : site},function(error, json){
-    if(error){
-      res.render('setting',error);
-      return;
-    }
-    
-    res.render('setting_trailing',json);
-  })
+  console.log("/setting_trailing 호출");
+    var site = req.query.site;
+    res.render('setting_trailing',{site : site});
 });
 
+router.get('/api/setting_trailing',  isAuthenticated, function(req,res){
+  console.log("/setting_trailing 호출");
+  var site = req.query.site;
+  var obj={}
+  setting.findOne({site : site},function(error, json){
+    if(error){
+      res.render('setting_trailing',error);
+      return;
+    }
+    obj["site"] = json.site;
+    obj["trailingHighRate"] = json.trailingHighRate;
+    obj["trailingLowRate"] = json.trailingLowRate;
+    obj["trailFeeRate"] = json.trailFeeRate;
+    obj["rentryFeeRate"] = json.rentryFeeRate;
+    obj["pgSide"] = json.side;
+    obj["entryPrice"] = json.entryPrice;
+    obj["highPrice"] = json.highPrice;
+    obj["lowPrice"] = json.lowPrice;
+    position.findOne({}, function(error, data){
+      if(error){
+        res.render('setting_trailing',error);
+        return;
+      }
+      obj["isSide"] = "";
+      for(var i=0; i<data.list.length; i++){
+        if(data.list[i].site === site){
+          obj.isSide = isPosition(data.list[i].size);
+          console.log("isSide : "+isPosition(data.list[i].size) );
+        }
+      }
+      console.log("obj.isSide : "+ obj.isSide);
+      console.log(obj);
+      res.send(obj);
+    });
+  })
+});
+function isPosition(size){
+  if(size > 0){
+      return "long"
+  }else if(size < 0){
+      return "short";
+  }else{
+      return "exit";
+  }
+}
 router.post('/api/setting_trailing',  isAuthenticated,  function(req,res){
   var json = new Object(req.body);
   
@@ -1485,6 +1524,7 @@ router.post('/api/setting_trailing',  isAuthenticated,  function(req,res){
     trailingHighRate : Number(json.trailingHighRate),
     trailingLowRate : Number(json.trailingLowRate),
     trailFeeRate : Number(json.trailFeeRate),
+    rentryFeeRate : Number(json.rentryFeeRate),
     entryPrice : Number(json.entryPrice),
     highPrice : Number(json.highPrice),
     lowPrice : Number(json.lowPrice)
