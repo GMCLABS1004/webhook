@@ -82,6 +82,7 @@ function update_low_high_price(last_price){
                 var obj = new Object(json[i]);
                 var lowPrice = obj.lowPrice;
                 var highPrice = obj.highPrice;
+
                 //고점 업데이트
                 if(obj.highPrice < last_price){
                     console.log("[" + getCurrentTimeString() +"] " + "고점 업데이트");
@@ -120,7 +121,7 @@ function update_low_high_price(last_price){
                 if(json[i].isTrailingStop === true){
                     setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
                 }
-               
+                
 
                 // var exec_trail = true;
                 // for(var j=0; j<check_list.length; j++){
@@ -150,6 +151,7 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             var trailingHighRate = obj.trailingHighRate * 0.01; 
             var trailingLowRate = obj.trailingLowRate * 0.01; 
             var trailFee = entryPrice * (obj.trailFeeRate * 0.01);
+            var rentryFee = entryPrice * (obj.rentryFeeRate * 0.01);
             var scriptNo = obj.scriptNo;
             var side_num = obj.side_num;
             var alpha = 0;
@@ -161,7 +163,7 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             console.log("[" + getCurrentTimeString() +"] " + "highPrice - entryPrice : "+ (highPrice - entryPrice) + " * "+ trailingHighRate + " = " + ((highPrice - entryPrice) * trailingHighRate));
             console.log("[" + getCurrentTimeString() +"] " + "lowPrice - entryPrice : "+ (lowPrice - entryPrice) + " * "+ trailingLowRate + " = " + ((lowPrice - entryPrice) * trailingLowRate));
             console.log("[" + getCurrentTimeString() +"] " + "trailFee : "+ trailFee);
-
+            console.log("[" + getCurrentTimeString() +"] " + "rentryFee : "+ rentryFee);
 
             // console.log("[" + getCurrentTimeString() +"] " + "trailingHighRate : "+ trailingHighRate);
             // console.log("[" + getCurrentTimeString() +"] " + "trailFee :"+ trailFee);
@@ -210,11 +212,11 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
                 // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
-                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha < last_price < entryPrice - trailFee");
-                console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - trailFee));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - rentryFee : "+ (entryPrice - rentryFee));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha < last_price < entryPrice - rentryFee");
+                console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - rentryFee));
 
-                if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
+                if(entryPrice - alpha < last_price &&  last_price < entryPrice - rentryFee){ //진입가 + 
                     console.log({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry"});
                     if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry", timestamp : new Date().getTime()})){
                         signal.insertMany({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry"});
@@ -226,14 +228,14 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 //console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
                 // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
-                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
-                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee < last_price < entryPrice + alpha");
-                console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + rentryFee : "+ (entryPrice + rentryFee));
+                console.log("[" + getCurrentTimeString() +"] " + "entryPrice + rentryFee < last_price < entryPrice + alpha");
+                console.log("[" + getCurrentTimeString() +"] " + (entryPrice + rentryFee) + " / " + last_price + " / " + (entryPrice + alpha));
                 
-                if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
-                    console.log({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry"});
-                    if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry", timestamp : new Date().getTime()})){
-                        signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "reentry"});
+                if(entryPrice + rentryFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
+                    console.log({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "rentry"});
+                    if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "rentry", timestamp : new Date().getTime()})){
+                        signal.insertMany({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "rentry"});
                     }
                 }
             }

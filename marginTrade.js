@@ -109,6 +109,82 @@ var logfileName6_2 = './log/korbit' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName6_1, logfileName6_2, function(loggerHandle){ logger_korbit = loggerHandle; logger_korbit.info("코빗");}); //logger 생성
 
 
+//tv action
+const doSkip = /*무시*/ {text : "무시", isSkip : true, isStatus : false, isExit : false, isEntry : false}
+const doStatus = /*상태값변경 */ {text : "상태값변경", isSkip : true, isStatus : true, isExit : false, isEntry : false}
+const doExit = /*탈출 */ {text : "탈출", isSkip : false, isStatus : true, isExit : true, isEntry : false}
+const doEntry = /*진입 */ {text : "진입", isSkip : false, isStatus : true, isExit : false, isEntry : true}
+const doSwitch = /*스위칭 */ {text : "스위칭", isSkip : false, isStatus : true, isExit : true, isEntry : true}
+
+//트레일링스탑 action
+const doTrailExit = /*탈출 */ {text : "트레일링 탈출", isSkip : false, isStatus : false, isExit : true, isEntry : false}
+
+
+const action_table = [
+    {type : '', pgSide : 'Buy', isSide : 'Buy', sigSide : "Buy", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Buy', isSide : 'Buy', sigSide : "Buy Exit", /*탈출 */action : doExit},
+    {type : '', pgSide : 'Buy', isSide : 'Buy', sigSide : "Sell", /*스위칭 */action : doSwitch},
+    {type : '', pgSide : 'Buy', isSide : 'Buy', sigSide : "Sell Exit", /*무시*/ action : doSkip},
+    
+    {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Buy", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Buy Exit", /*상태값변경 */ action : doStatus},
+    {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
+    {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},
+    
+    // {type : '', pgSide : 'Buy', isSide : 'Sell', sigSide : "Buy", /*스위칭 */action : doSwitch},
+    // {type : '', pgSide : 'Buy', isSide : 'Sell', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+    // {type : '', pgSide : 'Buy', isSide : 'Sell', sigSide : "Sell", /*무시*/ action : doSkip},
+    // {type : '', pgSide : 'Buy', isSide : 'Sell', sigSide : "Sell Exit", /*탈출 */action : doExit},
+    
+    // {type : '', pgSide : 'Sell', isSide : 'Buy', sigSide : "Buy", /*무시*/ action : doSkip},
+    // {type : '', pgSide : 'Sell', isSide : 'Buy', sigSide : "Buy Exit", /*탈출 */action : doExit},
+    // {type : '', pgSide : 'Sell', isSide : 'Buy', sigSide : "Sell", /*스위칭 */action : doSwitch},
+    // {type : '', pgSide : 'Sell', isSide : 'Buy', sigSide : "Sell Exit", /*무시*/ action : doSkip},
+    
+    {type : '', pgSide : 'Sell', isSide : 'Sell', sigSide : "Buy", /*스위칭 */action : doSwitch},
+    {type : '', pgSide : 'Sell', isSide : 'Sell', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Sell', isSide : 'Sell', sigSide : "Sell", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Sell', isSide : 'Sell', sigSide : "Sell Exit", /*탈출 */action : doExit},
+    
+    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
+    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Sell", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Sell Exit", /*상태값변경 */ action : doStatus},
+ 
+    // {type : '', pgSide : 'Exit', isSide : 'Buy', sigSide : "Buy", /*상태값변경 */ action : doStatus},
+    // {type : '', pgSide : 'Exit', isSide : 'Buy', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+    // {type : '', pgSide : 'Exit', isSide : 'Buy', sigSide : "Sell", /*스위칭 */action : doSwitch},
+    // {type : '', pgSide : 'Exit', isSide : 'Buy', sigSide : "Sell Exit", /*무시*/ action : doSkip},
+    
+    // {type : '', pgSide : 'Exit', isSide : 'Sell', sigSide : "Buy", /*스위칭 */action : doSwitch},
+    // {type : '', pgSide : 'Exit', isSide : 'Sell', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+    // {type : '', pgSide : 'Exit', isSide : 'Sell', sigSide : "Sell", /*무시*/ action : doSkip},
+    // {type : '', pgSide : 'Exit', isSide : 'Sell', sigSide : "Sell Exit", /*탈출 */action : doExit},
+    
+    {type : '', pgSide : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
+    {type : '', pgSide : 'Exit', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
+    {type : '', pgSide : 'Exit', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},
+
+    {type : 'rentry', pgSide : 'Buy', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
+    {type : 'rentry', pgSide : 'Sell', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},    
+
+    {type : 'trailingStop', pgSide : 'Buy', isSide : 'Buy', sigSide : "Buy Exit", /*탈출 */action : doTrailExit},
+    {type : 'trailingStop', pgSide : 'Sell', isSide : 'Sell', sigSide : "Sell Exit", /*탈출 */action : doTrailExit},
+]
+
+// console.log(bitmex_decide_action("trailingStop", "Buy", "Buy", "Buy Exit"));
+
+function bitmex_decide_action(type, pgSide, isSide, sigSide){
+    for(var i=0; i<action_table.length; i++){
+        if(type === action_table[i].type && pgSide === action_table[i].pgSide && isSide === action_table[i].isSide && sigSide === action_table[i].sigSide){
+            return action_table[i].action;
+        }
+    }
+    return doSkip;
+}
+
+
 
 function fixed4(num){
   var str = new String(num);
@@ -1632,31 +1708,6 @@ function trade_bitmex(_signal, siteName){
             //console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
-          
-          
-          if(
-              (_signal.site ==='ALL' && _signal.type_log ==='') && //트레이딩뷰에서 신호줬는데
-              (
-                (res[0].side === 'long' && _signal.side ==='Sell Exit') || // long, Sell Exit 혹은
-                (res[0].side === 'short' && _signal.side ==='Buy Exit') //Sell, Buy Exit  //인 경우는 상태변경XX
-              )
-          ){
-            console.log("신호변경X"); 
-          }else if(_signal.site ==='ALL' && _signal.type_log ===''){ //나머지 트레이딩뷰에서 신호준거는 주문여부 관계없이 바로 side 업데이트
-            settings.updateOne(
-              {site : data.site}, 
-              {
-                $set :
-                {
-                  side : getType(_signal.side)
-                }
-              }, function(error, res){
-                if(error){
-                    console.log(error);
-                    return;
-                }
-            });
-          }
         
           data.url = res[0].url;
           data.symbol = res[0].symbol;
@@ -1734,18 +1785,38 @@ function trade_bitmex(_signal, siteName){
           //res.send({});
           return;
         }
-        
-        if(data.isSide === 'none'){ //진입한 포지션이 없으면 첫번째 주문 생략
-            return cb(null, data);
-        }else if( (data.pgSide === 'Buy' && data.isSide === 'Buy' && _signal.side === 'Buy Exit' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)) || 
-                  (data.pgSide === 'Sell' && data.isSide === 'Sell' && _signal.side === 'Sell Exit' && is_exit(data.script_data, "Sell", data.side_num, _signal.side_num)) ||
-                  (_signal.type_log ==='manual' && data.isSide === 'Buy' && _signal.side === 'Buy Exit' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)) ||//수동주문은 조건없이 실행
-                  (_signal.type_log ==='manual' && data.isSide === 'Sell' && _signal.side === 'Sell Exit' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)) 
-                ){
-            console.log("포지션 종료"); //로직종료
-            console.log("현재포지션 : "+ data.isSide);
-            console.log("신호 : "+ _signal.side);
-            var start_time = new Date();
+       
+        console.log("_signal.type_log : "+ _signal.type_log);
+        console.log("data.pgSide : "+ data.pgSide);
+        console.log("data.isSide : "+ data.isSide);
+        console.log("_signal.side : "+ _signal.side);
+        var action = bitmex_decide_action(_signal.type_log, data.pgSide, data.isSide, _signal.side);
+
+        if(action.status === true){
+          console.log("상태변경");
+          settings.updateOne(
+            {site : data.site}, 
+            {
+              $set :
+              {
+                side : getType(_signal.side)
+              }
+            }, function(error, res){
+              if(error){
+                  console.log(error);
+                  return;
+              }
+          });
+        }
+
+        if(action.isSkip === true){
+          console.log("신호무시");
+          return;
+        }
+
+        if(action.isExit === true){
+          console.log("isExit");
+          var start_time = new Date();
             start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
             var obj = {
                 site : data.site,
@@ -1771,113 +1842,16 @@ function trade_bitmex(_signal, siteName){
                 isContinue : false, //주문분할 계속할지 여부
             }
             setTimeout(div_exit_bitmex(obj, log_obj), 0);
-            return;
         }
-        // else if(_signal.side === 'Exit'){ //포지션종료
-        //     console.log("포지션 종료"); //로직종료
-        //     var start_time = new Date()
-        //     start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
-        //     var obj = {
-        //         site : data.site,
-        //         idx : 1,
-        //         url : data.url,
-        //         apiKey : data.apiKey,
-        //         secreteKey : data.secreteKey,
-        //         symbol : data.symbol,
-        //         ordInterval : data.ordInterval,
-        //         goalAmt : 0,
-        //         minOrdAmt : data.minOrdAmt,
-        //         totalOrdAmt : 0,
-        //         totalOrdValue : 0,
-        //         openingQty : 0, //진입한 포지션 수량 
-        //         side : "",
-        //         minAmtRate : data.minOrdRate, //최소주문비율  
-        //         maxAmtRate : data.minOrdRate, //최대주문비율 
-        //         start_time : start_time,
-        //         isOrdered : false, //주문시도 여부
-        //         isSuccess : false, //주문성공 여부
-        //         isContinue : false, //주문분할 계속할지 여부
-        //     }
-        //     setTimeout(div_exit_bitmex(obj, log_obj), 0);
-        //     return;
-        // }
-        else if( (data.isSide === 'Buy' && _signal.side === 'Exit') || (data.isSide === 'Sell' && _signal.side === 'Exit')){ //진입한 포지션O && Buy or Sell
-            var start_time = new Date()
-            start_time = start_time.getTime() + (1000 * 60 * 60 * 9);  
-            console.log("포지션 종료"); //로직종료
-            console.log("현재포지션 : "+ data.isSide);
-            console.log("신호 : "+ _signal.side);
-            var obj = {
-                site : data.site,
-                idx : 1,
-                url : data.url,
-                apiKey : data.apiKey,
-                secreteKey : data.secreteKey,
-                symbol : data.symbol,
-                goalAmt : 0,
-                minOrdAmt : data.minOrdAmt,
-                totalOrdAmt : 0,
-                totalOrdValue : 0,
-                openingQty : 0, //진입한 포지션 수량 
-                side : "",
-                side_num : _signal.side_num,
-                ordInterval : data.ordInterval,
-                minAmtRate : data.minOrdRate, //최소주문비율  
-                maxAmtRate : data.minOrdRate, //최대주문비율 
-                start_price : 0,
-                end_price : 0,
-                start_time : start_time,
-                type_log : _signal.type_log,
-                isOrdered : false, //주문시도 여부
-                isSuccess : false, //주문성공 여부
-                isContinue : false, //주문분할 계속할지 여부
-            }
-            setTimeout(div_exit_bitmex(obj, log_obj ), 0);
-            cb(null, data);
-        }else if( (data.pgSide === 'Buy' && data.isSide === 'Buy' && _signal.side === 'Sell') || 
-                  (data.pgSide === 'Sell' && data.isSide === 'Sell' && _signal.side === 'Buy') ||
-                  (_signal.type_log ==='manual'&& data.isSide === 'Buy' && _signal.side === 'Sell') ||  //수동주문은 조건없이 실행
-                  (_signal.type_log ==='manual'&& data.isSide === 'Sell' && _signal.side === 'Buy')
-                ){ //진입한 포지션O && Buy or Sell
-          var start_time = new Date()
-          start_time = start_time.getTime() + (1000 * 60 * 60 * 9);  
-          console.log("포지션 종료"); //로직종료
-          console.log("현재포지션 : "+ data.isSide);
-          console.log("신호 : "+ _signal.side);
-          var obj = {
-              site : data.site,
-              idx : 1,
-              url : data.url,
-              apiKey : data.apiKey,
-              secreteKey : data.secreteKey,
-              symbol : data.symbol,
-              goalAmt : 0,
-              minOrdAmt : data.minOrdAmt,
-              totalOrdAmt : 0,
-              totalOrdValue : 0,
-              openingQty : 0, //진입한 포지션 수량 
-              side : "",
-              side_num : _signal.side_num,
-              ordInterval : data.ordInterval,
-              minAmtRate : data.minOrdRate, //최소주문비율  
-              maxAmtRate : data.minOrdRate, //최대주문비율 
-              start_price : 0,
-              end_price : 0,
-              start_time : start_time,
-              type_log : _signal.type_log,
-              isOrdered : false, //주문시도 여부
-              isSuccess : false, //주문성공 여부
-              isContinue : false, //주문분할 계속할지 여부
-          }
-          setTimeout(div_exit_bitmex(obj, log_obj ), 0);
-          cb(null, data);
+
+        if(action.isEntry === true){
+          console.log("진입");
+          return cb(null, data);
+        }else{
+          return;
         }
       },
       function getUserMargin(data, cb){ //잔액조회
-        if(_signal.side === 'Exit'  || _signal.side === 'Buy Exit' || _signal.side === 'Sell Exit'){
-          return cb(null, data);
-        }
-        
         var requestOptions = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'GET','user/margin','currency=XBt');
         request(requestOptions, function(error, response, body){
             if(error){
@@ -1894,36 +1868,6 @@ function trade_bitmex(_signal, siteName){
         });
       },
       function order2(data, cb){
-        if(_signal.side === 'Exit' || _signal.side === 'Buy Exit' || _signal.side === 'Sell Exit'){
-          return cb(null, data);
-        }
-        
-        if(_signal.side !== 'Sell' && _signal.side !== 'Buy'){
-          return cb(null, data);
-        }
-        
-        var order_flag = false;
-        if((_signal.type_log === 'reentry' && data.pgSide === 'Buy' && data.isSide === 'none' && _signal.side === 'Buy')){
-          order_flag= true;
-        }if(_signal.type_log === 'reentry' && data.pgSide === 'Sell' && data.isSide === 'none' && _signal.side === 'Sell'){
-          order_flag= true;
-        }else if(_signal.type_log === '' && data.pgSide === 'Buy' && data.isSide === 'Buy' && _signal.side === 'Sell'){
-          order_flag= true;
-        }else if(_signal.type_log === '' && data.pgSide === 'Sell' && data.isSide === 'Sell' && _signal.side === 'Buy'){
-          order_flag= true;
-        }else if(_signal.type_log === '' && data.pgSide === 'Exit' && data.isSide === 'none' && (_signal.side === 'Buy' || _signal.side === 'Sell')){
-          order_flag= true;
-        }
-        else if(_signal.type_log ==='manual' && _signal.side === 'Sell' ){
-          order_flag= true;
-        }else if(_signal.type_log ==='manual' && _signal.side === 'Buy' ){
-          order_flag= true;
-        }
-
-        if(order_flag === false){
-          return cb(null, data);
-        }
-
         var start_time = new Date()
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
         //진입주문

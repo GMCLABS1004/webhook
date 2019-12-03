@@ -17,4 +17,5 @@ var scriptSchema = new Schema({
     short5 : {type : Array, default : []},
     timestamp : {type : Date, default : Date.now}
 });
+scriptSchema.index({scriptNo :1});
 module.exports = mongoose.model('script', scriptSchema,'script');

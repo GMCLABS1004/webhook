@@ -3,7 +3,7 @@
 <html lang="ko">
 
 <head>
-
+    
     <meta charset="utf-8" />
 
     <title>GMC DefenceBot - 세부설정</title>
@@ -29,6 +29,7 @@
 </head>
 
 <body class="body-51">
+        <input type="hidden" id="site" value="<%=site%>">
         <div class="section-75">
         <div class="w-container">
                 <div class="w-layout-grid grid-139">
@@ -61,10 +62,32 @@
                         </div>
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
-                            <div class="text-block-141"  for="trailFeeRate"">수수료 비율(%)</div>
+                            <div class="text-block-141"  for="trailFeeRate"">트레일링 수수료 비율(%)</div>
                             <input type="text" maxlength="256" id="trailFeeRate" required="" class="text-field-9 w-input">
                           </form>
                         </div>
+                        <div class="form-block-7 w-form">
+                            <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                              <div class="text-block-141"  for="rentryFeeRate"">재진입 수수료 비율(%)</div>
+                              <input type="text" maxlength="256" id="rentryFeeRate" required="" class="text-field-9 w-input">
+                            </form>
+                          </div>
+                        
+                        <div class="form-block-7 w-form">
+                            <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                              <div class="text-block-141"  for="isSide">포지션(실제)</div>
+                              <input type="text" maxlength="256" id="isSide" readonly required="" class="text-field-9 w-input">
+                            </form>
+                        </div>
+
+                        <div class="form-block-7 w-form">
+                            <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                              <div class="text-block-141"  for="pgSide">포지션(p/g)</div>
+                              <input type="text" maxlength="256" id="pgSide" readonly required="" class="text-field-9 w-input">
+                            </form>
+                        </div>
+
+
                         <div class="form-block-7 w-form">
                           <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
                             <div class="text-block-141"  for="entryPrice">진입</div>
@@ -92,6 +115,15 @@
 
 
     <script type="text/javascript">
+        function isPosition(size){
+            if(size > 0){
+                return "long"
+            }else if(size < 0){
+                return "short";
+            }else{
+                return "exit";
+            }
+        }
 
         $(document).ready(function (e) {
 
@@ -107,6 +139,7 @@
                     trailingHighRate : $("#trailingHighRate").val(), 
                     trailingLowRate : $("#trailingLowRate").val(), 
                     trailFeeRate: $("#trailFeeRate").val(),
+                    rentryFeeRate: $("#rentryFeeRate").val(),
                     entryPrice : $("#entryPrice").val(),
                     highPrice : $("#highPrice").val(),
                     lowPrice : $("#lowPrice").val()
@@ -131,15 +164,20 @@
 
             $.ajax({
                 type : "GET",
-                url : 'api/read_setting?site='+$("#site").val(),
+                url : '/api/setting_trailing?site='+$("#site").val(),
                 success : function(json){
                     if(json){
-                        console.log("read_setting실행");
+                        console.log("setting_trailing");
+                        console.log(json.isSide);
+                        console.log(json.side);
                         console.log(json);
                         $("#isTrailingStop").val(json.isTrailingStop);
                         $("#trailingHighRate").val(json.trailingHighRate);
                         $("#trailingLowRate").val(json.trailingLowRate);
                         $("#trailFeeRate").val(json.trailFeeRate);
+                        $("#rentryFeeRate").val(json.rentryFeeRate);
+                        $("#isSide").val(json.isSide);
+                        $("#pgSide").val(json.pgSide);
                         $("#entryPrice").val(json.entryPrice);
                         $("#highPrice").val(json.highPrice);
                         $("#lowPrice").val(json.lowPrice);
