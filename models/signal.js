@@ -6,7 +6,7 @@ var signalSchema = new Schema({
     side_num : {type:Number, default : 0},
     site : {type:String, default : "ALL"}, //ALL : 스크립트 넘버가 같은 모든 계정을 실행, bitmex1 -> 특정 계정에만 주문 실행,
     log : {type:String, default : ""}, 
-    type_log : {type:String, default : ""}, //div || trailingStop
+    type_log : {type:String, default : ""}, //div || trailingStop || rentry
     timestamp : {type : Date, default : Date.now}
 });
 module.exports = mongoose.model('signal', signalSchema,'signal');

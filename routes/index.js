@@ -1322,6 +1322,7 @@ router.post('/api/marginTrade', function(req,res){
     side : req.body.side,
     side_num : Number(req.body.side_num),
     log : req.body.log,
+    type_log : req.body.type_log, //div || trailingStop || rentry
     timestamp : new Date().getTime() + (1000 * 60 * 60 * 9)
   }
   signal.insertMany(sigData, function(error, data){
