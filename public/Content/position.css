@@ -116,21 +116,25 @@ th {
 }
 
 .___3098{
+	width: 200px;
   overflow: visible;
   text-align: right;
 }
 
 .___3099 {
+	width: 100px;
   overflow: visible;
   text-align: right;
 }
 
 .___3100 {
+	width: 100px;
   overflow: visible;
   text-align: right;
 }
 
 .___3101 {
+	width: 100px;
   overflow: visible;
   text-align: right;
 }
@@ -458,7 +462,26 @@ th {
 	.___3098 {
 		width: 50px;
 		overflow: visible;
-		text-align: right;
+		text-align: center;
+		/* padding-right: 5px; */
+	  }
+	  .___3099 {
+		width: 50px;
+		overflow: visible;
+		text-align: center;
+		/* padding-right: 5px; */
+	  }
+	  .___3100 {
+		width: 50px;
+		overflow: visible;
+		text-align: center;
+		/* padding-right: 5px; */
+	  }
+	  .___3101 {
+		width: 50px;
+		overflow: visible;
+		text-align: center;
+		/* padding-right: 5px; */
 	  }
 }
 
@@ -575,6 +598,6 @@ th {
 
 @media screen and (max-width: 320px){
 	td {
-		padding: 6px 1px 6px 1px;
+		padding: 6px 0px 6px 0px;
 	}
 }
