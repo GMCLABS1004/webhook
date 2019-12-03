@@ -62,6 +62,10 @@ router.get('/history_table',   function(req, res, next){
   res.render('history_table');
 });
 
+router.get('/positionAll_total',   function(req, res, next){
+  res.render('positionAll_total');
+});
+
 
 var isAuthenticated = function(req, res, next) {
   // console.log("isAuthenticated call!!!");
