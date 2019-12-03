@@ -120,7 +120,21 @@ const doSwitch = /*스위칭 */ {text : "스위칭", isSkip : false, isStatus : 
 const doTrailExit = /*탈출 */ {text : "트레일링 탈출", isSkip : false, isStatus : false, isExit : true, isEntry : false}
 
 
+
 const action_table = [
+    {type : 'manual', pgSide : '', isSide : 'Buy', sigSide : "Buy", /*무시*/ action : doSkip},
+    {type : 'manual', pgSide : '', isSide : 'Buy', sigSide : "Sell", /*스위칭 */action : doSwitch},
+    {type : 'manual', pgSide : '', isSide : 'Buy', sigSide : "Buy Exit", /*탈출 */action : doExit},
+
+    {type : 'manual', pgSide : '', isSide : 'Sell', sigSide : "Buy", /*스위칭 */action : doSwitch},
+    {type : 'manual', pgSide : '', isSide : 'Sell', sigSide : "Sell", /*무시*/ action : doSkip},
+    {type : 'manual', pgSide : '', isSide : 'Sell', sigSide : "Sell Exit", /*탈출 */action : doExit},
+
+    {type : 'manual', pgSide : '', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
+    {type : 'manual', pgSide : '', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
+    {type : 'manual', pgSide : '', isSide : 'none', sigSide : "Exit", /*무시*/ action : doSkip},
+
+
     {type : '', pgSide : 'Buy', isSide : 'Buy', sigSide : "Buy", /*무시*/ action : doSkip},
     {type : '', pgSide : 'Buy', isSide : 'Buy', sigSide : "Buy Exit", /*탈출 */action : doExit},
     {type : '', pgSide : 'Buy', isSide : 'Buy', sigSide : "Sell", /*스위칭 */action : doSwitch},
@@ -176,11 +190,20 @@ const action_table = [
 // console.log(bitmex_decide_action("trailingStop", "Buy", "Buy", "Buy Exit"));
 
 function bitmex_decide_action(type, pgSide, isSide, sigSide){
-    for(var i=0; i<action_table.length; i++){
+    if(type==='manual'){
+      for(var i=0; i<action_table.length; i++){
+        if(type === action_table[i].type && isSide === action_table[i].isSide && sigSide === action_table[i].sigSide){
+            return action_table[i].action;
+        }
+      }
+    }else{
+      for(var i=0; i<action_table.length; i++){
         if(type === action_table[i].type && pgSide === action_table[i].pgSide && isSide === action_table[i].isSide && sigSide === action_table[i].sigSide){
             return action_table[i].action;
         }
+      }
     }
+    
     return doSkip;
 }
 
