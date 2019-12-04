@@ -139,27 +139,29 @@
         function manual_order(obj){
             console.log("manual_order 호출");
             console.log(obj)
-            
-            var data= JSON.parse(obj);
-            if(data["side"] !== "Exit" && data["side_option"] === "Exit"){
-                data["side"] = data["side"] + " " + "Exit"
+            if(confirm("수동거래를 진행합니다.")){
+                var data= JSON.parse(obj);
+                if(data["side"] !== "Exit" && data["side_option"] === "Exit"){
+                    data["side"] = data["side"] + " " + "Exit"
+                }
+                
+                $.ajax({
+                    type: "POST",
+                    url: "api/manual_order",
+                    dataType: "json",
+                    data : data,
+                    success: function(body) {
+                        if(body){
+                            console.log(JSON.stringify(body));
+                            alert(body.msg);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
             }
             
-            $.ajax({
-                type: "POST",
-                url: "api/manual_order",
-                dataType: "json",
-                data : data,
-                success: function(body) {
-                    if(body){
-                        console.log(JSON.stringify(body));
-                        alert(body.msg);
-                    }
-                },
-                error : function(request, status, error) {
-                    console.log("error : " + error);
-                }
-            });
         }
 
 
