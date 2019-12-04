@@ -48,24 +48,7 @@ passport.use(new LocalStrategy({
 }));
 
 
-// table
-router.get('/positionAll_table', function(req, res, next){
-  res.render('positionAll_table');
-});
-router.get('/avg_order_history_table',   function(req, res, next){
-  res.render('avg_order_history_table');
-});
-router.get('/positionAll_internal_table',   function(req, res, next){
-  res.render('positionAll_internal_table');
-});
 
-// router.get('/history_table',  isAuthenticated,  function(req, res){
-//   var site = req.query.site;
-//   res.render('history_table',{site : site});
-// });
-// router.get('/positionAll_total',   function(req, res, next){
-//   res.render('positionAll_total');
-// });
 
 
 var isAuthenticated = function(req, res, next) {
@@ -113,6 +96,25 @@ router.get('/', isAuthenticated,  function(req, res){
 // router.get('/main',  function(req, res, next){
 //   res.render('main', {user_info : req.user});
 // });
+
+// table
+router.get('/positionAll_table', function(req, res, next){
+  res.render('positionAll_table');
+});
+router.get('/avg_order_history_table',   function(req, res, next){
+  res.render('avg_order_history_table');
+});
+router.get('/positionAll_internal_table',   function(req, res, next){
+  res.render('positionAll_internal_table');
+});
+
+router.get('/history_table',  isAuthenticated,  function(req, res){
+  var site = req.query.site;
+  res.render('history_table',{site : site});
+});
+router.get('/positionAll_total',   function(req, res, next){
+  res.render('positionAll_total');
+});
 
 router.get('/script', isAuthenticated,  function(req, res, next){
   res.render('script');
