@@ -19,6 +19,10 @@
 	}
 }
 
+*{
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
 .section-62 {
   margin-top: 40px;
   margin-left: 10px;
@@ -124,11 +128,11 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
 	font-size: 20px;
-	color: rgba(0,0,0,1);
+	color: rgba(112,112,112,1);
 }
 
 .___3098{
@@ -159,20 +163,19 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 12px;
-	color: rgba(0,0,0,1);
+	color: rgba(112,112,112,1);
 }
 
 .ID6XMA_ALT_V01_____ {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
-	font-weight: bold;
 	font-size: 14px;
 	color: rgba(112,112,112,1);
 }
@@ -181,7 +184,7 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 14px;
@@ -192,29 +195,33 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 14px;
-	color: rgba(107,153,0,1);
+	color: rgba(112,112,112,1);
 }
-
+.margin{
+	width: 100px;
+}
 .ID95_ {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 12px;
 	color: rgba(140,140,140,1);
 }
-
+.leverage{
+	width: 100px;
+}
 .ID2X {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 12px;
@@ -225,18 +232,18 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 14px;
-	color: rgba(140,140,140,1);
+	color: rgba(112,112,112,1);
 }
 
 ._21_917 {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 14px;
@@ -247,7 +254,7 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
 	font-size: 14px;
@@ -258,72 +265,73 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
-	/* font-weight: bold; */
+	font-weight: bold;
 	font-size: 14px;
-	color: rgba(0,0,0,1);
+	color: rgb(41, 41, 41);
 }
 
 .position {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
 	font-size: 14px;
-	color: rgb(0, 0, 0);
+	color: rgb(41, 41, 41);
 }
 
 .ID1 {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
 	font-size: 14px;
-	color: rgb(0, 0, 0);
+	color: rgb(41, 41, 41);
 }
 
 .ID0_0018_0_07__ {
 	overflow: visible;
 	white-space: nowrap;
 	float: right;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
 	font-size: 14px;
+	color: rgb(41, 41, 41);
 }
 
 @media screen and (max-width: 768px){
 	.ID95_ {
 		overflow: visible;
 		white-space: nowrap;
-		float: left;
-		font-family: Open Sans;
+		float: right;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgba(140,140,140,1);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID2X {
 		overflow: visible;
 		white-space: nowrap;
-		float: left;
-		font-family: Open Sans;
+		float: right;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgba(140,140,140,1);
+		color: rgba(112,112,112,1);
 	}
 	._21_917 {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
@@ -333,11 +341,11 @@ th {
 		overflow: visible;
 		white-space: nowrap;
 		float: left;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
-		/* font-weight: bold; */
+		font-weight: bold;
 		font-size: 12px;
-		color: rgba(0,0,0,1);
+		color: rgba(112,112,112,1);
 	}
 
 }
@@ -372,20 +380,19 @@ th {
 		overflow: visible;
 		white-space: nowrap;
 		float: left;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgba(0,0,0,1);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID6XMA_ALT_V01_____ {
 		overflow: visible;
 		white-space: nowrap;
 		float: left;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
-		font-weight: bold;
 		font-size: 12px;
 		color: rgba(112,112,112,1);
 	}
@@ -394,7 +401,7 @@ th {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
@@ -405,51 +412,55 @@ th {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgba(107,153,0,1);
+		color: rgba(112,112,112,1);
 	}
-	
+	.margin{
+		width: 40px;
+	}
 	.ID95_ {
 		overflow: visible;
 		white-space: nowrap;
 		float: left;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgba(140,140,140,1);
+		color: rgba(112,112,112,1);
 	}
-	
+	.leverage{
+		width: 40px;
+	}
 	.ID2X {
 		overflow: visible;
 		white-space: nowrap;
 		float: left;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgba(140,140,140,1);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID1_31862731 {
 		overflow: visible;
 		white-space: nowrap;
 		float: left;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgba(140,140,140,1);
+		color: rgba(112,112,112,1);
 	}
 	
 	._21_917 {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
@@ -460,7 +471,7 @@ th {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
@@ -471,43 +482,44 @@ th {
 		overflow: visible;
 		white-space: nowrap;
 		float: left;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
-		/* font-weight: bold; */
+		font-weight: bold;
 		font-size: 12px;
-		color: rgba(0,0,0,1);
+		color: rgb(41, 41, 41);
 	}
-	
+
 	.position {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: bold;
 		font-size: 12px;
-		color: rgb(0, 0, 0);
+		color: rgb(41, 41, 41);
 	}
 	
 	.ID1 {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: bold;
 		font-size: 12px;
-		color: rgb(0, 0, 0);
+		color: rgb(41, 41, 41);
 	}
 	
 	.ID0_0018_0_07__ {
 		overflow: visible;
 		white-space: nowrap;
 		float: right;
-		font-family: Open Sans;
+		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: bold;
 		font-size: 12px;
+		color: rgb(41, 41, 41);
 	}
 }
 
@@ -591,7 +603,7 @@ th {
 @media screen and (max-width: 570px) {
   th,
   td {
-    padding: 5px 5px 5px 5px;
+    padding: 5px 8px 5px 8px;
     border-bottom: 1px solid rgba(243, 243, 243, 0.541); 
   }
 
@@ -641,9 +653,8 @@ th {
 	overflow: visible;
 	white-space: nowrap;
 	text-align: left;
-	font-family: Open Sans;
+	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
-	font-weight: bold;
 	font-size: 14px;
 	color: rgba(112,112,112,1);
 }
