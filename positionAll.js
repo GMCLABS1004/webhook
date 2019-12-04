@@ -13,7 +13,7 @@ mongoose.connect(webSetting.dbPath, function(error){
       return;
     }
 });
-
+setTimeout(positionAll(), 0);
 setInterval(positionAll(), 10000);
 
 function positionAll(){
@@ -165,6 +165,8 @@ function getPosition_bitmex(set, cb){
             data["scriptNo"] = set.scriptNo;
             data["side_num"] = set.side_num;
             data["pgSide"] = set.side;
+            console.log(set);
+            setTimeout(correct_wrong_pgside(data.size,  data["pgSide"], new Object(set) ),0);
           }
         }
   
@@ -198,6 +200,45 @@ function getPosition_bitmex(set, cb){
         });
       })
     }
+}
+
+//프로그램 포지션은 long인데 실제 포지션은 short인 경우가 발생하면 안됨-> 이런경우 실제포지션으로 통일시켜 줘야함
+//위 경우의 반대도 허용 안됨
+function correct_wrong_pgside(size, pgSide, set){
+  return function(){
+    if( pgSide === 'long' && size < 0){
+      //pgSide short으로 정정
+      console.log("long->short");
+
+      var obj = {
+        side : 'short',
+      }
+      setting.updateOne({site : set.site},{$set : obj}, function(error,body){
+        if(error){
+          console.log(error);
+          return;
+        }
+        console.log(body);
+        
+      });
+    }else if(pgSide === 'short' && size > 0){
+      //pgSide long으로 정정
+      console.log("short->long");
+      var obj = {
+        side : 'long',
+      }
+      setting.updateOne({site : set.site},{$set : obj}, function(error,body){
+        if(error){
+          console.log(error);
+          return;
+        }
+        console.log(body);
+      });
+    }else{
+      console.log("정정XX");
+    }
+  }
+
 }
 
 
