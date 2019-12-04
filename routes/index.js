@@ -58,13 +58,14 @@ router.get('/avg_order_history_table',   function(req, res, next){
 router.get('/positionAll_internal_table',   function(req, res, next){
   res.render('positionAll_internal_table');
 });
-router.get('/history_table',  isAuthenticated,  function(req, res){
-  var site = req.query.site;
-  res.render('history_table',{site : site});
-});
-router.get('/positionAll_total',   function(req, res, next){
-  res.render('positionAll_total');
-});
+
+// router.get('/history_table',  isAuthenticated,  function(req, res){
+//   var site = req.query.site;
+//   res.render('history_table',{site : site});
+// });
+// router.get('/positionAll_total',   function(req, res, next){
+//   res.render('positionAll_total');
+// });
 
 
 var isAuthenticated = function(req, res, next) {
