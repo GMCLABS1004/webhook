@@ -114,9 +114,9 @@
                             var totalBenefit = (end_asset - start_asset);
                             var totalBenefitRate = ((totalBenefit/start_asset) *100);
                             $("#start_asset").html(asset_comma(start_asset, 'bitmex') +"<br>");
-                            $("#end_asset").html(+ asset_comma(end_asset, 'bitmex') +"<br>");
-                            $("#totalBenefit").html( + asset_comma(totalBenefit, 'bitmex')  +"<br>");
-                            $("#totalBenefitRate").html( + benefit_comma(totalBenefitRate)  +"<br>");
+                            $("#end_asset").html(asset_comma(end_asset, 'bitmex') +"<br>");
+                            $("#totalBenefit").html( asset_comma(totalBenefit, 'bitmex')  +"<br>");
+                            $("#totalBenefitRate").html(benefit_comma(totalBenefitRate)  +"<br>");
                             var unrealisedPnlSumPer = ((unrealisedPnlSum / end_asset ) * 100).toFixed(4); //
                             console.log("unrealisedPnlSumPer : "+ unrealisedPnlSumPer);
                             if(unrealisedPnlSumPer === NaN){
