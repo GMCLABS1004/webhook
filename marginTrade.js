@@ -699,6 +699,7 @@ function trade_bithumb(_signal){
               totalRemainVal : 0, //주문후 남은 가치
               goalValue : goalValue, //주문 목표 금액
               firstAvailMargin : 0,
+             
               totalOrdValue : 0, //주문넣은 가치 합산
               totalOrdAmount : 0,
               side : 'bid', //주문 타입
@@ -1904,6 +1905,7 @@ function trade_bitmex(_signal, siteName){
             minOrdAmt : data.minOrdAmt,
             ordInterval : data.ordInterval,
             firstMargin : 0,
+            firstWalletBalance : 0, //주문넣기 전 총자산 -> 거래내역 출력용
             totalRemainAmt : 0, //미체결 수량
             totalRemainVal : 0, //미체결 가치
             goalValue : Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker))), //주문 목표 금액
