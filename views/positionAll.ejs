@@ -86,21 +86,21 @@
                                         $("#mytable > tbody:last").append("</tr>");
 
                                         $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td><span class='bitmexName'>마진</span><span class='ID95_'>" + list[i].margin + "</span></td>");
-                                        $("#mytable > tbody:last").append("<td><span class='bitmexName'>레버리지</span><span class='ID2X'>" + list[i].leverage + "</span></td>");
+                                        $("#mytable > tbody:last").append("<td><span class='bitmexName namedelete'>마진</span><span class='ID95_'>" + list[i].margin + "</span></td>");
+                                        $("#mytable > tbody:last").append("<td><span class='bitmexName namedelete'>레버리지</span><span class='ID2X'>" + list[i].leverage + "</span></td>");
                                         $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>총자산</span><span class='ID1_31862731'>" + asset_comma(list[i].walletBalance, list[i].site) + "</span></td>");
-                                        $("#mytable > tbody:last").append("<td><span class='bitmexName'>수량</span><span class='_21_917'>"+amount_comma(list[i].size,list[i].site) +"</span></td>"); 
+                                        $("#mytable > tbody:last").append("<td><span class='bitmexName namedelete'>수량</span><span class='_21_917'>"+amount_comma(list[i].size,list[i].site) +"</span></td>"); 
                                         $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>가치</span><span class='_2_5102'>" + value_comma(list[i].value, list[i].site) + "</span></td>");
                                         $("#mytable > tbody:last").append("</tr>");
 
                                         $("#mytable > tbody:last").append("<tr>");
                                         $("#mytable > tbody:last").append("<td></td>");
                                         $("#mytable > tbody:last").append("<td></td>");
-                                        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>진입가격</span><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
+                                        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName namedelete'>진입가격</span><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
                                         $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>포지션</span><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
                                         $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
                                         // $("#mytable > tbody:last").append("<td align='center'>" + list[i].pgSide  + "</td>");
-                                        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName'>미실현손익</span><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");                         
+                                        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName namedelete'>미실현손익</span><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");                         
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
                                         // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
