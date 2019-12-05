@@ -7,8 +7,10 @@ var mongoose = require('mongoose');
 var set = require('./websocket.json');
 
 if(set.testnet === true){
+    console.log("테스트넷 실행");
     var client = new W3CWebSocket('wss://testnet.bitmex.com/realtimemd');
 }else{
+    console.log("본서버 실행");
     var client = new W3CWebSocket('wss://www.bitmex.com/realtimemd');
 }
 
