@@ -238,7 +238,6 @@ function correct_wrong_pgside(size, pgSide, set){
       console.log("정정XX");
     }
   }
-
 }
 
 
