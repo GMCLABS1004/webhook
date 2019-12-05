@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<!--  This site was created in Webflow. http://www.webflow.com  -->
-<!--  Last Published: Thu Nov 28 2019 01:05:16 GMT+0000 (Coordinated Universal Time)  -->
 <html data-wf-page="5db673445e46c15c64777758" data-wf-site="5db673445e46c1c077777757">
 <head>
   <meta charset="utf-8">
@@ -22,234 +20,244 @@
   <script>
       
       function getHistory(site){
-          $.ajax({
-              type : "GET",
-              url : 'api/orderHistoryTotal?site='+site,
-              success : function(json){
-                  if(json){
-                      console.log(json);
-                      var totalBenefit =0;
-                      var totalBenefitRate =0;
-                      var start_asset =0;
-                      var end_asset = 0;
-                      $("#mytable > tbody:last").empty();
+            $.ajax({
+                type : "GET",
+                url : 'api/orderHistoryTotal?site='+site,
+                success : function(json){
+                    if(json){
+                        console.log(json);
+                        var totalBenefit =0;
+                        var totalBenefitRate =0;
+                        var start_asset =0;
+                        var end_asset = 0;
+                        $("#mytable > tbody:last").empty();
 
-                      for(i=0; i<json.length; i++){
-                          var time1 = json[i].start_time.split("T")[1].split(":");
-                          var time2 = json[i].end_time.split("T")[1].split(":")
-                          $("#mytable > tbody:last").append("<tr>");
-                                  $("#mytable > tbody:last").append("<td align='right'>" + (i+1) + "</td>"); 
-                                  $("#mytable > tbody:last").append("<td align='right'>" + json[i].start_time.split("T")[0] + "</td>"); 
-                                  $("#mytable > tbody:last").append("<td align='right'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
-                                  $("#mytable > tbody:last").append("<td align='right'>" + time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0] + "</td>");
-                                  $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(json[i].totalAsset, site) + "</td>");
-                                  $("#mytable > tbody:last").append("<td align='center'>" + (json[i].type_log) + "</td>");
-                                  $("#mytable > tbody:last").append("<td align='center'>" + json[i].type + "</td>"); 
-                                  $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");
-                                  $("#mytable > tbody:last").append("<td align='center'>" + json[i].side_num + "</td>");
-                                  $("#mytable > tbody:last").append("<td align='center'>" + (json[i].div_cnt) + "</td>");  
-                                  $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].start_price, site) + "</td>");  
-                                  $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].end_price, site) + "</td>");  
-                                  $("#mytable > tbody:last").append("<td align='right'>" + price_comma(json[i].price, site) + "</td>");  
-                                  $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(json[i].amount, site) + "</td>"); 
-                                  $("#mytable > tbody:last").append("<td align='right'>" + value_comma(json[i].value, site) + "</td>");                         
-                                  $("#mytable > tbody:last").append("<td align='right'>" + json[i].benefit + "</td>");
-                                  $("#mytable > tbody:last").append("<td align='right'>" + benefit_comma(json[i].benefitRate) + "</td>");
-                                 
-                          $("#mytable > tbody:last").append("<tr>");  
-                              
-                                  //totalBenefit += json[i].benefit;
-                                  
-                      }
+                        for(i=0; i<json.length; i++){
+                            var time1 = json[i].start_time.split("T")[1].split(":");
+                            var time2 = json[i].end_time.split("T")[1].split(":")
+                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='number'>" + (i+1) + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='day'>" + json[i].start_time.split("T")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='manual'>" + (json[i].type_log) + "</td>");
+                                    $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='Short'>" + json[i].type + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='Sell'><span>" + json[i].side + "</span><span class='side_num'>" + json[i].side_num + "</span></td>");
+                            $("#mytable > tbody:last").append("</tr>");
 
-                      if(json.length>=1){
-                          start_asset = json[json.length-1].totalAsset;
-                      }
+                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    // $("#mytable > tbody:last").append("<td class='ID1'><span>" + json[i].side_num + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td class='ID1'><span class='ID1_31862731'>2.20260196</span></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='1' class='ID0_00_2'>-0.13719141</td>");
+                                    $("#mytable > tbody:last").append("<td class='tdHidden'></td>");
+                                    $("#mytable > tbody:last").append("<td class='ID0_00_'>" + benefit_comma(json[i].benefitRate) + "&nbsp;&nbsp;%</td>");
+                            $("#mytable > tbody:last").append("</tr>");
+                                    
+                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td class='__'>시작</td>");
+                                    $("#mytable > tbody:last").append("<td class='ID07_00_18'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td class='ID8_736_0'>" + price_comma(json[i].start_price, site) +"</td>");  
+                                    $("#mytable > tbody:last").append("<td class='___A64_Text_7'>수량</td>");
+                                    $("#mytable > tbody:last").append("<td class='ID21_917'>" + amount_comma(json[i].amount, site) +"&nbsp;&nbsp;&nbsp;&nbsp;</td>"); 
+                            $("#mytable > tbody:last").append("</tr>");
 
-                      if(json.length >= 2){
-                          
-                          end_asset = json[0].totalAsset;
+                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td class='___A64_Text_5'>종료</td>");
+                                    $("#mytable > tbody:last").append("<td class='ID07_00_21'>" + time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0] + "</td>");
+                                    $("#mytable > tbody:last").append("<td class='ID8_736_0_A64_Text_17'>" + price_comma(json[i].end_price, site) + "</td>");  
+                                    $("#mytable > tbody:last").append("<td class='___A64_Text_8'>가치</td>");
+                                    $("#mytable > tbody:last").append("<td class='ID2_5088'>" + value_comma(json[i].value, site) + "&nbsp;&nbsp;&nbsp;&nbsp;</td>");                         
+                            $("#mytable > tbody:last").append("</tr>");
+                                   
+                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px; border-bottom: 1px solid gray;' class='___A64_Text_6'>평균</td>");
+                                    $("#mytable > tbody:last").append("<td style='border-bottom: 1px solid gray;'></td>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px; border-bottom: 1px solid gray;' class='ID8_736_0_A64_Text_18'>" + price_comma(json[i].price, site) + "</td>");  
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px; border-bottom: 1px solid gray;' class='___A64_Text_10'>분할</td>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px; border-bottom: 1px solid gray;' class='ID1_A64_Text_15'>" + (json[i].div_cnt) + " 회</td>");  
+                            $("#mytable > tbody:last").append("</tr>");
 
-                          totalBenefit = (end_asset - start_asset)
-                          totalBenefitRate = ((totalBenefit/start_asset) *100);
-                      }
-                      $("#start_asset").html("");
-                      $("#end_asset").html("");
-                      $("#totalBenefit").html("");
-                      $("#totalBenefitRate").html("");
+                            $("#mytable > tbody:last").append("<tr>");  
+                                
+                                    //totalBenefit += json[i].benefit;
+                                    
+                        }
 
-                      $("#start_asset").html("시작 자산 : " + asset_comma(start_asset, site));
-                      $("#end_asset").html("최근 자산 : " + asset_comma(end_asset, site));
-                      $("#totalBenefit").html("총수익 : " + asset_comma(totalBenefit, site));
-                      $("#totalBenefitRate").html("총수익율 : " + benefit_comma(totalBenefitRate));
+                        if(json.length>=1){
+                            start_asset = json[json.length-1].totalAsset;
+                        }
 
-                  }
-              },
-              error : function(request, status, error){
-                  console.log("error : "+error);
-              }
-          });
-      }
+                        if(json.length >= 2){
+                            
+                            end_asset = json[0].totalAsset;
 
-      function asset_comma(num, site){
-          var site_type='';
-          if(site.indexOf("bitmex") !== -1){
-              site_type='bitmex';
-          }else{
-              site_type = site;
-          }
+                            totalBenefit = (end_asset - start_asset)
+                            totalBenefitRate = ((totalBenefit/start_asset) *100);
+                        }
+                        $("#start_asset").html("");
+                        $("#end_asset").html("");
+                        $("#totalBenefit").html("");
+                        $("#totalBenefitRate").html("");
 
-          var coin = Number(num);
-          if(site_type === 'bitmex'){
-              return numeral(coin).format( '₩0,0.00000000' ); // 1000.00000123 =>  1,000.00000123
-          }else{
-              return numeral(coin).format( '₩0,0' );
-          }
-      }
+                        $("#start_asset").html(asset_comma(start_asset, site));
+                        $("#end_asset").html(asset_comma(end_asset, site));
+                        $("#totalBenefit").html(asset_comma(totalBenefit, site));
+                        $("#totalBenefitRate").html(benefit_comma(totalBenefitRate));
 
-      function price_comma(num, site){
-          var site_type='';
-          if(site.indexOf("bitmex") !== -1){
-              site_type='bitmex';
-          }else{
-              site_type = site;
-          }
+                    }
+                },
+                error : function(request, status, error){
+                    console.log("error : "+error);
+                }
+            });
+        }
 
-          var coin = Number(num);
-          if(site_type === 'bitmex'){
-              return numeral(coin).format( '₩0,0.0' ); // 1000.00000123 =>  1,000.00000123
-          }else{
-              return numeral(coin).format( '₩0,0' );
-          }
-      }
+        function asset_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+ 
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.00000000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
 
-      function amount_comma(num, site){
-          var site_type='';
-          if(site.indexOf("bitmex") !== -1){
-              site_type='bitmex';
-          }else{
-              site_type = site;
-          }
+        function price_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
 
-          var amt = Number(num);
-          if(site_type==='bitmex'){
-              return numeral(amt).format( '₩0,0' ); 
-          }else{
-              return numeral(amt).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
-          }
-      }
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
 
-      function value_comma(num, site){
-          var site_type='';
-          if(site.indexOf("bitmex") !== -1){
-              site_type='bitmex';
-          }else{
-              site_type = site;
-          }
+        function amount_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
 
-          var coin = Number(num);
-          if(site_type === 'bitmex'){
-              return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
-          }else{
-              return numeral(coin).format( '₩0,0' ); 
-          }
-      }
+            var amt = Number(num);
+            if(site_type==='bitmex'){
+                return numeral(amt).format( '₩0,0' ); 
+            }else{
+                return numeral(amt).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }
+        }
 
-      function benefit_comma(num){
-          var coin = Number(num);
-          return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
-      }
+        function value_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
 
-      $(document).ready(function(){
-          var site = $("#site").val();
-          getHistory(site);
-          $("#logSearch").click(function(){
-              var site = $("#site").val();
-              getHistory(site);
-          });
-      });
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' ); 
+            }
+        }
+
+        function benefit_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+        }
+
+        $(document).ready(function(){
+            var site = $("#site").val();
+            getHistory(site);
+            $("#logSearch").click(function(){
+                var site = $("#site").val();
+                getHistory(site);
+            });
+        });
   </script>
 </head>
 <body>
-  
-  <div class="section-62">
-    <div class="w-container">
-      <h2 class="historyTitle" id="mytable"><%=site%> 거래 내역</h2>
-      <br>
-      <table class="head">
-          <tr>
-            <td>시작자산</td>
-            <td>1.46922347</td>
-            <td>총수익</td>
-            <td>-0.15059616</td>
-          </tr>    
-          <tr>
-            <td>최근자산</td>
-            <td>1.31862731</td>
-            <td>총 수익률</td>
-            <td>-10.25%</td>
-        </tr> 
-        </table>
-      <!-- <div class="w-layout-grid grid">
-        <div id="w-node-43b536c2223f-64777758">현재가 : </div>
-        <div id="w-node-9f83951db51f-64777758">시작 자산 :</div>
-        <div id="w-node-46c995660799-64777758">최근 자산 :</div>
-        <div id="w-node-6e8dd4e35420-64777758">총수익 :</div>
-        <div id="w-node-c22241ca7a6a-64777758">총수익율 :</div>
-      </div> -->
-    </div>
-
-    <div class="w-container">
-      <div class="html-embed w-embed">
-        
-          <!--  01  -->
-          <div>
-            <div class="____1463">
-            <table class="historyTable">
-                <tr>
-                    <td id="ID2019_11_12">2019-11-12</td>
-                    <td id="Short" colspan="2">Short</td>
-                    <td id="Sell">Sell</td>
-                    <td id="ID1" colspan="2">
-                      <span>1</span>
-					            <span id="ID1_31862731">1.31862731</span>
-                    </td>
-                    <td id="ID0_00_">0.00%</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td id="__">시작</td>
-                    <td colspan="2" id="ID07_00_18">07:00:18</td>
-                    <td id="ID8_736_0">8,736.0</td>
-                    <td id="___A64_Text_7">수량</td>
-                    <td id="ID21_917">21,917</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td id="___A64_Text_5">종료</td>
-                    <td colspan="2" id="ID07_00_21">07:00:21</td>
-                    <td id="ID8_736_0_A64_Text_17">8,736.0</td>
-                    <td id="___A64_Text_8">가치</td>
-                    <td id="ID2_5088">2.3519</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td id="___A64_Text_6">평균</td>
-                    <td colspan="2"></td>
-                    <td id="ID8_736_0_A64_Text_18">8,785.5</td>
-                    <td id="___A64_Text_10">분할</td>
-                    <td id="ID1_A64_Text_15">1회</td>
-                </tr>
+        <input type="hidden" id="site" value='<%=site%>' >
+        <!-- 조회 <input type="button" id="logSearch" value="조회"/><br> -->
+      
+      <div class="section-62">
+        <div class="w-container">
+          <h2 class="historyTitle"><%=site%> 거래 내역</h2>
+          <br>
+          <table class="head">
+              <tr>
+                <td>시작자산</td>
+                <td id="start_asset"></td>
+                <td>총수익</td>
+                <td id="totalBenefit"></td>
+              </tr>    
+              <tr>
+                <td>최근자산</td>
+                <td id="end_asset"></td>
+                <td>총 수익률</td>
+                <td id="totalBenefitRate"></td>
+            </tr> 
             </table>
+          <!-- <div class="w-layout-grid grid">
+            <div id="w-node-9f83951db51f-64777758">시작 자산 :</div>
+            <div id="w-node-46c995660799-64777758">최근 자산 :</div>
+            <div id="w-node-6e8dd4e35420-64777758">총수익 :</div>
+            <div id="w-node-c22241ca7a6a-64777758">총수익율 :</div>
+          </div> -->
+        
+    
+        <div class="w-container">
+          <div class="html-embed w-embed">
+                <input type="hidden" id="site" value='<%=site%>' >
+              <!--  01  -->
+              <div>
+                <div class="____1463">
+                <table class="historyTable" id="mytable">
+                        <!-- <thead>
+                                <tr>
+                                    <th>no</th>
+                                    <th>날짜</th>
+                                    <th>시작시간</th>
+                                    <th>종료시간</th>
+                                    <th>자산</th>
+                                    <th></th>
+                                    <th>구분</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>분할횟수</th>
+                                    <th>시작가격</th>
+                                    <th>종료가격</th>
+                                    <th>평균가격</th>
+                                    <th>수량</th>
+                                    <th>가치</th>
+                                    <th>수익</th>
+                                    <th>수익율</th>
+    
+                                </tr>
+                            </thead> -->
+                    <tbody>
+                        </tbody>
+                </table>
+                </div>
+                <div>
             </div>
-            <div>
+          </div>
+            </div>
+            </div>
+          </div>
         </div>
-      </div>
-        </div>
-        </div>
-      </div>
-      <!-- <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.4.1.min.220afd743d.js" type="text/javascript" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-      <script src="js/webflow.js" type="text/javascript"></script> -->
-      <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
-</body>
 </html>

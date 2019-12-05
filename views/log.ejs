@@ -6,6 +6,12 @@
 <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
 <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
 
+<style>
+        .w-container {
+          margin: 20px 15px;      
+        }
+</style>
+
 <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
 <script>
 $(document).ready(function(){
@@ -73,8 +79,7 @@ $(document).ready(function(){
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="w-container">
+                  
                       일자 : <input type='date' id="logDate"/> <input type="button" id="logSearch" value="조회"/><br>
                     <div class="text-block-173"><strong></strong></div>
                     <!-- <div class="text-block-173"><strong>idax BTC 거래량생성 로그</strong></div> -->
@@ -82,8 +87,7 @@ $(document).ready(function(){
                    
                     <div  id="logTitle"></div>
                     <div class="logDate" id="logData"></div>
-                    </div>
-              
+                </div>
                 </div>
 </body>
 </html>

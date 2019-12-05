@@ -1,5 +1,5 @@
 .section-62 {
-  margin-top: 40px;
+  margin: 40px 10px;
 }
 
 .link {
@@ -11,332 +11,19 @@ table {
   border-spacing: 0;
 }
 
-.historyTitle{
-  margin-left: 10px;
-}
-
-/* bitmexTable_1 */
-
-@media screen and (max-width: 320px) {
-  .bitmexTable_1 td {
-    padding: 0px 0px 0px 0px;
-    border: 1px solid rgb(243, 243, 243); 
-  }
-}
-
-.bitmexTable_1 th, td {
-  padding: 8px 18px 8px 18px;
-  border: 1px solid rgb(243, 243, 243); 
-}
-
-.bitmexTable_1{
-  width: 100%;
-  background-color: rgb(255, 255, 255);
-  filter: drop-shadow(0px 3px 10px rgba(163, 163, 163, 0.096));
-  /* margin-bottom: 20px; */
-}
-
-#ID01 {
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 30px;
-  color: rgba(0,0,0,1);
-}
-
-#___3099 {
-  width: 100px;
-  overflow: visible;
-  text-align: right;
-}
-
-#___3100 {
-  width: 100px;
-  overflow: visible;
-  text-align: right;
-}
-
-#___3101 {
-  width: 100px;
-  overflow: visible;
-  text-align: right;
-}
-
-#BITMEX01 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(0,0,0,1);
-}
-
-#ID6XMA_ALT_V01_____ {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  color: rgba(112,112,112,1);
-}
-
-#ID6 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: right;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
+*{
+  font-family: 'Nanum Gothic', sans-serif;
   font-size: 14px;
-  color: rgba(112,112,112,1);
-}
-
-#ID302 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: right;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  color: rgba(107,153,0,1);
-}
-
-#ID95_ {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID2X {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID1_31862731 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  color: rgba(140,140,140,1);
-}
-
-#_21_917 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: right;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  color: rgba(112,112,112,1);
-}
-
-#_2_5102 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: right;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  color: rgba(112,112,112,1);
-}
-
-#ID8_736_0 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  color: rgba(0,0,0,1);
-}
-
-#short {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  color: rgba(255,0,0,1);
-}
-
-#ID1 {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: center;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  color: rgba(255,94,0,1);
-}
-
-#ID0_0018_0_07__ {
-  overflow: visible;
-  white-space: nowrap;
-  text-align: right;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  color: rgba(0,84,255,1);
-}
-
-/* button */
-#____1_A63_Rectangle_7 {
-  opacity: 0.7;
-}
-.____1_A63_Rectangle_7 {
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-  overflow: visible;
-  background-color: rgba(255,255,255,1);
-  border: 1px solid rgba(181,53,53,1);
-  color: rgba(181,53,53,1);
-  border-radius: 5px;
-  font-size: 12px;
-  padding: 5px 10px 5px 10px;
-}
-
-#____1_A63_Rectangle_6 {
-  opacity: 0.5;
-}
-.____1_A63_Rectangle_6 {
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-  overflow: visible;
-  background-color: rgba(255,255,255,1);
-  border: 1px solid rgba(88,125,201,1);
-  color: rgba(88,125,201,1);
-  border-radius: 5px;
-  font-size: 12px;
-  padding: 5px 10px 5px 10px;
-}
-
-#____1_A63_Rectangle_8 {
-  opacity: 0.7;
-}
-.____1_A63_Rectangle_8 {
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-  overflow: visible;
-  background-color: rgba(190,95,0,1);
-  color: white;
-  border-radius: 5px;
-  font-size: 12px;
-  padding: 6px 11px 6px 11px;
-}
-
-@media screen and (max-width: 320px) {
-  .bitmexTable_1 th, td  {
-    padding: 10px 5px 10px 5px;
-    border: 1px solid rgb(243, 243, 243); 
-  }
-}
-
-@media screen and (max-width: 570px) {
-  
-  .bitmexTable_1 th, td  {
-    padding: 5px 5px 5px 5px;
-    border: 1px solid rgb(243, 243, 243); 
-  }
-
-  #___3099 {
-    width: 50px;
-    overflow: visible;
-    text-align: right;
-  }
-  
-  #___3100 {
-    width: 50px;
-    overflow: visible;
-    text-align: right;
-  }
-  
-  #___3101 {
-    width: 50px;
-    overflow: visible;
-    text-align: right;
-  }
-
-  /* button */
-#____1_A63_Rectangle_7 {
-  opacity: 0.7;
-}
-.____1_A63_Rectangle_7 {
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-  overflow: visible;
-  background-color: rgba(255,255,255,1);
-  border: 1px solid rgba(181,53,53,1);
-  color: rgba(181,53,53,1);
-  border-radius: 5px;
-  font-size: 12px;
-  padding: 3px;
-}
-
-#____1_A63_Rectangle_6 {
-  opacity: 0.5;
-}
-.____1_A63_Rectangle_6 {
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-  overflow: visible;
-  background-color: rgba(255,255,255,1);
-  border: 1px solid rgba(88,125,201,1);
-  color: rgba(88,125,201,1);
-  border-radius: 5px;
-  font-size: 12px;
-  padding: 3px;
-}
-
-#____1_A63_Rectangle_8 {
-  opacity: 0.7;
-}
-.____1_A63_Rectangle_8 {
-  /* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-  overflow: visible;
-  background-color: rgba(190,95,0,1);
-  color: white;
-  border-radius: 5px;
-  font-size: 12px;
-  padding: 4px;
-}
 }
 
 /* headTable */
 
 .head{
-  background-color: rgba(233, 233, 233, 0.13);
-}
-
-.head{
   width: 100%;
   /* background-color: rgb(255, 255, 255); */
   filter: drop-shadow(0px 3px 10px rgba(163, 163, 163, 0.096));
-  /* margin-bottom: 20px; */
+  background-color: rgba(233, 233, 233, 0.13);
+
 }
 
 .head td{
@@ -349,13 +36,14 @@ table {
 @media screen and (max-width: 570px){
   .head{
     background-color: rgba(233, 233, 233, 0.13);
+    color: rgb(77, 77, 77);
   }
   
   .head td{
     width: 100px;
     height: 20px;
     border: 1px solid rgba(199, 199, 199, 0.198);
-    padding: 5px 10px 5px 10px;
+    padding: 5px 8px 5px 8px;
   }
 }
 
@@ -373,15 +61,10 @@ table {
 }
 
 /*====================*/
+/* bitmexTable_1 */
 
-.____1463{
-  margin-top: 20px;
-}
-
-section {
-  max-width: 960px;
-  margin: 30px auto;
-  padding: 30px;
+.historyTitle{
+  margin-left: 10px;
 }
 
 .historyTable {
@@ -392,585 +75,490 @@ section {
 }
 
 .historyTable td {
-  padding: 8px 18px 8px 18px;
-  border-bottom: 1px solid rgba(243, 243, 243, 0.541); 
+  /* width: 100px; */
+  padding: 6px 10px 6px 10px;
+  border: 1px solid rgba(243, 243, 243, 0.541); 
 }
 
-#ID2019_11_12 {
-  /* position: absolute; */
-  /* left: 24px; */
-  /* top: 7px; */
-  overflow: visible;
-  white-space: nowrap;
+
+
+.number{
+  width: 100px;
   text-align: center;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  color: rgba(0,0,0,1);
+  color: rgb(77, 77, 77);
+}
+.side_num{
+  float: right;
 }
 
-#Short {
-  /* position: absolute; */
-  /* left: 112px; */
-  /* top: 7px; */
-  overflow: visible;
-  white-space: nowrap;
+.day{
   text-align: center;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#Sell {
-  /* position: absolute; */
-  /* left: 160px; */
-  /* top: 7px; */
+.manual{
+  text-align: center;
+  
+}
+
+section {
+  max-width: 960px;
+  margin: 30px auto;
+  padding: 30px;
+}
+
+.____1463{
+  margin-top: 20px;
+}
+
+.Sell {
   overflow: visible;
   white-space: nowrap;
   text-align: left;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(216,96,96,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID1 {
-  /* position: absolute; */
-  /* left: 193px; */
-  /* top: 7px; */
+.ID1 {
   overflow: visible;
   white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(216,96,96,1);
-  padding-left: 8px;
+  color: rgb(77, 77, 77);
 }
 
-#ID1_31862731 {
-  /* position: absolute; */
-  /* left: 215px; */
-  /* top: 7px; */
+.ID1_31862731 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  color: rgb(77, 77, 77);
+  /* padding-left: 80px; */
+}
+
+.ID0_00_ {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(0,0,0,1);
-  padding-left: 80px;
-  /* padding-right: 15px; */
+  color: rgba(181,53,53,1);
 }
 
-#ID0_00_ {
-  /* position: absolute; */
-  /* left: 301px; */
-  /* top: 7px; */
+.ID0_00_2 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  color: rgb(77, 77, 77);
+  content: none;
+}
+
+.__ {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID07_00_18 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID8_736_0 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.___A64_Text_7 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID21_917 {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  color: rgba(116,151,222,1);
-}
-
-#__ {
-  /* position: absolute; */
-  /* left: 88px; */
-  /* top: 32px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID07_00_18 {
-  /* position: absolute; */
-  /* left: 128px; */
-  /* top: 31px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID8_736_0 {
-  /* position: absolute; */
-  /* left: 192px; */
-  /* top: 31px; */
+.___A64_Text_5 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_7 {
-  /* position: absolute; */
-  /* left: 256px; */
-  /* top: 32px; */
+.ID07_00_21 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID21_917 {
-  /* position: absolute; */
-  /* left: 299px; */
-  /* top: 31px; */
+.ID8_736_0_A64_Text_17 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.___A64_Text_8 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID2_5088 {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_5 {
-  /* position: absolute; */
-  /* left: 88px; */
-  /* top: 56px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID07_00_21 {
-  /* position: absolute; */
-  /* left: 128px; */
-  /* top: 55px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID8_736_0_A64_Text_17 {
-  /* position: absolute; */
-  /* left: 192px; */
-  /* top: 55px; */
+.___A64_Text_6 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_8 {
-  /* position: absolute; */
-  /* left: 256px; */
-  /* top: 56px; */
+.ID8_736_0_A64_Text_18 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID2_5088 {
-  /* position: absolute; */
-  /* left: 299px; */
-  /* top: 55px; */
+.___A64_Text_10 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID1_A64_Text_15 {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_6 {
-  /* position: absolute; */
-  /* left: 88px; */
-  /* top: 80px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID8_736_0_A64_Text_18 {
-  /* position: absolute; */
-  /* left: 191px; */
-  /* top: 79px; */
+.Short {
+  width: 100px;
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(0,0,0,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_10 {
-  /* position: absolute; */
-  /* left: 256px; */
-  /* top: 80px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: center;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
-}
 
-#ID1_A64_Text_15 {
-  /* position: absolute; */
-  /* left: 313px; */
-  /* top: 79px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: right;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+@media screen and (max-width: 570px) {
+  
+  .bitmexTable td  {
+    padding: 5px 5px 5px 5px;
+    border: 1px solid rgb(243, 243, 243); 
+  }
 }
 
 @media screen and (max-width: 500px) {
+
+  *{
+    font-size: 12px;
+  }
+
  .historyTable td {
-    padding: 10px 5px 10px 5px;
+    padding: 5px 3px 5px 3px;
     border-bottom: 1px solid rgb(243, 243, 243); 
   }
 
-#ID2019_11_12 {
-  /* position: absolute; */
-  /* left: 24px; */
-  /* top: 7px; */
+  .number{
+    width: 30px;
+    text-align: center;
+    color: rgb(77, 77, 77);
+  }
+  .side_num{
+    float: right;
+  }
+
+
+.ID2019_11_12 {
+  width: 50px;
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  color: rgba(0,0,0,1);
+  color: rgb(77, 77, 77);
 }
 
-#Short {
-  /* position: absolute; */
-  /* left: 112px; */
-  /* top: 7px; */
+.Short {
+  width: 30px;
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#Sell {
-  /* position: absolute; */
-  /* left: 160px; */
-  /* top: 7px; */
+.Sell {
   overflow: visible;
   white-space: nowrap;
   text-align: left;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(216,96,96,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID1 {
-  /* position: absolute; */
-  /* left: 193px; */
-  /* top: 7px; */
+.ID1 {
   overflow: visible;
   white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(216,96,96,1);
+  color: rgb(77, 77, 77);
   padding-left: 8px;
 }
 
-#ID1_31862731 {
-  /* position: absolute; */
-  /* left: 215px; */
-  /* top: 7px; */
+.ID1_31862731 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+    color: rgb(77, 77, 77);
+  }
+
+.ID0_00_ {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(0,0,0,1);
-  padding-left: 15px;
-  /* padding-right: 15px; */
+  color: rgba(181,53,53,1);
 }
 
-#ID0_00_ {
-  /* position: absolute; */
-  /* left: 301px; */
-  /* top: 7px; */
+.ID0_00_2 {
   overflow: visible;
   white-space: nowrap;
-  text-align: right;
-  font-family: Open Sans;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  color: rgba(116,151,222,1);
+  color: rgb(77, 77, 77);
+  
 }
 
-#__ {
-  /* position: absolute; */
-  /* left: 88px; */
-  /* top: 32px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID07_00_18 {
-  /* position: absolute; */
-  /* left: 128px; */
-  /* top: 31px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID8_736_0 {
-  /* position: absolute; */
-  /* left: 192px; */
-  /* top: 31px; */
+.__ {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_7 {
-  /* position: absolute; */
-  /* left: 256px; */
-  /* top: 32px; */
+.ID07_00_18 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID21_917 {
-  /* position: absolute; */
-  /* left: 299px; */
-  /* top: 31px; */
+.ID8_736_0 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.___A64_Text_7 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID21_917 {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_5 {
-  /* position: absolute; */
-  /* left: 88px; */
-  /* top: 56px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID07_00_21 {
-  /* position: absolute; */
-  /* left: 128px; */
-  /* top: 55px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID8_736_0_A64_Text_17 {
-  /* position: absolute; */
-  /* left: 192px; */
-  /* top: 55px; */
+.___A64_Text_5 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_8 {
-  /* position: absolute; */
-  /* left: 256px; */
-  /* top: 56px; */
+.ID07_00_21 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID2_5088 {
-  /* position: absolute; */
-  /* left: 299px; */
-  /* top: 55px; */
+.ID8_736_0_A64_Text_17 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.___A64_Text_8 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID2_5088 {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_6 {
-  /* position: absolute; */
-  /* left: 88px; */
-  /* top: 80px; */
-  overflow: visible;
-  white-space: nowrap;
-  text-align: left;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  color: rgba(140,140,140,1);
-}
-
-#ID8_736_0_A64_Text_18 {
-  /* position: absolute; */
-  /* left: 191px; */
-  /* top: 79px; */
+.___A64_Text_6 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  color: rgba(0,0,0,1);
+  
+  color: rgb(77, 77, 77);
 }
 
-#___A64_Text_10 {
-  /* position: absolute; */
-  /* left: 256px; */
-  /* top: 80px; */
+.ID8_736_0_A64_Text_18 {
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  color: rgba(112,112,112,1);
+  color: rgb(77, 77, 77);
 }
 
-#ID1_A64_Text_15 {
-  /* position: absolute; */
-  /* left: 313px; */
-  /* top: 79px; */
+.___A64_Text_10 {
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Nanum Gothic', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+
+.ID1_A64_Text_15 {
   overflow: visible;
   white-space: nowrap;
   text-align: right;
-  font-family: Open Sans;
+  font-family: 'Nanum Gothic', sans-serif;
   font-style: normal;
   font-weight: normal;
+  color: rgb(77, 77, 77);
+}
+.manual{
   font-size: 12px;
-  color: rgba(112,112,112,1);
 }
 }
 
 @media screen and (max-width: 320px) {
   .historyTable td {
-    padding: 0px 0px 0px 0px;
+    padding: 4px 1px 4px 1px;
   }
 }
