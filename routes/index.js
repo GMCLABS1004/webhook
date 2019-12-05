@@ -341,6 +341,8 @@ function getPosition_bitmex(set, cb){
           data["isOpen"] = obj.isOpen;
           data["realisedPnl"] = obj.realisedPnl;
           data["unrealisedPnl"] = obj.unrealisedPnl;
+          data["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
+          
           data["size"] = obj.size;
           data["value"] = obj.value;
 
