@@ -4,7 +4,14 @@ var margin = require('./models/margin');
 var position2 = require('./models/position2');
 var webSetting = require('./webSetting.json');
 var mongoose = require('mongoose');
-var client = new W3CWebSocket('wss://testnet.bitmex.com/realtimemd');
+var set = require('./websocket.json');
+
+if(set.testnet === true){
+    var client = new W3CWebSocket('wss://testnet.bitmex.com/realtimemd');
+}else{
+    var client = new W3CWebSocket('wss://www.bitmex.com/realtimemd');
+}
+
 var crypto = require('crypto');
 mongoose.connect(webSetting.dbPath);
 client.onerror = function(){

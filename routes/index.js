@@ -67,8 +67,6 @@ router.get('/login', function(req, res) {
   res.render('login');
 });
 
-
-
 router.post('/login', passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}), // 인증 실패 시 401 리턴, {} -> 인증 스트레티지
   function (req, res) {
     res.redirect('/manage');
@@ -841,7 +839,6 @@ function getPosition_coinone(set, cb){
           cb(null, data);
         
         });
-
       },
       function trade_history(data, cb){
         if(data.isSide === 'none'){
