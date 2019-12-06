@@ -39,7 +39,7 @@
                             idx = idx + 1;
                             $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='number'>" + idx + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='day'>" + json.list[i].start_time.split("T")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td colspan='2' style='padding-top: 20px;' class='day'>" + json.list[i].start_time.split("T")[0] + "</td>"); 
                                     $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='manual'>" + (json.list[i].type_log) + "</td>");
                                     $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='Short'>" + json.list[i].type + "</td>"); 
                                     $("#mytable > tbody:last").append("<td style='padding-top: 20px;' class='Sell'><span>" + json.list[i].side + "</span><span class='side_num'>" + json.list[i].side_num + "</span></td>");
@@ -48,13 +48,14 @@
                             $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td></td>");
                                     // $("#mytable > tbody:last").append("<td class='ID1'><span>" + json.list[i].side_num + "</span></td>");
-                                    $("#mytable > tbody:last").append("<td class='ID1'><span class='ID1_31862731'>2.20260196</span></td>");
-                                    $("#mytable > tbody:last").append("<td colspan='1' class='ID0_00_2'>-0.13719141</td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2' class='ID1'><span class='ID1_31862731'>" + asset_comma(json.list[i].totalAsset, site) + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='1' class='ID0_00_2'>" + json.list[i].benefit + "</td>");
                                     $("#mytable > tbody:last").append("<td class='tdHidden'></td>");
                                     $("#mytable > tbody:last").append("<td class='ID0_00_'>" + benefit_comma(json.list[i].benefitRate) + "&nbsp;&nbsp;%</td>");
                             $("#mytable > tbody:last").append("</tr>");
                                     
                             $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td></td>");
                                     $("#mytable > tbody:last").append("<td class='__'>시작</td>");
                                     $("#mytable > tbody:last").append("<td class='ID07_00_18'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
                                     $("#mytable > tbody:last").append("<td class='ID8_736_0'>" + price_comma(json.list[i].start_price, site) +"</td>");  
@@ -63,6 +64,7 @@
                             $("#mytable > tbody:last").append("</tr>");
                             
                             $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td></td>");
                                     $("#mytable > tbody:last").append("<td class='___A64_Text_5'>종료</td>");
                                     $("#mytable > tbody:last").append("<td class='ID07_00_21'>" + time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0] + "</td>");
                                     $("#mytable > tbody:last").append("<td class='ID8_736_0_A64_Text_17'>" + price_comma(json.list[i].end_price, site) + "</td>");  
@@ -71,6 +73,7 @@
                             $("#mytable > tbody:last").append("</tr>");
                             
                             $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px; border-bottom: 1px solid gray;'></td>");      
                                     $("#mytable > tbody:last").append("<td style='padding-bottom: 30px; border-bottom: 1px solid gray;' class='___A64_Text_6'>평균</td>");
                                     $("#mytable > tbody:last").append("<td style='border-bottom: 1px solid gray;'></td>");
                                     $("#mytable > tbody:last").append("<td style='padding-bottom: 30px; border-bottom: 1px solid gray;' class='ID8_736_0_A64_Text_18'>" + price_comma(json.list[i].price, site) + "</td>");  
