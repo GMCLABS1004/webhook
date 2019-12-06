@@ -31,7 +31,7 @@
                     success: function(json){
                         console.log(json);
                         if(json){
-                            var url = window.location.origin + '/orderHistoryTotal?site='
+                            var url = window.location.origin + '/orderHistoryTotalPage?site='
                             var list = json.list;
                             var last_price = json.last_price;
                             var end_asset = 0;
