@@ -46,8 +46,8 @@
                             $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td></td>");
                                     // $("#mytable > tbody:last").append("<td class='ID1'><span>" + json[i].side_num + "</span></td>");
-                                    $("#mytable > tbody:last").append("<td class='ID1'><span class='ID1_31862731'>2.20260196</span></td>");
-                                    $("#mytable > tbody:last").append("<td colspan='1' class='ID0_00_2'>-0.13719141</td>");
+                                    $("#mytable > tbody:last").append("<td class='ID1'><span class='ID1_31862731'>" + asset_comma(json[i].totalAsset, site) + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='1' class='ID0_00_2'>" + json[i].benefit + "</td>");
                                     $("#mytable > tbody:last").append("<td class='tdHidden'></td>");
                                     $("#mytable > tbody:last").append("<td class='ID0_00_'>" + benefit_comma(json[i].benefitRate) + "&nbsp;&nbsp;%</td>");
                             $("#mytable > tbody:last").append("</tr>");
