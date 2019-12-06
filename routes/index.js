@@ -1848,6 +1848,156 @@ router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
 });
 
 
+router.get('/orderHistoryTotalPage',  isAuthenticated,  function(req, res){
+  var site = req.query.site;
+  res.render('orderHistoryTotalPage',{site : site});
+});
+
+
+router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
+  console.log("/api/orderHistoryTotalPage 실행");
+  var site = req.query.site; //.skip(0).limit(20)
+  var page = Number(req.query.page) ; //현재 페이지 번호
+  var cntPerPage = Number(req.query.cntPerPage); //페이지당 문서 갯수
+  //var pageCnt = Number(req.query.pageCnt); //화면에 표시할 페이지 갯수
+  var total_cnt=0; //글 총갯수
+  var totalPageSize =0; //총 페이지 갯수
+  var start_page_num =0; //시작 페이지
+  var end_page_num =0; //마지막 페이지
+  var isPrev = false;
+  var isNext = false;
+  var prev_page_num =0;
+  var next_page_num =0;
+
+  // total_cnt / cntPerPage
+  var start_asset =0;
+  var end_asset =0;
+  var totalBenefit =0;
+  var totalBenefitRate =0;
+  var data = [];
+  //총 페이지 사이즈 = ( 글 갯수 - 1 / w_size ) + 1
+  // totalPageSize = total_cnt / cntPerPage;
+  // start_page_num = page -1 / totalPageSize * totalPageSize + 1
+  // end_page_num = start_page_num -1 / totalPageSize - 1
+  //시작번호 = ( (페이지 번호 -1) / 총 페이지 사이즈 ) * 총 페이지 사이즈 + 1
+  //마지막번호 = 시작 페이지 번호 + 페이지 총 사이즈 -1
+  //
+  async.waterfall([
+    
+    function get_start_asset(cb){
+      order.findOne({site : site}).sort({start_time : "asc"}).limit(1).exec(function(error, json){
+        if(error){
+          console.log(error);
+          res.send(error);
+        }
+        start_asset = json.totalAsset;
+        cb(null);
+      });
+    },
+    function get_end_asset(cb){
+      
+      order.findOne({site : site}).sort({start_time : "desc"}).limit(1).exec(function(error, json){
+        if(error){
+          console.log(error);
+          res.send(error);
+        }
+        end_asset = json.totalAsset;
+        totalBenefit = (end_asset - start_asset)
+        totalBenefitRate = ((totalBenefit/start_asset) *100);
+        cb(null);
+      });
+    },
+    function get_trade_list(cb){
+      order.find({site : site}).sort({start_time : "desc"}).skip( (page-1) * cntPerPage).limit(cntPerPage).exec(function(error, result){
+        if(error){
+          console.log(error);
+          res.send(error);
+        }
+        //console.log(result);
+        data = new Object(result);
+        cb(null);
+      });
+    },
+    function get_total_order_cnt(cb){
+      order.find({site : site}).count(function(error, count){
+        total_cnt = count;
+        //total_cnt / cntPerPage / page;
+        console.log("total_cnt : " + total_cnt);
+        console.log("cntPerPage : " + cntPerPage);
+        // totalPageSize = Math.ceil(total_cnt / cntPerPage) -1;  //총 페이지 사이즈 = (글 갯수 - 1 / w_size ) + 1
+        // if(totalPageSize % cntPerPage > 0){
+        //   totalPageSize = totalPageSize+1;
+        // }
+        totalPageSize = Math.ceil(total_cnt / cntPerPage);  //총 페이지 사이즈 = (글 갯수 - 1 / w_size ) + 1
+       
+        if (totalPageSize < page){
+            page = totalPageSize;
+        }
+        start_page_num =  (Math.floor((page-1) / 10) * 10) + 1 //시작번호 = ( (페이지 번호 -1) / 총 페이지 사이즈 ) * 총 페이지 사이즈 + 1
+        end_page_num = start_page_num + 10 - 1 //마지막번호 = 시작 페이지 번호 + 페이지 총 사이즈 -1
+        //start_page_num = start_page_num - (end_page_num - start_page_num) +1
+        if (end_page_num > totalPageSize) {
+          end_page_num = totalPageSize;
+        }
+        
+        //이전페이지 활성화
+        if(start_page_num.toString().length >= 2){
+          isPrev=true;
+          prev_page_num = start_page_num-1; //이전페이지 번호
+        }
+
+        //다음페이지 활성화
+        if(end_page_num < totalPageSize){
+          isNext = true;
+          next_page_num = end_page_num+1; //다음 페이지 번호
+        }
+
+        cb(null);
+      });
+    },
+  ], function(error, results){
+    if(error){
+      console.log(error);
+      res.send(error);
+    }
+    console.log("page : "+ page);
+    console.log("total_cnt : "+ total_cnt);
+    console.log("cntPerPage : "+ cntPerPage);
+    console.log("totalPageSize : "+ totalPageSize);
+    console.log("start_page_num : "+ start_page_num);
+    console.log("end_page_num : "+ end_page_num);
+    console.log("start_asset : "+start_asset);
+    console.log("end_asset : "+end_asset);
+    console.log("totalBenefit : "+totalBenefit);
+    console.log("totalBenefitRate : "+totalBenefitRate);
+    var obj = {
+      idx : (page -1) * cntPerPage,
+      page : page, //현재 페이지
+      cntPerPage : cntPerPage, //페이지당 문서 갯수
+      totalPageSize : totalPageSize, //페이지 총 갯수
+      start_page_num : start_page_num, //시작페이지
+      end_page_num : end_page_num, //마지막페이지
+      isPrev : isPrev,
+      isNext : isNext,
+      prev_page_num : prev_page_num, //이전페이지
+      next_page_num : next_page_num, //다음 페이지
+      start_asset : start_asset, //시작자산
+      end_asset : end_asset, //종료자산
+      totalBenefit : totalBenefit, //수익
+      totalBenefitRate :  totalBenefitRate, //수익율
+      list : data //주문목록
+    }
+    res.send(obj);
+  });
+  
+});
+
+function get_start_end(page, cntPerPage){ //10개
+	var end_page = cntPerPage * page.toString().length;
+  console.log(end_page);
+}
+
+
 router.get('/avg_order_history',  isAuthenticated,  function(req, res){
   var site_type = req.query.site_type;
   res.render('avg_order_history',{site_type : site_type});
