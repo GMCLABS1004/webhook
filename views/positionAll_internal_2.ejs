@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <link href="../Content/normalize.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/gmc-labs.webflow.css" rel="stylesheet" type="text/css">
+    <link href="../Content/webflowGrid.css" rel="stylesheet" type="text/css">
+
+    <style>
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+            /*====================*/
+            section {
+                max-width: 960px;
+                margin: 30px auto;
+                padding: 30px;
+            }
+            table {
+                width: 100%;
+            }
+            th,
+            td {
+                padding: 5px;
+                border: 1px solid #ddd;
+            }
+            th {
+                background: #f4f4f4;
+            }
+            .demo02 th {
+                width: 13%;
+            }
+            .demo02 td {
+                text-align: center;
+            }
+            .demo02 td:first-child {
+                text-align: center;
+            }
+            @media only screen and (max-width: 800px) {
+                .demo02 {
+                    display: block;
+                    width: 100%;
+                    margin: 0 -10px;
+                }
+                .demo02 thead {
+                    display: block;
+                    float: left;
+                    overflow-x: scroll;
+                }
+                .demo02 tbody {
+                    display: block;
+                    width: auto;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+                .demo02 th {
+                    display: block;
+                    width: auto;
+                }
+                .demo02 tbody tr {
+                    display: inline-block;
+                    margin: 0 -3px;
+                }
+                .demo02 td {
+                    display: block;
+                }
+            }
+        </style>
+
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+
+        setTimeout(positionAll_internal(), 0);
+        setInterval(positionAll_internal(), 3000);
+        function positionAll_internal(){
+            return function(){
+                $.ajax({
+                    method : "GET",
+                    url : "api/positionAll_internal",
+                    success: function(json){
+                        console.log(json);
+                        var url = window.location.origin + '/orderHistoryTotal?site='
+                        if(json){
+                            var list = json.list;
+                            var end_asset = 0;
+                            var start_asset =0;
+                            var last_price = price_comma(json.last_price, "korean");
+                            $("#mytable > tbody:last").empty();
+                            $("#last_price").html("");
+                            $("#end_asset").html("");
+                            $("#start_asset").html("");
+                            $("#totalBenefit").html("");
+                            $("#totalBenefitRate").html("");
+                            
+                            $("#last_price").html("현재가 : "+ last_price +"<br>");
+                            for(i=0; i<list.length; i++){
+                                end_asset += list[i].totalAsset;
+                                start_asset += list[i].totalAsset_before;
+
+                                $("#mytable > tbody:last").append("<tr>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='left'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptName + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].version + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].scriptNo + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].isSide + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].side_num + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(list[i].totalAsset, list[i].site) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(list[i].size,list[i].site) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='right'>" + value_comma(list[i].value, list[i].site) + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + price_comma(list[i].price, list[i].site) + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].margin + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + list[i].leverage + "</td>");                          
+                                        $("#mytable > tbody:last").append("<td align='right'>" + roePer_comma(list[i].benefitRate) + "</td>");                         
+                                $("#mytable > tbody:last").append("<tr>");
+                            }
+                            var totalBenefit = (end_asset - start_asset);
+                            var totalBenefitRate = ((totalBenefit/start_asset) *100);
+                            $("#start_asset").html("시작 자산 : "+ asset_comma(start_asset, 'bithumb') +"<br>");
+                            $("#end_asset").html("최근 자산 : "+ asset_comma(end_asset, 'bithumb') +"<br>");
+                            $("#totalBenefit").html("총수익 : " + asset_comma(totalBenefit, 'bithumb')  +"<br>");
+                            $("#totalBenefitRate").html("총수익율 : " + benefit_comma(totalBenefitRate)  +"<br>");
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            }
+        }
+       
+        function isPosition(size){
+            if(size > 0){
+                return "long"
+            }else if(size < 0){
+                return "short";
+            }else{
+                return "";
+            }
+
+        }
+        function asset_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+ 
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.00000000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function price_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function amount_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var amt = Number(num);
+            if(site_type==='bitmex'){
+                return numeral(amt).format( '₩0,0' ); 
+            }else{
+                return numeral(amt).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }
+        }
+
+        function value_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' ); 
+            }
+        }
+
+        function benefit_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+        }
+        function roePer_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.00' ); // 1000.00000123 =>  1,000.00000123
+        }
+    </script>
+    <title>Document</title>
+</head>
+
+<body class="body-37">
+    
+        <div class="section-62">
+                <div class="w-container">
+            
+                <h2>포지션(국내)</h2>
+                
+                <div class="w-embed">
+                    <div class="table-wrapper">
+                        <br>
+                
+                        <div id="last_price"></div>
+                        <div id="start_asset"></div>
+                        <div id="end_asset"></div>
+                        <div id="totalBenefit"></div>
+                        <div id="totalBenefitRate"></div>
+                        <table id="mytable" border="1px">
+                            <thead>
+                                <tr>
+                                    <th>no</th>
+                                    <th>계정</th>
+                                    <th>스크립트</th>
+                                    <th>버전</th>
+                                    <th>스크립트 번호</th>
+                                    <th>포지션</th>
+                                    <th>side num</th>
+                                   
+                                    <th>총자산</th>
+                                    <th>수량</th>
+                                    <th>가치</th>
+                                    <th>진입가격</th>
+                                    <th>마진</th>
+                                    <th>레버리지</th>
+                                    <th>실현손익</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                </div>
+</body>
+</html>
