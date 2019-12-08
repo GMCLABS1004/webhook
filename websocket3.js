@@ -5,111 +5,123 @@ var position2 = require('./models/position2');
 var webSetting = require('./webSetting.json');
 var mongoose = require('mongoose');
 var set = require('./websocket.json');
-
-if(set.testnet === true){
-    console.log("테스트넷 실행");
-    var client = new W3CWebSocket('wss://testnet.bitmex.com/realtimemd');
-}else{
-    console.log("본서버 실행");
-    var client = new W3CWebSocket('wss://www.bitmex.com/realtimemd');
-}
-
 var crypto = require('crypto');
 mongoose.connect(webSetting.dbPath);
-client.onerror = function(){
-    console.log('Connection Error');
-};
- 
-client.onopen = function(){
-    console.log('WebSocket Client Connected');
+setTimeout(startWebsocket(), 0);
 
-    setting.find({site_type : 'oversee', execFlag : true}, function(error, json){
-        if(error){
-            console.log(error);
-            return;
+function startWebsocket(){
+    return function(){
+        if(set.testnet === true){
+            console.log("테스트넷 실행");
+            var client = new W3CWebSocket('wss://testnet.bitmex.com/realtimemd');
+        }else{
+            console.log("본서버 실행");
+            var client = new W3CWebSocket('wss://www.bitmex.com/realtimemd');
         }
-        //console.log(json);
-        for(var i=0; i<json.length; i++){
-            var username = json[i].site;
-            var apiKey = json[i].apiKey
-            var secreteKey = json[i].secreteKey;
-            var expires = new Date().getTime() //+ (60 * 1000); // 1 min in the future //4102358400
-            var signature = crypto.createHmac('sha256', secreteKey).update('GET/realtime'+expires).digest('hex');
+        
+        
+        
+        client.onerror = function(){
+            console.log("[" + getCurrentTimeString() +"]" +  ' Connection Error');
+        };
+         
+        client.onopen = function(){
+            console.log('WebSocket Client Connected');
+        
+            setting.find({site_type : 'oversee', execFlag : true}, function(error, json){
+                if(error){
+                    console.log(error);
+                    return;
+                }
+                //console.log(json);
+                for(var i=0; i<json.length; i++){
+                    var username = json[i].site;
+                    var apiKey = json[i].apiKey
+                    var secreteKey = json[i].secreteKey;
+                    var expires = new Date().getTime() //+ (60 * 1000); // 1 min in the future //4102358400
+                    var signature = crypto.createHmac('sha256', secreteKey).update('GET/realtime'+expires).digest('hex');
+                    
+                    //멀티플렉싱2
+                    client.send(JSON.stringify([1, username, username]));
+                    client.send(JSON.stringify([0, username, username, {"op": "authKeyExpires", "args": [apiKey, expires, signature]}]));
+                    //client.send(JSON.stringify([0, username, username, {"subscribe": "margin"}]));//margin, 
+                    client.send(JSON.stringify([0, username, username, {"op" : "subscribe", "args" : ["position", "margin"]}]));//margin, 
+        
+                }
+            });
+        };
+        
+        client.onclose = function(){
+            console.log("[" + getCurrentTimeString() +"]" +  ' echo-protocol Client Closed');
+            //setTimeout(startWebsocket(), 10000);
+            setTimeout(function() {
+                process.exit(1);//connect();
+            }, 10000);
+        };
+         
+        client.onmessage = function(e){
             
-            //멀티플렉싱2
-            client.send(JSON.stringify([1, username, username]));
-            client.send(JSON.stringify([0, username, username, {"op": "authKeyExpires", "args": [apiKey, expires, signature]}]));
-            //client.send(JSON.stringify([0, username, username, {"subscribe": "margin"}]));//margin, 
-            client.send(JSON.stringify([0, username, username, {"op" : "subscribe", "args" : ["position", "margin"]}]));//margin, 
-
-        }
-    });
-};
- 
-client.onclose = function(){
-    console.log('echo-protocol Client Closed');
-};
- 
-client.onmessage = function(e){
-    var json = JSON.parse(e.data);
-    //유효한 데이터가 없으면 종료
-    if(json[3].data === undefined){
-        return;
-    }
-
-    // console.log(json);
-    // console.log(json[1]);
-    // console.log(json[3].table);
-    // console.log(json[3].data);
-    var username = json[1];
-    var table = json[3].table;
-    var data = json[3].data;
-    if(table === "margin"){
-        //console.log(data);
-        for(var i=0; i<data.length; i++){
-            if(data[i].currency === 'XBt'){
-               //data[i] 업데이트
-               //console.log(data);
-               var obj = bitmex_margin_parse(username, data[i]);
-               
-                margin.findOneAndUpdate(
-                    {site : username},
-                    {$set : obj},
-                    {upsert : true},
-                    function(error, body){
-                        if(error){
-                            console.log(error);
-                            return;
-                        }
-                        //console.log(body);
-                        console.log("margin 갱신");
-                    }
-                )
+            var json = JSON.parse(e.data);
+            //유효한 데이터가 없으면 종료
+            if(json[3].data === undefined){
+                return;
             }
-        }
-    }else if(table === "position"){
-        //console.log(data);
-        for(var i=0; i<data.length; i++){
-            if(data[i].symbol === 'XBTUSD'){
-                //data[i] 업데이트
-                var obj = bitmex_position_parse(username, data[i]);
-                
-                position2.findOneAndUpdate(
-                    {site : username},
-                    {$set : obj},
-                    {upsert : true},
-                    function(error, body){
-                        if(error){
-                            console.log(error);
-                            return;
-                        }
-                        //console.log(body);
-                        console.log("position 갱신");
+        
+            // console.log(json);
+            // console.log(json[1]);
+            // console.log(json[3].table);
+            // console.log(json[3].data);
+            var username = json[1];
+            var table = json[3].table;
+            var data = json[3].data;
+            if(table === "margin"){
+                //console.log(data);
+                for(var i=0; i<data.length; i++){
+                    if(data[i].currency === 'XBt'){
+                       //data[i] 업데이트
+                       //console.log(data);
+                       var obj = bitmex_margin_parse(username, data[i]);
+                       
+                        margin.findOneAndUpdate(
+                            {site : username},
+                            {$set : obj},
+                            {upsert : true},
+                            function(error, body){
+                                if(error){
+                                    console.log(error);
+                                    return;
+                                }
+                                //console.log(body);
+                                console.log("[" + getCurrentTimeString() +"]" +  " margin 갱신");
+                            }
+                        )
                     }
-                )
+                }
+            }else if(table === "position"){
+                //console.log(data);
+                for(var i=0; i<data.length; i++){
+                    if(data[i].symbol === 'XBTUSD'){
+                        //data[i] 업데이트
+                        var obj = bitmex_position_parse(username, data[i]);
+                        
+                        position2.findOneAndUpdate(
+                            {site : username},
+                            {$set : obj},
+                            {upsert : true},
+                            function(error, body){
+                                if(error){
+                                    console.log(error);
+                                    return;
+                                }
+                                //console.log(body);
+                                console.log("[" + getCurrentTimeString() +"]" + " position 갱신");
+                            }
+                        )
+                    }
+                }
             }
-        }
-    }
+        }        
+    }    
 }
 
 
@@ -199,4 +211,13 @@ function bitmex_position_parse(site, obj){
    
     return posObj;
     
+  }
+
+
+  function getCurrentTimeString(){
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var CurrentDateTime = date+' '+time;
+    return CurrentDateTime;
   }
