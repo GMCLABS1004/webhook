@@ -267,7 +267,7 @@ function fixed2(num){
 function bitmex_margin_parse(site, obj){
     var posObj = {};
     posObj["site"] = site;
-    console.log(obj);
+   // console.log(obj);
     if(typeof(obj.walletBalance) !== "undefined" && obj.walletBalance !== null)
         posObj["walletBalance"] = obj.walletBalance / 100000000;
   
