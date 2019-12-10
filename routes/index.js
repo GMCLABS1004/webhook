@@ -1437,10 +1437,10 @@ router.get('/manage', isAuthenticated,  function(req, res, next){
     if(err){
       console.log(err);
     }
-    console.log("api/manage 호출");
-    console.log(body);
-    console.log(typeof(body));
-    console.log( JSON.parse(body));
+    //console.log("api/manage 호출");
+    // console.log(body);
+    // console.log(typeof(body));
+    // console.log( JSON.parse(body));
     var json = JSON.parse(body);
     res.render('manage', json);
   });

@@ -317,10 +317,10 @@ function bitmex_position_parse(site, obj){
 
     if(typeof(obj.symbol) !== "undefined" && obj.symbol !== null)
         posObj["symbol"] = obj.symbol;
-  
+    
     if(typeof(obj.currentQty) !== "undefined" && obj.currentQty !== null) 
         posObj["size"] = obj.currentQty;
-  
+    
     if(typeof(obj.homeNotional) !== "undefined" && obj.homeNotional !== null) 
         posObj["value"] = obj.homeNotional;
   
@@ -355,9 +355,8 @@ function bitmex_position_parse(site, obj){
     
     
     
-   
+
     return posObj;
-    
   }
 
 
