@@ -6,6 +6,8 @@ var marginSchema = new Schema({
     walletBalance : {type:Number, default : 0}, //총액
     marginBalance : {type:Number, default : 0}, //position
     availableMargin : {type:Number, default : 0}, //이용가능금액
+    marginLeverage : {type:Number, default : 0}, //총액
+    marginUsedPcnt : {type:Number, default : 0} //총액
 });
 
 marginSchema.index({site :1});

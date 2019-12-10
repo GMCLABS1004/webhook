@@ -267,6 +267,7 @@ function fixed2(num){
 function bitmex_margin_parse(site, obj){
     var posObj = {};
     posObj["site"] = site;
+    console.log(obj);
     if(typeof(obj.walletBalance) !== "undefined" && obj.walletBalance !== null)
         posObj["walletBalance"] = obj.walletBalance / 100000000;
   
@@ -275,6 +276,12 @@ function bitmex_margin_parse(site, obj){
   
     if(typeof(obj.availableMargin) !== "undefined" && obj.availableMargin !== null) 
         posObj["availableMargin"] = obj.availableMargin / 100000000;
+
+    if(typeof(obj.marginLeverage) !== "undefined" && obj.marginLeverage !== null) 
+        posObj["marginLeverage"] = obj.marginLeverage;
+    
+    if(typeof(obj.marginUsedPcnt) !== "undefined" && obj.marginUsedPcnt !== null) 
+        posObj["marginUsedPcnt"] = obj.marginUsedPcnt ;
     return posObj;
   }
 
@@ -283,7 +290,7 @@ function bitmex_position_parse(site, obj){
     var posObj = {
         site : site
     };
-    
+   // console.log(obj);
     if(typeof(obj.isOpen) !== "undefined" && obj.isOpen !== null){
         posObj["isOpen"] = new Boolean(obj.isOpen);
         // //포지션 닫혀있으면 0으로 값초기화 하여 업데이트

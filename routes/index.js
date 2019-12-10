@@ -265,7 +265,20 @@ router.get('/api/positionAll', isAuthenticated,  function(req, res){
       cb(null, set_list);
     }
   },
-  function getPosition(set_list, cb){
+  function getMargin(set_list, cb){
+    for(i=0; i<set_list.length; i++){
+      margin.find({}, function(error, margin_list){
+        if(error){
+            console.log(error);
+            return;
+        }
+        
+        cb(null, set_list, margin_list); 
+      });
+    }
+   
+  },
+  function getPosition(set_list, margin_list, cb){
     for(i=0; i<set_list.length; i++){
       setTimeout(getPosition_bitmex(set_list[i], function(error, data){
         if(error){
@@ -325,61 +338,148 @@ router.get('/api/positionAll', isAuthenticated,  function(req, res){
   });
 })
 
-function getPosition_bitmex(set, cb){
+function getPosition_bitmex(set, callback){
   return function(){
-      position2.findOne({site : set.site}, function(error, obj){
-          if(error){
-              console.log(err);
-              return;
-          }
-          // console.log("getPosition_bitmex");
-          // console.log(body);
-          //var obj = JSON.parse(body)
-          var data = {};
-          data["site"] = obj.site;
-          data["avgEntryPrice"] = obj.avgEntryPrice;
-          data["isOpen"] = obj.isOpen;
-          data["realisedPnl"] = obj.realisedPnl;
-          data["unrealisedPnl"] = obj.unrealisedPnl;
-          data["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
-          
-          data["size"] = obj.size;
-          data["value"] = obj.value;
-
-          data["leverage"] = set.leverage;
-          data["margin"] = set.margin;
-          data["scriptNo"] = set.scriptNo;
-          data["side_num"] = set.side_num;
-          data["pgSide"] = set.side;
-          
-          //setTimeout(correct_wrong_pgside(data.size,  data["pgSide"], new Object(set) ),0);
-          
-          margin.findOne({site : set.site},function(error, json){
-              if(error){
-                  console.log(err);
-                  return;
-              }
-              data["walletBalance"] = json.walletBalance;
-
-              //최초자산 조회
-              order.find({site : set.site}).sort({start_time : "asc"}).limit(1).exec(function(error, body){
-                  if(error){
-                      console.log(error);
-                      
-                      return;
-                  }
-                  // console.log(body);
-                  if(body.length > 0){
-                      //console.log("")
-                      data["walletBalance_before"] = body[0].totalAsset;
-                  }else{
-                      data["walletBalance_before"] = data.walletBalance;
-                  }
-                  cb(null, data);
-              });
+      var data = {};
+      async.waterfall([
+        function get_position(cb){
+          position2.findOne({site : set.site}, function(error, obj){
+            if(error){
+                console.log(err);
+                return;
+            }
+            // console.log("getPosition_bitmex");
+            // console.log(body);
+            //var obj = JSON.parse(body)
+            
+            data["site"] = obj.site;
+            data["avgEntryPrice"] = obj.avgEntryPrice;
+            data["isOpen"] = obj.isOpen;
+            data["realisedPnl"] = obj.realisedPnl;
+            data["unrealisedPnl"] = obj.unrealisedPnl;
+            data["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
+            
+            data["size"] = obj.size;
+            data["value"] = obj.value;
+  
+            data["leverage"] = set.leverage;
+            data["margin"] = set.margin;
+            // data["leverage_real"] = obj.leverage;
+            // data["margin_real"] = obj.margin;
+            data["scriptNo"] = set.scriptNo;
+            data["side_num"] = set.side_num;
+            data["pgSide"] = set.side;
+            cb(null);
           });
-          
+        },
+        function get_margin(cb){
+          margin.findOne({site : set.site},function(error, json){
+            if(error){
+                console.log(err);
+                return;
+            }
+            data["walletBalance"] = json.walletBalance;
+            data["marginLeverage"] = json.marginLeverage;
+            data["marginUsedPcnt"] = json.marginUsedPcnt;
+            cb(null);
+          });
+        },
+        function get_firt_asset(cb){
+          //최초자산 조회
+          order.find({site : set.site}).sort({start_time : "asc"}).limit(1).exec(function(error, body){
+            if(error){
+                console.log(error);
+                
+                return;
+            }
+            // console.log(body);
+            if(body.length > 0){
+                //console.log("")
+                data["walletBalance_before"] = body[0].totalAsset;
+            }else{
+                data["walletBalance_before"] = data.walletBalance;
+            }
+            cb(null);
+          });
+        },
+        function get_unfilled_order_cnt(cb){ //미체결내역 갯수
+          order_unfilled.find({site : set.site}).count().exec(function(error, cnt){
+            if(error){
+              console.log(error);
+              return;
+            }
+            if(cnt > 0){
+              data["isUnfilled"] = true;
+            }else{
+              data["isUnfilled"] = false;
+            }
+            cb(null);
+          })
+        }
+      ], function(error, results){
+        if(error){
+          console.log(error);
+          return;
+        }
+        callback(null, data);
       });
+      // position2.findOne({site : set.site}, function(error, obj){
+      //     if(error){
+      //         console.log(err);
+      //         return;
+      //     }
+      //     // console.log("getPosition_bitmex");
+      //     // console.log(body);
+      //     //var obj = JSON.parse(body)
+      //     var data = {};
+      //     data["site"] = obj.site;
+      //     data["avgEntryPrice"] = obj.avgEntryPrice;
+      //     data["isOpen"] = obj.isOpen;
+      //     data["realisedPnl"] = obj.realisedPnl;
+      //     data["unrealisedPnl"] = obj.unrealisedPnl;
+      //     data["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
+          
+      //     data["size"] = obj.size;
+      //     data["value"] = obj.value;
+
+      //     data["leverage"] = set.leverage;
+      //     data["margin"] = set.margin;
+      //     // data["leverage_real"] = obj.leverage;
+      //     // data["margin_real"] = obj.margin;
+      //     data["scriptNo"] = set.scriptNo;
+      //     data["side_num"] = set.side_num;
+      //     data["pgSide"] = set.side;
+          
+      //     //setTimeout(correct_wrong_pgside(data.size,  data["pgSide"], new Object(set) ),0);
+          
+      //     margin.findOne({site : set.site},function(error, json){
+      //         if(error){
+      //             console.log(err);
+      //             return;
+      //         }
+      //         data["walletBalance"] = json.walletBalance;
+      //         data["marginLeverage"] = json.marginLeverage;
+      //         data["marginUsedPcnt"] = json.marginUsedPcnt;
+
+      //         //최초자산 조회
+      //         order.find({site : set.site}).sort({start_time : "asc"}).limit(1).exec(function(error, body){
+      //             if(error){
+      //                 console.log(error);
+                      
+      //                 return;
+      //             }
+      //             // console.log(body);
+      //             if(body.length > 0){
+      //                 //console.log("")
+      //                 data["walletBalance_before"] = body[0].totalAsset;
+      //             }else{
+      //                 data["walletBalance_before"] = data.walletBalance;
+      //             }
+      //             cb(null, data);
+      //         });
+      //     });
+          
+      // });
   }
 }
 
