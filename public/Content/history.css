@@ -65,6 +65,7 @@ table {
 
 .historyTitle{
   margin-left: 10px;
+  font-size: 30px;
 }
 
 .historyTable {
@@ -79,8 +80,25 @@ table {
   padding: 6px 10px 6px 10px;
   border: 1px solid rgba(243, 243, 243, 0.541); 
 }
+.select {
+  float: right; 
+  margin-top: 25px; 
+  margin-right: 10px;
+  height: 28px; 
+  width: 70px; 
+  font-size: 14px;
+}
 
+.pageNumber{
+  margin-top: 30px; 
+  margin-bottom: 20px;
+}
 
+.pageNumber a, strong{
+  font-size: 18px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
 
 .number{
   width: 100px;
@@ -341,6 +359,29 @@ section {
     float: right;
   }
 
+  .historyTitle{
+    font-size: 22px;
+  }
+
+  .select {
+    float: right; 
+    margin-top: 25px; 
+    margin-right: 5px;
+    height: 28px; 
+    width: 60px; 
+    font-size: 14px;
+  }
+
+  .pageNumber{
+    margin-top: 30px; 
+    margin-bottom: 20px;
+  }
+  
+  .pageNumber a, strong{
+    font-size: 16px;
+    margin-left: 2px;
+    margin-right: 2px;
+  }
 
 .ID2019_11_12 {
   width: 50px;

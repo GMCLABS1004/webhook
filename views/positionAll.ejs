@@ -19,9 +19,35 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script>
+        var popupWindow = null;
+        
+
+        function child_open(url) {
+
+        var _width = '700';
+        var _height = '600';
+        
+        var _left  = Math.ceil((document.body.offsetWidth - _width) /2);
+        var _top  = Math.ceil((document.body.offsetHeight - _height) /2);
+
+            if (popupWindow && !popupWindow.closed) {
+                popupWindow.focus();
+            }
+            else {
+                popupWindow = window.open(url, 'popup-test', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top)
+            }
+        }
+        function parent_disable() {
+            if (popupWindow && !popupWindow.closed)
+                popupWindow.focus();
+        }
+    </script>
+
     <script>
        
-       setTimeout(positionAll(),0);
+        setTimeout(positionAll(),0);
         setInterval(positionAll(), 3000);
         function positionAll(){
             return function(){
@@ -65,49 +91,53 @@
                                 // obj["side_option"] = "Exit";
                                 // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
                                 
-                                        $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
-                                        $("#mytable > tbody:last").append("<td></td>");
-                                        //$("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
-                                        $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=limit_order('" + JSON.stringify({site : list[i].site}) + "')><strong>"+ "주문" +"</strong></a>" + "</td>");
-                                        obj["side"] = "Buy";
-                                        $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매수" +"</strong></a>" + "</td>");
-                                        obj["side"] = "Sell";
-                                        $("#mytable > tbody:last").append("<td class='___3100'>" + "<a class='____1_A63_Rectangle_6' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매도" +"</strong></a>" + "</td>");
-                                        obj["side"] = reverse_position(list[i].size);
-                                        obj["side_option"] = "Exit";
-                                        $("#mytable > tbody:last").append("<td class='___3101'>" + "<a class='____1_A63_Rectangle_8' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "탈출" +"</strong></a>" + "</td>");
-                                        $("#mytable > tbody:last").append("</tr>");
+                                $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    
+                                    //$("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
+                                    $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=limit_order('" + JSON.stringify({site : list[i].site}) + "')><strong>"+ "주문" +"</strong></a>" + "</td>");
+                                    
+                                    // $("#mytable > tbody:last").append("<td class='___3098'>" + "<a href='javascript:child_open()' class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
 
-                                        $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>계정</span><span class='BITMEX01'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></span></td>");
-                                       
+                                    obj["side"] = "Buy";
+                                    $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매수" +"</strong></a>" + "</td>");
+                                    obj["side"] = "Sell";
+                                    $("#mytable > tbody:last").append("<td class='___3100'>" + "<a class='____1_A63_Rectangle_6' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매도" +"</strong></a>" + "</td>");
+                                    obj["side"] = reverse_position(list[i].size);
+                                    obj["side_option"] = "Exit";
+                                    $("#mytable > tbody:last").append("<td class='___3101'>" + "<a class='____1_A63_Rectangle_8' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "탈출" +"</strong></a>" + "</td>");
+                                    $("#mytable > tbody:last").append("</tr>");
 
-                                        $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
-                                        $("#mytable > tbody:last").append("<td><span class='bitmexName'>포지션</span><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
-                                        $("#mytable > tbody:last").append("<td><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
-                                        // $("#mytable > tbody:last").append("<td align='center'>" + list[i].pgSide  + "</td>");
-                                        $("#mytable > tbody:last").append("<td colspan='2'><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");                         
-                                        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
-                                        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
-                                        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
-                                        $("#mytable > tbody:last").append("</tr>");
+                                    $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>계정</span><span class='BITMEX01'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></span></td>");
+                                    
 
-                                        $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td class='margin'><span class='ID95_'>" + list[i].margin + "</span></td>");
-                                        $("#mytable > tbody:last").append("<td class='leverage'><span class='ID2X'>" + list[i].leverage + "</span></td>");
-                                        $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>총자산</span><span class='ID1_31862731'>" + asset_comma(list[i].walletBalance, list[i].site) + "</span></td>");
-                                        $("#mytable > tbody:last").append("<td><span class='_21_917'>"+amount_comma(list[i].size,list[i].site) +"</span></td>"); 
-                                        $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>가치</span><span class='_2_5102'>" + value_comma(list[i].value, list[i].site) + "</span></td>");
-                                        $("#mytable > tbody:last").append("</tr>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
+                                    $("#mytable > tbody:last").append("<td><span class='bitmexName'>포지션</span><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
+                                    $("#mytable > tbody:last").append("<td><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + list[i].pgSide  + "</td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");                         
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
 
-                                        $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td></td>");
-                                        $("#mytable > tbody:last").append("<td></td>");
-                                        $("#mytable > tbody:last").append("<td colspan='2' style='padding-bottom: 30px;'><span class='bitmexName'>스크립트</span><span class='ID6XMA_ALT_V01_____'>" + list[i].scriptName + "</span></td>");
-                                        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>버전</span><span class='ID6'>" + list[i].version + "<span></td>");
-                                        $("#mytable > tbody:last").append("<td colspan='2' style='padding-bottom: 30px;'><span class='bitmexName'>스크립트번호</span><span class='ID302'>" + list[i].scriptNo + "</span></td>");
-                                        $("#mytable > tbody:last").append("</tr>");
+                                    $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td class='margin'><span class='ID95_'>" + list[i].margin + " %</span></td>");
+                                    $("#mytable > tbody:last").append("<td class='leverage'><span class='ID2X'>" + list[i].leverage + " X</span></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>총자산</span><span class='ID1_31862731'>" + asset_comma(list[i].walletBalance, list[i].site) + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='_21_917'>"+amount_comma(list[i].size,list[i].site) +"</span></td>"); 
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>가치</span><span class='_2_5102'>" + value_comma(list[i].value, list[i].site) + "</span></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
+
+                                    $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2' style='padding-bottom: 30px;'><span class='bitmexName'>스크립트</span><span class='ID6XMA_ALT_V01_____'>" + list[i].scriptName + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>버전</span><span class='ID6'>" + list[i].version + "<span></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2' style='padding-bottom: 30px;'><span class='bitmexName'>스크립트번호</span><span class='ID302'>" + list[i].scriptNo + "</span></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
                                         
                                         
                                       
@@ -171,7 +201,8 @@
             console.log("limit_order : "+body);
             var json = JSON.parse(body);
             console.log(json.site);
-            location = window.location.origin + '/order?site='+json.site;
+            child_open(window.location.origin + '/order?site='+json.site);
+           // location = window.location.origin + '/order?site='+json.site;
         }
 
 
@@ -273,7 +304,7 @@
       </script>
 
 </head>
-<body>
+<body onFocus="parent_disable();" onclick="parent_disable();">
   <div class="section-62">
     <div class="w-container">
       <h2 class="bitmexTitle">비트맥스 포지션</h2>

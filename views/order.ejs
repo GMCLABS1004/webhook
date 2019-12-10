@@ -34,13 +34,13 @@
                 }
             });
             $("#half").click(function(){
-            console.log("0.5x");
+                console.log("0.5x");
                 let size = Number($("#size").val());
                 size = Math.floor(size / 2);
                 $("#orderQty").val(size);
             });
             $("#all").click(function(){
-                console.log("0.5x");
+                console.log("1.0x");
                 let size = Number($("#size").val());
                 size = Math.floor(size);
                 $("#orderQty").val(size);
@@ -55,6 +55,15 @@
             }
             return Number(arr[0]);
         }
+        function fixed4(num){
+            var str = new String(num);
+            var arr = str.split(".");
+            if(arr.length>1){
+                    var str2 = arr[1].slice(0,4);
+                return Number(arr[0] + '.' + str2);	
+            }
+            return Number(arr[0])
+        }
         function get_order_info(){
             return function(){
                 $.ajax({
@@ -62,9 +71,11 @@
                     url : "api/get_order_info?site="+$("#site").val(),
                     success : function(json){
                         if(json){
-                            //console.log(json);
-                            $("#last_price").val(fixed1(json.last_price));
-                            $("#avgEntryPrice").val(fixed1(json.avgEntryPrice));
+                            console.log(json);
+                            $("#last_price").html("현재가 : "+fixed1(json.last_price));
+                            $("#avgEntryPrice").html("현재진입가격 : "+fixed1(json.avgEntryPrice));
+                            
+                            $("#size_text").html("현재수량 : "+json.size);
                             $("#size").val(json.size);
                         }
                     },
@@ -91,8 +102,9 @@
                                         $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>");  
                                         $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='center'>" + json[i].price + "</td>");  
-                                        $("#mytable > tbody:last").append("<td align='right'>" + json[i].orderQty+ "</td>"); 
-                                        $("#mytable > tbody:last").append("<td align='right'>" + json[i].leavesQty+ "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='right'>" + json[i].orderQty+ "</td>"); fixed4
+                                        $("#mytable > tbody:last").append("<td align='right'>" + fixed4(json[i].orderQty/json[i].price) + "</td>");
+                                        // $("#mytable > tbody:last").append("<td align='right'>" + json[i].leavesQty+ "</td>"); 
                                         var obj = {
                                             site : json[i].site,
                                             orderID : json[i].orderID
@@ -158,11 +170,12 @@
     </script>
 </head>
 <body>
-    <h2>주문</h2>
-    <input type="hidden" id="site" value="<%=site%>"> <br>
-    현재가 <input type="text" id="last_price" value=""><br>
-    현재진입가격 <input type="text" id="avgEntryPrice" value=""><br>
-    현재수량 <input type="text" id="size" value=""><br>
+    <h2><%=site%> 주문</h2>
+    <input type="hidden" id="site" value="<%=site%>">
+    <input type="hidden" id="size" value="">
+    <div id="last_price">현재가 : </div>
+    <div id="avgEntryPrice">현재진입가격 : </div>
+    <div id="size_text"">현재수량 : </div>
     주문가격 <input type="text" id="price" value=""><br>
     주문수량 <input type="text" id="orderQty" value="" readonly>
     <input type="button" id="half" value="0.5x"/>
@@ -177,8 +190,8 @@
                 <th>날짜</th>
                 <th>시간</th>
                 <th>가격</th>
-                <th>주문수량</th>
-                <th>잔여수량</th>
+                <th>수량</th>
+                <th>가치</th>
                 <th>취소</th>
             </tr>
         </thead>

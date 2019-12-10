@@ -100,25 +100,24 @@ router.get('/', isAuthenticated,  function(req, res){
 // });
 
 // table
-router.get('/positionAll_table', function(req, res, next){
-  res.render('positionAll_table');
+router.get('/positionAll_2',   function(req, res, next){
+  res.render('positionAll_2');
 });
 
-router.get('/avg_order_history_table',   function(req, res, next){
-  res.render('avg_order_history_table');
+router.get('/positionAll_internal_2',   function(req, res, next){
+  res.render('positionAll_internal_2');
 });
 
-router.get('/positionAll_internal_table',   function(req, res, next){
-  res.render('positionAll_internal_table');
-});
-
-router.get('/history_table',  isAuthenticated,  function(req, res){
+router.get('/orderHistoryTotal_2',  isAuthenticated,  function(req, res){
   var site = req.query.site;
-  res.render('history_table',{site : site});
+  res.render('orderHistoryTotal_2',{site : site});
 });
-router.get('/positionAll_total',   function(req, res, next){
-  res.render('positionAll_total');
+
+router.get('/avg_order_history_table', isAuthenticated, function(req, res, next){
+  var site_type = req.query.site_type;
+  res.render('avg_order_history_table',{site_type : site_type});
 });
+
 
 router.get('/script', isAuthenticated,  function(req, res, next){
   res.render('script');

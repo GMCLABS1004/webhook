@@ -27,6 +27,7 @@ mongoose.connect(webSetting.dbPath, function(error){
     }
     mongoose.set('useFindAndModify', false);
 });
+
 client.onerror = function(){
     console.log('Connection Error');
 };
@@ -58,7 +59,11 @@ client.onopen = function(){
 };
  
 client.onclose = function(){
-    console.log('echo-protocol Client Closed');
+    console.log("[" + getCurrentTimeString() +"]" +  ' echo-protocol Client Closed');
+    //setTimeout(startWebsocket(), 10000);
+    setTimeout(function() {
+        process.exit(1);//connect();
+    }, 10000);
 };
  
 client.onmessage = function(e){
@@ -93,7 +98,7 @@ client.onmessage = function(e){
                             return;
                         }
                         //console.log(body);
-                        //console.log("margin 갱신");
+                        console.log("margin 갱신");
                     }
                 )
             }
@@ -116,23 +121,21 @@ client.onmessage = function(e){
                             return;
                         }
                     
-                        //console.log("position 갱신");
+                        console.log("position 갱신");
                     }
                 )
             }
         }
     }else if(table === "order"){
-
-
         for(var i=0; i<data.length; i++){
             if(data[i]["ordStatus"] === 'Filled'){ //data[i]["text"] === 'dilute' && 
                 //물타기 한 주문이 체결되면 체결내역으로 데이터 이동
-                // console.log("action : "+ json[3]["action"] );
-                // console.log("orderID : "+ data[i]["orderID"]);   
-                // console.log("ordStatus : "+data[i]["ordStatus"]);   
-                // console.log("text : "+data[i]["text"]);
-                // console.log("--------------");
-                // console.log("");
+                console.log("action : "+ json[3]["action"] );
+                console.log("orderID : "+ data[i]["orderID"]);   
+                console.log("ordStatus : "+data[i]["ordStatus"]);   
+                console.log("text : "+data[i]["text"]);
+                console.log("--------------");
+                console.log("");
                 setTimeout(move_unfilled_to_filled(username, data[i].orderID));
             }
         }
@@ -348,4 +351,13 @@ function bitmex_position_parse(site, obj){
    
     return posObj;
     
+  }
+
+
+  function getCurrentTimeString(){
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var CurrentDateTime = date+' '+time;
+    return CurrentDateTime;
   }

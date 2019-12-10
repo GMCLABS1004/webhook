@@ -135,30 +135,6 @@ th {
 	color: rgb(41, 41, 41);
 }
 
-.___3098{
-	width: 200px;
-  overflow: visible;
-  text-align: center;
-}
-
-.___3099 {
-	width: 100px;
-  overflow: visible;
-  text-align: center;
-}
-
-.___3100 {
-	width: 100px;
-  overflow: visible;
-  text-align: center;
-}
-
-.___3101 {
-	width: 100px;
-  overflow: visible;
-  text-align: center;
-}
-
 .BITMEX01 {
 	overflow: visible;
 	white-space: nowrap;
@@ -166,7 +142,7 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
+	font-size: 14px;
 	color: rgb(41, 41, 41);
 }
 
@@ -176,8 +152,8 @@ th {
 	float: right;
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
-	font-size: 12px;
-	color: rgb(41, 41, 41);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 
 .ID6 {
@@ -187,8 +163,8 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	color: rgb(41, 41, 41);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 
 .ID302 {
@@ -198,8 +174,8 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	color: rgb(41, 41, 41);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 .margin{
 	width: 100px;
@@ -212,7 +188,7 @@ th {
 	font-style: normal;
 	font-weight: normal;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 14px;
 	color: rgb(41, 41, 41);
 }
 .ID95_ {
@@ -222,8 +198,8 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	color: rgba(140,140,140,1);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 .leverage{
 	width: 100px;
@@ -235,8 +211,8 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	color: rgba(140,140,140,1);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 
 .ID1_31862731 {
@@ -246,8 +222,8 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	color: rgb(41, 41, 41);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 
 ._21_917 {
@@ -257,8 +233,8 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	color: rgb(41, 41, 41);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 
 ._2_5102 {
@@ -268,8 +244,8 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: normal;
-	font-size: 12px;
-	color: rgb(41, 41, 41);
+	font-size: 14px;
+	color: rgba(112,112,112,1);
 }
 
 .ID8_736_0 {
@@ -279,7 +255,7 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 14px;
 	color: rgb(41, 41, 41);
 }
 
@@ -290,7 +266,7 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 14px;
 	color: rgb(41, 41, 41);
 }
 
@@ -301,7 +277,7 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 14px;
 	color: rgb(41, 41, 41);
 }
 
@@ -312,7 +288,7 @@ th {
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 14px;
 	color: rgb(41, 41, 41);
 }
 
@@ -325,7 +301,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID2X {
@@ -336,7 +312,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	._21_917 {
 		overflow: visible;
@@ -346,7 +322,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	.ID8_736_0 {
 		overflow: visible;
@@ -362,30 +338,6 @@ th {
 }
 
 @media screen and (max-width: 425px){
-
-	.___3098 {
-		width: 50px;
-		overflow: visible;
-		text-align: center;
-	  }
-
-	.___3099 {
-		width: 50px;
-		overflow: visible;
-		text-align: center;
-	  }
-	  
-	  .___3100 {
-		width: 50px;
-		overflow: visible;
-		text-align: center;
-	  }
-	  
-	  .___3101 {
-		width: 50px;
-		overflow: visible;
-		text-align: center;
-	  }
 
 	.BITMEX01 {
 		overflow: visible;
@@ -405,7 +357,7 @@ th {
 		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID6 {
@@ -416,7 +368,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID302 {
@@ -427,7 +379,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	.margin{
 		width: 40px;
@@ -435,12 +387,12 @@ th {
 	.ID95_ {
 		overflow: visible;
 		white-space: nowrap;
-		float: le;
+		float: left;
 		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	.leverage{
 		width: 40px;
@@ -465,7 +417,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID1_31862731 {
@@ -476,7 +428,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	
 	._21_917 {
@@ -487,7 +439,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	
 	._2_5102 {
@@ -498,7 +450,7 @@ th {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
-		color: rgb(41, 41, 41);
+		color: rgba(112,112,112,1);
 	}
 	
 	.ID8_736_0 {
@@ -572,6 +524,6 @@ th {
 
 @media screen and (max-width: 320px){
 	td {
-		padding: 6px 0px 6px 0px;
+		padding: 6px 2px 6px 4px;
 	}
 }
