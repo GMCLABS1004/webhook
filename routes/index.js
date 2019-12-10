@@ -265,20 +265,7 @@ router.get('/api/positionAll', isAuthenticated,  function(req, res){
       cb(null, set_list);
     }
   },
-  function getMargin(set_list, cb){
-    for(i=0; i<set_list.length; i++){
-      margin.find({}, function(error, margin_list){
-        if(error){
-            console.log(error);
-            return;
-        }
-        
-        cb(null, set_list, margin_list); 
-      });
-    }
-   
-  },
-  function getPosition(set_list, margin_list, cb){
+  function getPosition(set_list, cb){
     for(i=0; i<set_list.length; i++){
       setTimeout(getPosition_bitmex(set_list[i], function(error, data){
         if(error){
