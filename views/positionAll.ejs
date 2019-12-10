@@ -114,7 +114,7 @@
                                     
 
                                     $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
-                                    $("#mytable > tbody:last").append("<td><span class='bitmexName'>포지션</span><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
+                                    $("#mytable > tbody:last").append("<td><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
                                     $("#mytable > tbody:last").append("<td><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
                                     // $("#mytable > tbody:last").append("<td align='center'>" + list[i].pgSide  + "</td>");
                                     $("#mytable > tbody:last").append("<td colspan='2'><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");                         
