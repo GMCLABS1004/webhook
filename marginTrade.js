@@ -25,6 +25,7 @@ var signal = require("./models/signal");
 var settings = require("./models/setting");
 var orderDB = require('./models/order');
 var orderDB2 = require('./models/order_avg');
+var order_unfilled = require('./models/order_unfilled');
 var webSetting = require('./webSetting.json');
 
 var logger;
@@ -1866,6 +1867,9 @@ function trade_bitmex(_signal, siteName){
                 isContinue : false, //주문분할 계속할지 여부
             }
             setTimeout(div_exit_bitmex(obj, log_obj), 0);
+
+            //탈출시 미체결 내역 전부 취소 및 삭제
+            setTimeout(all_cancel_unfilled_order(obj.site), 0);
         }
 
         if(action.isEntry === true){
@@ -1999,46 +2003,110 @@ function is_exit(script_data, posName, isSideNum, signal_side_num){
 }
 
 function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
-    path = '/api/v1/'+ endpoint;
-    expires = new Date().getTime() + (60 * 1000); // 1 min in the future
-    var requestOptions;
-    if(verb === 'POST' || verb === 'PUT'){
-        var postBody = JSON.stringify(data);
-        var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
-        var headers = {
-            'content-type' : 'application/json',
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'api-expires': expires,
-            'api-key': apiKey,
-            'api-signature': signature
-        };
-        requestOptions = {
-            headers: headers,
-            url: url+path,
-            method: verb,
-            body: postBody
-        };
-    }else{ //'GET'
-        var query = '?'+ data;
-        var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + query + expires).digest('hex');
-        var headers = {
+  path = '/api/v1/'+ endpoint;
+  expires = new Date().getTime() + (60 * 1000); // 1 min in the future
+  var requestOptions;
+  if(verb === 'POST' || verb === 'PUT' || verb === 'DELETE'){
+      var postBody = JSON.stringify(data);
+      var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
+      var headers = {
           'content-type' : 'application/json',
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
           'api-expires': expires,
           'api-key': apiKey,
           'api-signature': signature
-        };
-        requestOptions = {
-            headers: headers,
-            url: url+path + query,
-            method: verb
-        };
-    }
-    return requestOptions;
+      };
+      requestOptions = {
+          headers: headers,
+          url: url+path,
+          method: verb,
+          body: postBody
+      };
+  }else{ //'GET'
+      var query = '?'+ data;
+      var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + query + expires).digest('hex');
+      var headers = {
+        'content-type' : 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'api-expires': expires,
+        'api-key': apiKey,
+        'api-signature': signature
+      };
+      requestOptions = {
+          headers: headers,
+          url: url+path + query,
+          method: verb
+      };
+  }
+  return requestOptions;
 }
   
+function all_cancel_unfilled_order(site){
+  return function(){
+      order_unfilled.find({site : site}, function(error, json){
+          if(error){
+              console.log(error);
+              return;
+          }
+          for(var i=0; i<json.length; i++){
+              setTimeout(cancel_unfilled_order(site, json[i].orderID), i*500);
+          }
+      });
+  }
+}
+
+
+function cancel_unfilled_order(site, orderID){
+  return function(){
+      async.waterfall([
+          function get_api_key(cb){
+            settings.findOne({site : site}, function(error, json){
+              if(error){
+                console.log(error);
+                return;
+              }
+              url = json.url;
+              apiKey = json.apiKey;
+              secreteKey = json.secreteKey;
+              cb(null);
+            });
+          },
+          function order_cancel(cb){ //주문취소
+            var requestHeader = setRequestHeader(url, apiKey, secreteKey, 'DELETE','order',
+            {orderID : orderID});
+            request(requestHeader, function(error, response, body){
+                if(error){
+                    console.log(error);
+                    return;
+                }
+                //console.log(body);
+                isCancel=true;
+                cb(null);
+            });
+          },
+          function remove_unfilled_order(cb){ //주문삭제
+            if(isCancel === true){
+              order_unfilled.findOneAndRemove({orderID : orderID}, function(error, json){          
+                  if(error){
+                      console.log(error);
+                      return;
+                  }
+                  console.log("미체결 내역 취소성공");
+                  cb(null);
+              });
+            }
+          }
+        ], function(error, results){
+          if(error){
+            console.log(error);
+            return;
+          }
+          
+      });        
+  }
+}
   
 function parse(site, json){
   if(site === 'upbit'){

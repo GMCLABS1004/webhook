@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            setTimeout(get_order_info(), 0);
+            setTimeout(get_unfilled_history(), 0);
+            //var intevID = setInterval(get_last_price(), 1000);
+            $("#buy").click(function(){
+                if(confirm("매수 하시겠습니까?")){
+                    var site = $("#site").val();
+                    var price = $("#price").val();
+                    var orderQty = Math.abs(Number($("#orderQty").val()));
+                    var side = "Buy";
+             
+                    order(site, side, price, orderQty)
+                }
+            });
+
+            $("#sell").click(function(){
+                if(confirm("매도 하시겠습니까?")){
+                    var site = $("#site").val();
+                    var price = $("#price").val();
+                    var orderQty = Math.abs(Number($("#orderQty").val()));
+                    var side = "Sell";
+  
+                    order(site, side, price, orderQty)
+                }
+            });
+            $("#half").click(function(){
+            console.log("0.5x");
+                let size = Number($("#size").val());
+                size = Math.floor(size / 2);
+                $("#orderQty").val(size);
+            });
+            $("#all").click(function(){
+                console.log("0.5x");
+                let size = Number($("#size").val());
+                size = Math.floor(size);
+                $("#orderQty").val(size);
+            });
+        });
+        function fixed1(num){
+            var str = new String(num);
+            var arr = str.split(".");
+            if(arr.length>1){
+                var str2 = arr[1].slice(0,1);
+                return Number(arr[0] + '.' + str2);	
+            }
+            return Number(arr[0]);
+        }
+        function get_order_info(){
+            return function(){
+                $.ajax({
+                    type : "GET",
+                    url : "api/get_order_info?site="+$("#site").val(),
+                    success : function(json){
+                        if(json){
+                            //console.log(json);
+                            $("#last_price").val(fixed1(json.last_price));
+                            $("#avgEntryPrice").val(fixed1(json.avgEntryPrice));
+                            $("#size").val(json.size);
+                        }
+                    },
+                    error : function(request, status, error){
+                        console.log("error : "+error);
+                        //clearInterval(intevID);
+                    }
+                });
+            }
+        }
+        function get_unfilled_history(){
+            return function(){
+                $.ajax({
+                    type : "GET",
+                    url : "api/get_unfilled_history?site="+$("#site").val(),
+                    success : function(json){
+                        if(json){
+                            //console.log(json);
+                            $("#mytable > tbody:last").empty();
+                            for(i=0; i<json.length; i++){
+                                var time1 = json[i].timestamp.split("T")[1].split(":");
+                                $("#mytable > tbody:last").append("<tr>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].price + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='right'>" + json[i].orderQty+ "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='right'>" + json[i].leavesQty+ "</td>"); 
+                                        var obj = {
+                                            site : json[i].site,
+                                            orderID : json[i].orderID
+                                        }
+                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=orderCancel('" + JSON.stringify(obj) + "')>"+ "취소" +"</a>" + "</td>");            
+                                        //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
+
+                                $("#mytable > tbody:last").append("<tr>");
+                            }
+                        }
+                    },
+                    error : function(request, status, error){
+                        console.log("error : "+error);
+                        //clearInterval(intevID);
+                    }
+                });
+            }
+        }
+        function order(site, side, price, orderQty){
+            var obj = {
+                site : site,
+                symbol : 'XBTUSD',
+                side : side,
+                price : price,
+                orderQty : orderQty
+            }
+
+            $.ajax({
+                method : 'POST',
+                url : '/api/order',
+                dataType : "json",
+                data : obj,
+                success : function(json){
+                    alert(json.msg);
+                    setTimeout(get_unfilled_history(), 0);
+                },
+                error(){
+
+                }
+            });
+        }
+        function orderCancel(obj){
+            if(confirm("취소하시겠습니까?")){
+                var json = JSON.parse(obj);
+                console.log(json);
+            
+                $.ajax({
+                    method : 'POST',
+                    url : '/api/orderCancel',
+                    dataType : "json",
+                    data : json,
+                    success : function(json){
+                        alert(json.msg);
+                        setTimeout(get_unfilled_history(), 0);
+                    },
+                    error(){
+
+                    }
+                });
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <h2>주문</h2>
+    <input type="hidden" id="site" value="<%=site%>"> <br>
+    현재가 <input type="text" id="last_price" value=""><br>
+    현재진입가격 <input type="text" id="avgEntryPrice" value=""><br>
+    현재수량 <input type="text" id="size" value=""><br>
+    주문가격 <input type="text" id="price" value=""><br>
+    주문수량 <input type="text" id="orderQty" value="" readonly>
+    <input type="button" id="half" value="0.5x"/>
+    <input type="button" id="all" value="1.0x"/><br>
+    <input type="button" id="buy" value="공매수"> <input type="button" id="sell" value="공매도"><br>
+
+    <h2>미체결내역</h2>
+    <table id="mytable" border="1px">
+        <thead>
+            <tr>
+                <th>no</th>
+                <th>날짜</th>
+                <th>시간</th>
+                <th>가격</th>
+                <th>주문수량</th>
+                <th>잔여수량</th>
+                <th>취소</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</body>
+</html>

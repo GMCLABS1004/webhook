@@ -68,7 +68,8 @@
                                         $("#mytable > tbody:last").append("<tr>");
                                         $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
                                         $("#mytable > tbody:last").append("<td></td>");
-                                        $("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
+                                        //$("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
+                                        $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=limit_order('" + JSON.stringify({site : list[i].site}) + "')><strong>"+ "주문" +"</strong></a>" + "</td>");
                                         obj["side"] = "Buy";
                                         $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매수" +"</strong></a>" + "</td>");
                                         obj["side"] = "Sell";
@@ -166,7 +167,12 @@
             
         }
 
-
+        function limit_order(body){
+            console.log("limit_order : "+body);
+            var json = JSON.parse(body);
+            console.log(json.site);
+            location = window.location.origin + '/order?site='+json.site;
+        }
 
 
         function isPosition(size){

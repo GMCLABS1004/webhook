@@ -12,6 +12,7 @@ var script = require("../models/script");
 var signal = require("../models/signal");
 var setting = require("../models/setting");
 var order = require("../models/order");
+var order_unfilled = require("../models/order_unfilled");
 var orderDB2 = require('../models/order_avg');
 var position = require("../models/position");
 var position2 = require("../models/position2");
@@ -1192,12 +1193,11 @@ function fixed4(num){
   var str2 = arr[1].slice(0,4);
   return Number(arr[0] + '.' + str2);
 }
-
 function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
   path = '/api/v1/'+ endpoint;
   expires = new Date().getTime() + (60 * 1000); // 1 min in the future
   var requestOptions;
-  if(verb === 'POST' || verb === 'PUT'){
+  if(verb === 'POST' || verb === 'PUT' || verb === 'DELETE'){
       var postBody = JSON.stringify(data);
       var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
       var headers = {
@@ -1233,6 +1233,46 @@ function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
   }
   return requestOptions;
 }
+// function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
+//   path = '/api/v1/'+ endpoint;
+//   expires = new Date().getTime() + (60 * 1000); // 1 min in the future
+//   var requestOptions;
+//   if(verb === 'POST' || verb === 'PUT'){
+//       var postBody = JSON.stringify(data);
+//       var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
+//       var headers = {
+//           'content-type' : 'application/json',
+//           'Accept': 'application/json',
+//           'X-Requested-With': 'XMLHttpRequest',
+//           'api-expires': expires,
+//           'api-key': apiKey,
+//           'api-signature': signature
+//       };
+//       requestOptions = {
+//           headers: headers,
+//           url: url+path,
+//           method: verb,
+//           body: postBody
+//       };
+//   }else{ //'GET'
+//       var query = '?'+ data;
+//       var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + query + expires).digest('hex');
+//       var headers = {
+//         'content-type' : 'application/json',
+//         'Accept': 'application/json',
+//         'X-Requested-With': 'XMLHttpRequest',
+//         'api-expires': expires,
+//         'api-key': apiKey,
+//         'api-signature': signature
+//       };
+//       requestOptions = {
+//           headers: headers,
+//           url: url+path + query,
+//           method: verb
+//       };
+//   }
+//   return requestOptions;
+// }
 
 
 function bitmex_position_notSearch(set){
@@ -1989,13 +2029,209 @@ router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
     }
     res.send(obj);
   });
+});
+
+router.get('/order', isAuthenticated, function(req,res){
+  var site = req.query.site;
+  console.log("site : "+ site);
+  res.render('order', {site : site});
+});
+
+router.post('/api/order', isAuthenticated, function(req,res){
+  var site = req.body.site;
+  var url = "";
+  var apiKey = "";
+  var secreteKey = "";
+  var parentID = "";
+  console.log("site : "+ site);
+  async.waterfall([
+    function get_api_key(cb){
+      setting.findOne({site : site}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        url = json.url;
+        apiKey = json.apiKey;
+        secreteKey = json.secreteKey;
+        cb(null);
+      });
+    },
+    function get_parent_order(cb){
+      order.findOne({site : site}).sort({start_time : 'desc'}).limit(1).exec(function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        console.log(json._id);
+        parentID = json._id;
+        console.log(json);
+        cb(null);
+      });
+    },
+    function limit_order(cb){
+      var obj = {
+        symbol : req.body.symbol, 
+        side : req.body.side, 
+        price : req.body.price, 
+        orderQty :  req.body.orderQty, 
+        ordType : "Limit", 
+        text : "dilute"
+      }
+      var requestHeader = setRequestHeader(url, apiKey, secreteKey, 'POST','order', obj);
+      
+      request(requestHeader, function(error, response, body){
+        if(error){
+          res.send(error);
+          return;
+        }
+        console.log(body);
+        var json = JSON.parse(body);
+        var data = {
+          site : site,
+          ordStatus : json.ordStatus, //New
+          orderID : json.orderID,
+          parentID : parentID,
+          price : json.price,
+          side : json.side,
+          orderQty : json.orderQty,
+          leavesQty : json.leavesQty,
+          cumQty : json.cumQty,
+          timestamp : new Date().getTime() + (1000 *60 * 60 * 9)
+        }
+
+        order_unfilled.insertMany(data, function(error, body){
+          if(error){
+            console.log(error);
+            return;
+          }
+          console.log(body);
+          cb(null);
+        });
+        
+      });
+    }
+  ], function(error, results){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send({msg : "주문성공"});
+
+  });
+});
+
+router.post('/api/orderCancel', isAuthenticated, function(req,res){
+  var site = req.body.site;
+  var orderID = req.body.orderID;
+  var url, apiKey, secreteKey="";
+  var isCancel = false;
+  console.log('/api/orderCancel');
+  console.log('site : '+ site);
+  console.log('orderID : '+ orderID);
+  async.waterfall([
+    function get_api_key(cb){
+      setting.findOne({site : site}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        url = json.url;
+        apiKey = json.apiKey;
+        secreteKey = json.secreteKey;
+        cb(null);
+      });
+    },
+    function order_cancel(cb){
+      var requestHeader = setRequestHeader(url, apiKey, secreteKey, 'DELETE','order',
+      {orderID : orderID});
+      request(requestHeader, function(error, response, body){
+          if(error){
+              console.log(error);
+              return;
+          }
+          console.log(body);
+          isCancel=true;
+          cb(null);
+      });
+    },
+    function remove_unfilled_order(cb){
+      if(isCancel === true){
+        order_unfilled.findOneAndRemove({orderID : orderID}, function(error, json){          if(error){
+            console.log(error);
+            return;
+          }
+          cb(null);
+        });
+      }
+    }
+  ], function(error, results){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send({msg : "취소성공"});
+  });
   
 });
 
-function get_start_end(page, cntPerPage){ //10개
-	var end_page = cntPerPage * page.toString().length;
-  console.log(end_page);
-}
+
+router.get('/api/get_order_info', isAuthenticated, function(req,res){
+  var site = req.query.site;
+  console.log(site);
+  var obj ={
+    last_price : 0,
+    avgEntryPrice : 0,
+    size : 0
+  }
+  async.waterfall([
+    function get_last_price(cb){
+      //cb(null);
+      ticker.findOne({site : 'bitmex'}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        console.log(json);
+        
+        obj.last_price = json.last_price;
+        cb(null);
+      });
+    },
+    function get_position(cb){
+      
+      position2.findOne({site : site}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        console.log(json);
+        obj.avgEntryPrice = json.avgEntryPrice;
+        obj.size = json.size;
+        cb(null);
+      });
+    }
+  ], function(error, results){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send(obj);
+  });
+});
+
+router.get('/api/get_unfilled_history', isAuthenticated, function(req, res){
+  var site = req.query.site;
+  order_unfilled.find({site : site}, function(error, json){
+    if(error){
+      console.log(error);
+      return;
+    }
+    console.log(json);
+    res.send(json);
+  });
+});
+
 
 
 router.get('/avg_order_history',  isAuthenticated,  function(req, res){
