@@ -444,7 +444,7 @@ td {
 	}
 	.ID2X {
 		overflow: visible;
-		float: left;
+		float: right;
 		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
 		font-weight: normal;
@@ -656,7 +656,6 @@ td {
 
 #ID6XMA_ALT_V01_____ {
 	overflow: visible;
-	
 	text-align: left;
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
