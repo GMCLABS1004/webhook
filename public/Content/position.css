@@ -88,9 +88,9 @@ table {
   
 @media screen and (max-width: 375px){
 	.head td{
-		width: 80px;
-	  font-size: 12px;
-	  padding: 5px 0px 5px 4px;
+	width: 80px;
+	font-size: 12px;
+	padding: 5px 0px 5px 4px;
 	}
   }
 
@@ -144,13 +144,13 @@ th {
 .___3099 {
 	width: 100px;
   overflow: visible;
-  text-align: right;
+  text-align: center;
 }
 
 .___3100 {
 	width: 100px;
   overflow: visible;
-  text-align: right;
+  text-align: center;
 }
 
 .___3101 {
@@ -172,7 +172,6 @@ th {
 
 .ID6XMA_ALT_V01_____ {
 	overflow: visible;
-	white-space: nowrap;
 	float: right;
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
@@ -361,13 +360,13 @@ th {
 	.___3099 {
 		width: 50px;
 		overflow: visible;
-		text-align: right;
+		text-align: center;
 	  }
 	  
 	  .___3100 {
 		width: 50px;
 		overflow: visible;
-		text-align: right;
+		text-align: center;
 	  }
 	  
 	  .___3101 {
@@ -389,7 +388,6 @@ th {
 	
 	.ID6XMA_ALT_V01_____ {
 		overflow: visible;
-		white-space: nowrap;
 		float: left;
 		font-family: 'Nanum Gothic', sans-serif;
 		font-style: normal;
@@ -603,7 +601,7 @@ th {
 @media screen and (max-width: 570px) {
   th,
   td {
-    padding: 5px 8px 5px 8px;
+    padding: 3px 3px 3px 3px;
     border-bottom: 1px solid rgba(243, 243, 243, 0.541); 
   }
 
@@ -651,7 +649,6 @@ th {
 
 #ID6XMA_ALT_V01_____ {
 	overflow: visible;
-	white-space: nowrap;
 	text-align: left;
 	font-family: 'Nanum Gothic', sans-serif;
 	font-style: normal;
