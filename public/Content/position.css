@@ -208,6 +208,15 @@ td {
 	font-size: 14px;
 	color: rgba(112,112,112,1);
 }
+.ID95_2 {
+	overflow: visible;
+	float: right;
+	font-family: 'Nanum Gothic', sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	color: rgba(112,112,112,1);
+}
 .leverage{
 	width: 100px;
 }
@@ -293,6 +302,15 @@ td {
 
 @media screen and (max-width: 768px){
 	.ID95_ {
+		overflow: visible;
+		float: right;
+		font-family: 'Nanum Gothic', sans-serif;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		color: rgba(112,112,112,1);
+	}
+	.ID95_2 {
 		overflow: visible;
 		float: right;
 		font-family: 'Nanum Gothic', sans-serif;
@@ -401,7 +419,7 @@ td {
 		color: rgba(112,112,112,1);
 	}
 	.margin{
-		width: 40px;
+		width: 30px;
 	}
 	.ID95_ {
 		overflow: visible;
@@ -412,8 +430,17 @@ td {
 		font-size: 12px;
 		color: rgba(112,112,112,1);
 	}
+	.ID95_2 {
+		overflow: visible;
+		float: right;
+		font-family: 'Nanum Gothic', sans-serif;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		color: rgba(112,112,112,1);
+	}
 	.leverage{
-		width: 40px;
+		width: 30px;
 	}
 	.ID2X {
 		overflow: visible;
