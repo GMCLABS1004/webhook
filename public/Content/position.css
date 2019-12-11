@@ -156,7 +156,7 @@ th {
 .___3101 {
 	width: 100px;
   overflow: visible;
-  text-align: right;
+  text-align: center;
 }
 
 .BITMEX01 {
@@ -372,7 +372,7 @@ th {
 	  .___3101 {
 		width: 50px;
 		overflow: visible;
-		text-align: right;
+		text-align: center;
 	  }
 
 	.BITMEX01 {
