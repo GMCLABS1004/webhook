@@ -45,6 +45,7 @@ table {
 }
 
 /* headTable */
+
 .head{
 	background-color: rgba(233, 233, 233, 0.13);
   }
@@ -93,21 +94,12 @@ table {
 	}
   }
 
-  @media screen and (max-width: 360px){
-	.head td{
-	  width: 0px;
-	  font-size: 12px;
-	  padding: 4px 3px 4px 5px;
-	}
-  }
-
   @media screen and (max-width: 330px){
 	.head td{
 	  padding: 1px 0px 1px 0px;
 	  font-size: 12px;
 	}
   }
-
 
 /*====================*/
 section {
@@ -238,7 +230,6 @@ td {
 	font-size: 14px;
 	color: rgba(112,112,112,1);
 }
-
 .ID2X_2 {
 	overflow: visible;
 	float: right;
@@ -348,6 +339,15 @@ td {
 		font-size: 12px;
 		color: rgba(112,112,112,1);
 	}
+	.ID2X_2 {
+		overflow: visible;
+		float: right;
+		font-family: 'Nanum Gothic', sans-serif;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		color: rgba(112,112,112,1);
+	}
 	._21_917 {
 		overflow: visible;
 		float: right;
@@ -372,28 +372,28 @@ td {
 @media screen and (max-width: 425px){
 
 	.___3098 {
-		width: 30px;
+		width: 70px;
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
 	  }
 
 	.___3099 {
-		width: 30px;
+		width: 70px;
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
 	  }
 	  
 	  .___3100 {
-		width: 30px;
+		width: 70px;
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
 	  }
 	  
 	  .___3101 {
-		width: 30px;
+		width: 70px;
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
@@ -416,6 +416,7 @@ td {
 		font-style: normal;
 		font-size: 12px;
 		color: rgba(112,112,112,1);
+		white-space: nowrap;
 	}
 	
 	.ID6 {
@@ -462,16 +463,6 @@ td {
 		width: 30px;
 	}
 	.ID2X {
-		overflow: visible;
-		float: left;
-		font-family: 'Nanum Gothic', sans-serif;
-		font-style: normal;
-		font-weight: normal;
-		font-size: 12px;
-		color: rgba(112,112,112,1);
-	}
-
-	.ID2X_2 {
 		overflow: visible;
 		float: right;
 		font-family: 'Nanum Gothic', sans-serif;
@@ -561,7 +552,7 @@ td {
 	  margin-right: 10px;
 	}
 	td{
-		/* width: 60px; */
+		width: 60px;
 	}
 }
 
@@ -608,20 +599,6 @@ td {
 	text-decoration: none;
 }
 
-#____1_A63_Rectangle_5 {
-	opacity: 0.7;
-}
-.____1_A63_Rectangle_5 {
-	/* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-	overflow: visible;
-	background-color: rgb(163, 163, 163);
-	color: white;
-	border-radius: 5px;
-	font-size: 12px;
-	padding: 6px 11px 6px 11px;
-	text-decoration: none;
-}
-
 #____1_A63_Rectangle_6 {
 	opacity: 0.5;
 }
@@ -650,11 +627,24 @@ td {
 	padding: 6px 11px 6px 11px;
 	text-decoration: none;
 }
+#____1_A63_Rectangle_5 {
+	opacity: 0.7;
+}
+.____1_A63_Rectangle_5 {
+	/* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
+	overflow: visible;
+	background-color: rgb(187, 187, 187);
+	color: white;
+	border-radius: 5px;
+	font-size: 12px;
+	padding: 6px 11px 6px 11px;
+	text-decoration: none;
+}
 
 @media screen and (max-width: 570px) {
   td {
-	width: 0px;
-    padding: 4px 11px 4px 11px;
+	  width: 74px;
+    padding: 3px 3px 3px 3px;
     border-bottom: 1px solid rgba(243, 243, 243, 0.541); 
   }
 
@@ -671,20 +661,6 @@ td {
 	border-radius: 5px;
 	font-size: 12px;
 	padding: 3px;
-	text-decoration: none;
-}
-
-#____1_A63_Rectangle_5 {
-	opacity: 0.7;
-}
-.____1_A63_Rectangle_5 {
-	/* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
-	overflow: visible;
-	background-color: rgb(163, 163, 163);
-	color: white;
-	border-radius: 5px;
-	font-size: 12px;
-	padding: 4px;
 	text-decoration: none;
 }
 
@@ -717,6 +693,20 @@ td {
 	text-decoration: none;
 }
 
+#____1_A63_Rectangle_5 {
+	opacity: 0.7;
+}
+.____1_A63_Rectangle_5 {
+	/* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
+	overflow: visible;
+	background-color: rgb(187, 187, 187);
+	color: white;
+	border-radius: 5px;
+	font-size: 12px;
+	padding: 4px;
+	text-decoration: none;
+}
+
 #ID6XMA_ALT_V01_____ {
 	overflow: visible;
 	text-align: left;
@@ -729,24 +719,17 @@ td {
 
 }
 
-@media screen and (max-width: 375px){
-	td {
-		width: 0px;
-		padding: 5px 5px 5px 5px;
-	}
-}
-
 
 @media screen and (max-width: 330px){
 	td {
-		/* width: 50px; */
+		width: 50px;
 		padding: 5px 2px 5px 4px;
 	}
 }
 
 @media screen and (max-width: 320px){
 	td {
-		/* width: 50px; */
+		width: 50px;
 		padding: 6px 0px 6px 0px;
 	}
 }
