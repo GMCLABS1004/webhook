@@ -8,9 +8,9 @@ mongoose.connect(webSetting.dbPath, function(error){
         console.log(error);
         return;
     }
-
+    //{"timestamp" : {"$gte": new Date("2018-01-01T09:00:00.000Z") }}
     //SMA 계산
-    bid_1h.find({"timestamp" : {"$gte": new Date("2018-01-01T09:00:00.000Z") }}).sort({timestamp : 'desc'}).exec(function(error, list){
+    bid_1h.find({}).sort({timestamp : 'desc'}).exec(function(error, list){
         if(error){
             console.log(error);
             return;
@@ -33,29 +33,6 @@ mongoose.connect(webSetting.dbPath, function(error){
             });
         }
     });
-
-    // bid_1h.find({}).sort({timestamp : 'asc'}).exec(function(error, list){
-    //     if(error){
-    //         console.log(error);
-    //         return;
-    //     }
-    //     var standard = "low"
-    //     var beforeEMA =0;
-    //     for(var idx=0; idx<list.length; idx++){
-            
-    //         var obj = {
-    //             ema : getEMA340(list, idx, standard, beforeEMA)
-    //         }
-    //         beforeEMA = obj.ema;
-    //         bid_1h.findByIdAndUpdate(list[idx]._id, {$set : obj}, function(error, res){
-    //             if(error){
-    //                 console.log(error);
-    //                 return;
-    //             }
-    //             //console.log(res);
-    //         });
-    //     }
-    // });
 
 });
 function fixed1(num){

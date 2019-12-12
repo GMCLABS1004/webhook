@@ -12,12 +12,6 @@ mongoose.connect(webSetting.dbPath, function(error){
     
 });
 
-
-
-
-
-
-
 var url = 'https://www.bitmex.com'
 var symbol = "XBTUSD";
 var binSize = "1h"; //분봉데이터 유형 ex) 1m, 5m, 1h, 1d
@@ -29,12 +23,21 @@ var apiSecret = "XT6vsX8GJr9Fpk1alXe9nv9DuVdY99hSNp96e2tIuhMkp-YN"; //bitmex API
 console.log('restore by day' + d);
 
 //1달 데이터 수집
-//setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, 2016, 12),0);
+setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, 2016, 11),0);
 
-//setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, d.getFullYear(), d.getMonth()+1),0);
+setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, 2016, 12),1000 * 20);
+
+//setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, d.getFullYear(), d.getMonth()+1),1000 * 20);
 
 //1년 데이터 수집
- setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2019), 1000);
+setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2017), 1000 * 60);
+
+//1년 데이터 수집
+setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2018), 1000 * 60 * 6);
+
+//1년 데이터 수집
+setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2019), 1000 * 60 * 12);
+
 
 function RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, year){
     return function(){

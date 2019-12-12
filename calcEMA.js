@@ -9,16 +9,8 @@ mongoose.connect(webSetting.dbPath, function(error){
         return;
     }
 
-    // timestamp : {$gte : new Date("2018-01-01T09:00:00:00:000Z")}
-    // bid_1h.find({"timestamp" : {"$gte": new Date("2018-01-01T09:00:00.000Z") }}).sort({timestamp : 'asc'}).limit(10).exec(function(error, list){
-    //     if(error){
-    //         console.log(error);
-    //         return;
-    //     }
-    //     console.log(list);
-    // });
     //{"timestamp" : {"$gte": new Date("2018-01-01T09:00:00.000Z") }}
-    bid_1h.find({"timestamp" : {"$gte": new Date("2018-01-01T09:00:00.000Z") }}).sort({timestamp : 'asc'}).exec(function(error, list){
+    bid_1h.find().sort({timestamp : 'asc'}).exec(function(error, list){
         if(error){
             console.log(error);
             return;
@@ -70,25 +62,3 @@ function getEMA340(list, idx, standard, beforeEMA){
     return Number(Number(ema).toFixed(11));
     //return fixed1(ema);
 }
-
-
-
-// function getEMA340(list, idx, standard){
-    
-//     if(idx-1 < 0){
-//         return 0;
-//     }
-
-//     if(idx < 339){
-//         return 0;
-//     }
-
-//     if(idx === 339){
-//         return list[idx+1]["sma5"];
-//     }
-
-
-//     ema = ((list[idx][standard] - list[idx-1]["ema"]) * (2/(340+1))) + list[idx-1]["ema"];
-//     return fixed1(ema);
-// }
-
