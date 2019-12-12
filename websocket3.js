@@ -136,7 +136,7 @@ client.onmessage = function(e){
                 console.log("text : "+data[i]["text"]);
                 console.log("--------------");
                 console.log("");
-                setTimeout(move_unfilled_to_filled(username, data[i].orderID));
+                setTimeout(move_unfilled_to_filled(username, data[i].orderID),0);
             }
         }
     }
@@ -194,7 +194,7 @@ function move_unfilled_to_filled(site, orderID){
                     div_cnt : 1,
                     start_time : new Date().getTime() + (1000 * 60 * 60 * 9),
                     end_time : new Date().getTime() + (1000 * 60 * 60 * 9),
-                    type_log : "dilute",
+                    type_log : "limit order",
                     isSend : false //telegram 전송여부
                 }
                 orderDB.insertMany(obj, function(error, res){
@@ -206,7 +206,27 @@ function move_unfilled_to_filled(site, orderID){
                     cb(null);
                 });
             },
+            function change_side(cb){
+                setTimeout(function(){
+                    setting.findOne({site : site}, function(error, json){
+                        if(error){
+                            console.log(error);
+                            return;
+                        }
+                        
+                        if(json.side === 'exit'){
+                            setting.findByIdAndUpdate(json._id, {$set : {side : getType(data.side)}}, function(error, json){
+                                if(error){
+                                    console.log(error);
+                                    return;
+                                }
 
+                            });
+                        }
+                        cb(null);
+                    });
+                },1000);
+            }
         ], function(error, results){
             if(error){
                 console.log(error);
