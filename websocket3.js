@@ -157,7 +157,8 @@ function move_unfilled_to_filled(site, orderID){
                     if(json === null){ //조회결과 없으면
                         return;
                     }
-                    //console.log(json);
+                    console.log("체결된 물타기 주문 검색-> 삭제!!");
+                    console.log(json);
                     data = new Object(json);
                     cb(null);
                 });
