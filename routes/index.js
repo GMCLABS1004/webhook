@@ -18,6 +18,7 @@ var position = require("../models/position");
 var position2 = require("../models/position2");
 var margin = require("../models/margin");
 var ticker = require("../models/ticker");
+var bid_1h = require("../models/bid_1h");
 
 var webSetting = require("../webSetting");
 var moment = require('moment');
@@ -1279,6 +1280,7 @@ function fixed4(num){
   var str2 = arr[1].slice(0,4);
   return Number(arr[0] + '.' + str2);
 }
+
 function setRequestHeader(url, apiKey, apiSecret, verb, endpoint, data){
   path = '/api/v1/'+ endpoint;
   expires = new Date().getTime() + (60 * 1000); // 1 min in the future
@@ -1777,20 +1779,20 @@ router.get('/api/setting_trailing',  isAuthenticated, function(req,res){
     obj["entryPrice"] = json.entryPrice;
     obj["highPrice"] = json.highPrice;
     obj["lowPrice"] = json.lowPrice;
-    position.findOne({}, function(error, data){
+    position2.findOne({site : json.site}, function(error, data){
       if(error){
         res.render('setting_trailing',error);
         return;
       }
-      obj["isSide"] = "";
-      for(var i=0; i<data.list.length; i++){
-        if(data.list[i].site === site){
-          obj.isSide = isPosition(data.list[i].size);
-          console.log("isSide : "+isPosition(data.list[i].size) );
-        }
-      }
-      console.log("obj.isSide : "+ obj.isSide);
-      console.log(obj);
+      obj["isSide"] = isPosition(data.size);
+      // for(var i=0; i<data.list.length; i++){
+      //   if(data.list[i].site === site){
+      //     obj.isSide = isPosition(data.list[i].size);
+      //     console.log("isSide : "+isPosition(data.list[i].size) );
+      //   }
+      // }
+      // console.log("obj.isSide : "+ obj.isSide);
+      // console.log(obj);
       res.send(obj);
     });
   })
@@ -2338,6 +2340,406 @@ router.get('/api/avg_order_history',  isAuthenticated, function(req, res){
     res.send(result);
   });
 });
+
+// router.get('/api/avg_order_history',  isAuthenticated, function(req, res){
+//   console.log("/api/avg_order_history 실행");
+//   var site_type = req.query.site_type;
+//   console.log('site_type : '+ site_type);
+//   orderDB2.find({site_type : site_type}).sort({start_time : "desc"}).exec(function(error, result){
+//     if(error){
+//       console.log(error);
+//       res.send(error);
+//     }
+//     console.log(result);
+//     res.send(result);
+//   });
+// });
+
+
+router.get('/bid_restore',  isAuthenticated, function(req, res){
+  res.render('bid_restore');
+});
+
+router.post('/api/bid_restore',  isAuthenticated, function(req, res){
+  var url = 'https://testnet.bitmex.com'
+  var symbol = "XBTUSD";
+  var apiKey = "qFG9oOJ_Xey0cQ17tRlMjsIN"; //bitmex API key
+  var secretKey = "ofmqAoKMzh7IfE4eU7_e5yYfBtzHRBmxx2zo1CuANzbsNB_c"; //bitmex API Secret
+  
+  var binSize = req.body.binSize; //분봉데이터 유형 ex) 1m, 5m, 1h, 1d
+  var d = req.body.date;
+  var interval=req.body.interval;
+  if(interval === 'month'){
+    d = new Date(d+"-01");
+    setTimeout(RestoreBidMonthData(url, apiKey, secretKey, symbol, binSize, d.getFullYear(), d.getMonth()+1),0);
+  }else if(interval === 'day'){
+    d = new Date(d);
+    setTimeout(RestoreBidData(url, apiKey, secretKey, symbol, binSize, d.getFullYear(), d.getMonth()+1,  d.getDate()),0);
+  }
+  res.send({msg : "복구완료"});
+});
+
+
+
+
+router.get('/bid_search',  isAuthenticated, function(req, res){
+  res.render('bid_search');
+});
+
+router.get('/api/bid_search',  isAuthenticated, function(req, res){
+  console.log("/api/bid_search 실행");
+  var start_time = req.query.start_time;
+  var end_time = req.query.end_time;
+
+  if(start_time === undefined){
+    start_time = new Date().toISOString().slice(0,10);
+  }
+  
+  if(end_time === undefined){
+    end_time = new Date().toISOString().slice(0,10);
+  }
+  bid_1h.find({"timestamp" : {"$gte": new Date(start_time+"T00:00:00.000Z"),"$lte": new Date(end_time+"T23:59:59.000Z")}}).sort({timestamp : "asc"}).exec(function(error, result){
+    if(error){
+      console.log(error);
+      res.send(error);
+    }
+    //console.log(result);
+    res.send(result);
+  });
+});
+
+
+
+
+//startDay부터 endDay까지(ex : 2018-10-01 ~ 2018-10-07) 분봉데이터 수집하여 DB에 저장 
+//범위지정은 4일까지만 허용(많은 데이터 요청시 bitmex에서 접속제한 걸기때문)
+function RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, year, month){
+  return function(){
+      if(month < 10)
+          month = "0" + month;
+      
+      var endDay = getMonthEndDay(year, month);
+      console.log("endDay : "+ endDay);
+      //1일부터
+      var st1 = new Date(year + "-" + month + "-" + "01" + "T00:00:00.00Z");
+      st1.setHours(st1.getHours()-9);
+      st1.setMinutes(1);
+      st1 = st1.toUTCString();
+      console.log(st1);
+
+       //20일까지
+      var et1 = new Date(year + "-" + month + "-" + "20" + "T15:00:00.00Z").toUTCString();
+      console.log(et1);
+      
+      //20일부터
+      var st2 = new Date(year + "-" + month + "-" + "20" + "T15:01:00.00Z").toUTCString();
+      console.log(st2);
+
+      //endDay까지
+      var et2 = new Date(year + "-" + month + "-" + endDay + "T15:00:00.00Z").toUTCString();
+      console.log(et2);
+      
+      var count =720;
+      if(binSize === '1h'){
+          count = 720;
+      }
+      
+      var param1 = 'binSize=' + binSize + '&partial=false&symbol=' + symbol + '&count='+count+'&reverse=false&startTime=' + st1 +'&endTime=' + et1;
+      var param2 = 'binSize=' + binSize + '&partial=false&symbol=' + symbol + '&count='+count+'&reverse=false&startTime=' + st2 +'&endTime=' + et2;
+      console.log(param1);
+      console.log(param2);
+      try{
+          (async function main() {
+              //var result1 = await makeRequest(bitmexURL, apiKeyId, apiSecret, 'GET','trade/bucketed', param1);
+              var requestOptions = setRequestHeader(url, apiKeyId, apiSecret,'GET', 'trade/bucketed', param1);
+              
+              request(requestOptions.url, function(err,response, body){
+                  var result = JSON.parse(body);
+                  var data1 = new Array();
+                  for(var i=0; i<result.length; i++){
+                      var temp = {};
+                      temp["symbol"] = result[i].symbol;
+                      temp["timestamp"] = new Date(result[i].timestamp).getTime() + (1000 * 60 * 60 * 8);
+                      //temp["time1m"] = d;
+                      temp["open"] = result[i].open;
+                      temp["high"] = result[i].high;
+                      temp["low"] = result[i].low;
+                      temp["close"] = result[i].close;
+                      temp["trades"] = result[i].trades;
+                      temp["volume"] = result[i].volume;
+                      temp["vwap"] = result[i].vwap;
+                      temp["lastSize"] = result[i].lastSize;
+                      temp["turnover"] = result[i].turnover;
+                      temp["homeNotional"] = result[i].homeNotional;
+                      temp["foreignNotional"] = result[i].foreignNotional;
+                      data1.push(temp);
+                  }
+                  //console.log("data1");
+                  //console.log(data1);
+                  //분봉데이터 DB에 저장, 데이터 중복 허용 X
+                  for(var i in data1){
+                      bid_1h.updateOne({
+                              symbol : data1[i].symbol, 
+                              timestamp : data1[i].timestamp
+                          }, {
+                              symbol : data1[i].symbol,
+                              timestamp : data1[i].timestamp,
+                              open : data1[i].open,
+                              high : data1[i].high,
+                              low : data1[i].low,
+                              close : data1[i].close,
+                              trades : data1[i].trades,
+                              volume : data1[i].volume,
+                              vwap : data1[i].vwap,
+                              lastSize : data1[i].lastSize,
+                              turnover : data1[i].turnover,
+                              homeNotional : data1[i].homeNotional,
+                              foreignNotional : data1[i].foreignNotional
+                          }, { upsert: true }, 
+                          function(err, body){
+                              if(err) console.log(err);
+                          }
+                      );
+                  }
+              })
+          })();
+  
+          (async function main() {
+              var requestOptions = setRequestHeader(url, apiKeyId, apiSecret,'GET', 'trade/bucketed', param2);
+  
+              request(requestOptions.url, function(err,response, body){
+                  var result = JSON.parse(body);
+                  var data2 = new Array();
+                  for(var i=0; i<result.length; i++){
+                      var temp = {};
+                      temp["symbol"] = result[i].symbol;
+                      temp["timestamp"] = new Date(result[i].timestamp).getTime() + (1000 * 60 * 60 * 8);
+                      //temp["time1m"] = d;
+                      temp["open"] = result[i].open;
+                      temp["high"] = result[i].high;
+                      temp["low"] = result[i].low;
+                      temp["close"] = result[i].close;
+                      temp["trades"] = result[i].trades;
+                      temp["volume"] = result[i].volume;
+                      temp["vwap"] = result[i].vwap;
+                      temp["lastSize"] = result[i].lastSize;
+                      temp["turnover"] = result[i].turnover;
+                      temp["homeNotional"] = result[i].homeNotional;
+                      temp["foreignNotional"] = result[i].foreignNotional;
+                      data2.push(temp);
+                  }
+  
+                  //console.log("data2");
+                  //console.log(data2);
+                  //분봉데이터 DB에 저장, 데이터 중복 허용 X
+                  for(var i in data2){
+                      bid_1h.updateOne({
+                              symbol : data2[i].symbol,
+                              timestamp : data2[i].timestamp
+                          }, {
+                              symbol : data2[i].symbol,
+                               
+                              timestamp : data2[i].timestamp,
+                              open : data2[i].open,
+                              high : data2[i].high,
+                              low : data2[i].low,
+                              close : data2[i].close,
+                              trades : data2[i].trades,
+                              volume : data2[i].volume,
+                              vwap : data2[i].vwap,
+                              lastSize : data2[i].lastSize,
+                              turnover : data2[i].turnover,
+                              homeNotional : data2[i].homeNotional,
+                              foreignNotional : data2[i].foreignNotional
+                          }, { upsert: true }, 
+                          function(err, body){
+                              if(err) console.log(err);
+                          }
+                      );
+                  }
+              })
+              /*
+              var result2 = await makeRequest(bitmexURL, apiKeyId, apiSecret, 'GET','trade/bucketed', param2);
+              
+              */
+          })();
+      }catch(error){ //분봉데이터가 없으면
+          console.log("error : "+ error); 
+          console.log("param1 :"+ param1); //못받은 데이터 출력
+          console.log("param2 :"+ param2); //못받은 데이터 출력
+      }
+  }
+}
+
+function getMonthEndDay(year, month){
+  var d = new Date();//오늘날짜 계산
+  var thisMonth = (parseInt(year) === d.getFullYear() && parseInt(month) === (d.getMonth()+1)); //이번달인지 아닌지 판단
+  var endDay = 0;
+  console.log("thisMonth : "+ thisMonth);
+  if(thisMonth === true){ //이번달이면
+      console.log("이번달");
+      endDay  = d.getDate(); //현재일자 GET
+  }else{ //이번달이 아니면 
+      console.log("이번달X");
+      endDay = new Date(year, month, 0).getDate(); //month의 마지막 날짜 ex) 31 or 30 or 28 
+  }
+  return endDay;
+}
+
+
+function RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, year, month, startday){
+  return function(){
+      var startDay = (startday < 10)? "0" + startday : startday;
+      if(month < 10)
+          month = "0" + month;
+      var dateString = year + "-" + month + "-" + startDay + "T00:00:00.00Z";
+      
+      var st1 = new Date(dateString);
+      st1.setHours(st1.getHours()-9);
+      st1.setMinutes(1);
+      var et1 = new Date(st1);
+      et1.setMinutes(720);
+      
+      var st2 = new Date(st1);
+      st2.setHours(st2.getHours() + 12);
+      st2.setMinutes(1);
+
+      var et2 = new Date(st1);
+      et2.setMinutes(720);
+      
+      var count =720;
+      if(binSize === '1m'){
+          count = 720;
+      }else if(binSize === '1h'){
+          count = 12;
+      }
+  
+      var param1 = 'binSize=' + binSize + '&partial=false&symbol=' + symbol + '&count='+count+'&reverse=false&startTime=' + st1.toUTCString() +'&endTime=' + et1.toUTCString();
+      var param2 = 'binSize=' + binSize + '&partial=false&symbol=' + symbol + '&count='+count+'&reverse=false&startTime=' + st2.toUTCString() +'&endTime=' + et2.toUTCString();
+      console.log(param1);
+      console.log(param2);
+      try{
+          (async function main() {
+              //var result1 = await makeRequest(bitmexURL, apiKeyId, apiSecret, 'GET','trade/bucketed', param1);
+              var requestOptions = setRequestHeader(url, apiKeyId, apiSecret,'GET', 'trade/bucketed', param1);
+              
+              request(requestOptions.url, function(err,response, body){
+                  var result = JSON.parse(body);
+                  var data1 = new Array();
+                  for(var i=0; i<result.length; i++){
+                      var temp = {};
+                      temp["symbol"] = result[i].symbol;
+                      temp["timestamp"] = new Date(result[i].timestamp).getTime() + (1000 * 60 * 60 * 8);
+                      //temp["time1m"] = d;
+                      temp["open"] = result[i].open;
+                      temp["high"] = result[i].high;
+                      temp["low"] = result[i].low;
+                      temp["close"] = result[i].close;
+                      temp["trades"] = result[i].trades;
+                      temp["volume"] = result[i].volume;
+                      temp["vwap"] = result[i].vwap;
+                      temp["lastSize"] = result[i].lastSize;
+                      temp["turnover"] = result[i].turnover;
+                      temp["homeNotional"] = result[i].homeNotional;
+                      temp["foreignNotional"] = result[i].foreignNotional;
+                      data1.push(temp);
+                  }
+                  //console.log("data1");
+                  //console.log(data1);
+                  //분봉데이터 DB에 저장, 데이터 중복 허용 X
+                  for(var i in data1){
+                      bid_1h.updateOne({
+                              symbol : data1[i].symbol, 
+                              timestamp : data1[i].timestamp
+                          }, {
+                              symbol : data1[i].symbol,
+                              timestamp : data1[i].timestamp,
+                              open : data1[i].open,
+                              high : data1[i].high,
+                              low : data1[i].low,
+                              close : data1[i].close,
+                              trades : data1[i].trades,
+                              volume : data1[i].volume,
+                              vwap : data1[i].vwap,
+                              lastSize : data1[i].lastSize,
+                              turnover : data1[i].turnover,
+                              homeNotional : data1[i].homeNotional,
+                              foreignNotional : data1[i].foreignNotional
+                          }, { upsert: true }, 
+                          function(err, body){
+                              if(err) console.log(err);
+                          }
+                      );
+                  }
+              })
+          })();
+  
+          (async function main() {
+              var requestOptions = setRequestHeader(url, apiKeyId, apiSecret,'GET', 'trade/bucketed', param2);
+  
+              request(requestOptions.url, function(err,response, body){
+                  var result = JSON.parse(body);
+                  var data2 = new Array();
+                  for(var i=0; i<result.length; i++){
+                      var temp = {};
+                      temp["symbol"] = result[i].symbol;
+                      temp["timestamp"] = new Date(result[i].timestamp).getTime() + (1000 * 60 * 60 * 8);
+                      //temp["time1m"] = d;
+                      temp["open"] = result[i].open;
+                      temp["high"] = result[i].high;
+                      temp["low"] = result[i].low;
+                      temp["close"] = result[i].close;
+                      temp["trades"] = result[i].trades;
+                      temp["volume"] = result[i].volume;
+                      temp["vwap"] = result[i].vwap;
+                      temp["lastSize"] = result[i].lastSize;
+                      temp["turnover"] = result[i].turnover;
+                      temp["homeNotional"] = result[i].homeNotional;
+                      temp["foreignNotional"] = result[i].foreignNotional;
+                      data2.push(temp);
+                  }
+  
+                  //console.log("data2");
+                  //console.log(data2);
+                  //분봉데이터 DB에 저장, 데이터 중복 허용 X
+                  for(var i in data2){
+                      bid_1h.updateOne({
+                              symbol : data2[i].symbol,
+                              timestamp : data2[i].timestamp
+                          }, {
+                              symbol : data2[i].symbol,
+                               
+                              timestamp : data2[i].timestamp,
+                              open : data2[i].open,
+                              high : data2[i].high,
+                              low : data2[i].low,
+                              close : data2[i].close,
+                              trades : data2[i].trades,
+                              volume : data2[i].volume,
+                              vwap : data2[i].vwap,
+                              lastSize : data2[i].lastSize,
+                              turnover : data2[i].turnover,
+                              homeNotional : data2[i].homeNotional,
+                              foreignNotional : data2[i].foreignNotional
+                          }, { upsert: true }, 
+                          function(err, body){
+                              if(err) console.log(err);
+                          }
+                      );
+                  }
+              })
+              /*
+              var result2 = await makeRequest(bitmexURL, apiKeyId, apiSecret, 'GET','trade/bucketed', param2);
+              
+              */
+          })();
+      }catch(error){ //분봉데이터가 없으면
+          console.log("error : "+ error); 
+          console.log("param1 :"+ param1); //못받은 데이터 출력
+          console.log("param2 :"+ param2); //못받은 데이터 출력
+      }
+  }
+}
 
 
  module.exports = router;

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            init();
+            $("#restore").click(function(){
+                var interval = $("#interval option:selected").val()
+                var binSize = $("#binSize option:selected").val()
+                var date = $("#date").val();
+                var month = $("#month").val();
+                var data = {
+                    interval : interval,
+                    binSize : binSize,
+                    date : (date !== undefined)? date : month
+                }
+                $.ajax({
+                    method : "POST",
+                    url : "/api/bid_restore",
+                    dataType : "json",
+                    data : data,
+                    success : function(json){
+
+                    },
+                    error : function(){
+
+                    }
+                });
+            });
+            $("#interval").change(function(){
+                var val = $("#interval option:selected").val();
+                if(val === 'day'){
+                    console.log(val);
+                    $("#html_date").html('date : <input type="date" id="date" ><br>');
+                }else if(val === 'month'){
+                    console.log(val);
+                    $("#html_date").html('month : <input type="month" id="month" ><br>');
+                }
+                init();
+            });
+        });
+        function init(){
+            var d = new Date();
+            var year = d.getFullYear();
+            var month = d.getMonth()+1;
+            var day = d.getDate()+1;
+            $("#date").val(year + "-" + month + "-" + day);
+            $("#month").val(year + "-" + month);
+        }
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Restore Price Data</h2>
+    <progress value="0" max="100"></progress><br>
+    interval : <select id="interval">
+            <option value="day" selected>day</option>
+            <option value="month">month</option>
+    </select><br>
+    bin size : <select id="binSize">
+        <!-- <option value="1m" >1m</option> -->
+        <!-- <option value="5m">5m</option> -->
+        <option value="1h" selected>1h</option>
+        <!-- <option value="1d">1d</option> -->
+    </select><br>
+    <div id="html_date">
+        date : <input type="date" id="date" ><br>
+    </div>
+    
+    <button id="restore">복구</button><br>
+</body>
+</html>
