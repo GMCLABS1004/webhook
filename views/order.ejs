@@ -166,7 +166,8 @@
                                 var time1 = json[i].timestamp.split("T")[1].split(":");
                                 $("#mytable > tbody:last").append("<tr>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>");  
-                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");  
                                         $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='center'>" + price_comma(json[i].price,'bitmex') + "</td>");  
                                         $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(json[i].orderQty,'bitmex')+ "</td>"); 
@@ -262,6 +263,7 @@
                 <th>no</th>
                 <th>날짜</th>
                 <th>시간</th>
+                <th>타입</th>
                 <th>가격</th>
                 <th>수량</th>
                 <th>가치</th>
