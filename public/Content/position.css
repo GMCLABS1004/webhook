@@ -90,7 +90,7 @@ table {
 	.head td{
 	  width: 85px;
 	  font-size: 12px;
-	  padding: 4px 3px 4px 3px;
+	  padding: 4px 2px 4px 2px;
 	}
   }
 
@@ -175,6 +175,7 @@ td {
 	font-style: normal;
 	font-size: 14px;
 	color: rgba(112,112,112,1);
+	white-space: nowrap;
 }
 
 .ID6 {
@@ -221,6 +222,15 @@ td {
 	width: 100px;
 }
 .ID2X {
+	overflow: visible;
+	float: right;
+	font-family: 'Nanum Gothic', sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 14px;
+	color: rgba(112,112,112,1);
+}
+.ID2X_2 {
 	overflow: visible;
 	float: right;
 	font-family: 'Nanum Gothic', sans-serif;
@@ -329,6 +339,15 @@ td {
 		font-size: 12px;
 		color: rgba(112,112,112,1);
 	}
+	.ID2X_2 {
+		overflow: visible;
+		float: right;
+		font-family: 'Nanum Gothic', sans-serif;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 12px;
+		color: rgba(112,112,112,1);
+	}
 	._21_917 {
 		overflow: visible;
 		float: right;
@@ -364,6 +383,7 @@ td {
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
+		  padding: 0px 10px;
 	  }
 	  
 	  .___3100 {
@@ -371,6 +391,7 @@ td {
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
+		  padding: 0px 10px;
 	  }
 	  
 	  .___3101 {
@@ -378,6 +399,7 @@ td {
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
+		  padding: 0px 10px;
 	  }
 
 	.BITMEX01 {
@@ -397,6 +419,7 @@ td {
 		font-style: normal;
 		font-size: 12px;
 		color: rgba(112,112,112,1);
+		white-space: nowrap;
 	}
 	
 	.ID6 {
@@ -576,6 +599,7 @@ td {
 	border-radius: 5px;
 	font-size: 12px;
 	padding: 5px 10px 5px 10px;
+	text-decoration: none;
 }
 
 #____1_A63_Rectangle_6 {
@@ -590,6 +614,7 @@ td {
 	border-radius: 5px;
 	font-size: 12px;
 	padding: 5px 10px 5px 10px;
+	text-decoration: none;
 }
 
 #____1_A63_Rectangle_8 {
@@ -603,6 +628,20 @@ td {
 	border-radius: 5px;
 	font-size: 12px;
 	padding: 6px 11px 6px 11px;
+	text-decoration: none;
+}
+#____1_A63_Rectangle_5 {
+	opacity: 0.7;
+}
+.____1_A63_Rectangle_5 {
+	/* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
+	overflow: visible;
+	background-color: rgb(187, 187, 187);
+	color: white;
+	border-radius: 5px;
+	font-size: 12px;
+	padding: 6px 11px 6px 11px;
+	text-decoration: none;
 }
 
 @media screen and (max-width: 570px) {
@@ -625,6 +664,7 @@ td {
 	border-radius: 5px;
 	font-size: 12px;
 	padding: 3px;
+	text-decoration: none;
 }
 
 #____1_A63_Rectangle_6 {
@@ -639,6 +679,7 @@ td {
 	border-radius: 5px;
 	font-size: 12px;
 	padding: 3px;
+	text-decoration: none;
 }
 
 #____1_A63_Rectangle_8 {
@@ -652,6 +693,21 @@ td {
 	border-radius: 5px;
 	font-size: 12px;
 	padding: 4px;
+	text-decoration: none;
+}
+
+#____1_A63_Rectangle_5 {
+	opacity: 0.7;
+}
+.____1_A63_Rectangle_5 {
+	/* filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161)); */
+	overflow: visible;
+	background-color: rgb(187, 187, 187);
+	color: white;
+	border-radius: 5px;
+	font-size: 12px;
+	padding: 4px;
+	text-decoration: none;
 }
 
 #ID6XMA_ALT_V01_____ {
@@ -661,6 +717,7 @@ td {
 	font-style: normal;
 	font-size: 14px;
 	color: rgba(112,112,112,1);
+	white-space: nowrap;
 }
 
 }
