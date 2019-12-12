@@ -144,6 +144,7 @@ client.onmessage = function(e){
 
 function move_unfilled_to_filled(site, orderID){
     return function(){
+        console.log("move_unfilled_to_filled 실행!!!");
         var data = {};
         var walletBalance = 0;
         async.waterfall([
@@ -232,6 +233,7 @@ function move_unfilled_to_filled(site, orderID){
                 console.log(error);
                 return;
             }
+            console.log("move_unfilled_to_filled 실행!!!");
         })
     }
 }
@@ -366,7 +368,7 @@ function bitmex_position_parse(site, obj){
   
     if(typeof(obj.unrealisedPnl) !== "undefined" && obj.unrealisedPnl !== null) 
         posObj["unrealisedPnl"] =  obj.unrealisedPnl * 0.00000001;
-  
+    
     if(typeof(obj.unrealisedRoePcnt) !== "undefined" && obj.unrealisedRoePcnt !== null) 
         posObj["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
   
