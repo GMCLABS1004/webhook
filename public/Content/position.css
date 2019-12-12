@@ -90,7 +90,7 @@ table {
 	.head td{
 	  width: 85px;
 	  font-size: 12px;
-	  padding: 4px 3px 4px 3px;
+	  padding: 4px 2px 4px 2px;
 	}
   }
 
@@ -383,6 +383,7 @@ td {
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
+		  padding: 0px 10px;
 	  }
 	  
 	  .___3100 {
@@ -390,6 +391,7 @@ td {
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
+		  padding: 0px 10px;
 	  }
 	  
 	  .___3101 {
@@ -397,6 +399,7 @@ td {
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
+		  padding: 0px 10px;
 	  }
 
 	.BITMEX01 {
