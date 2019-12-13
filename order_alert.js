@@ -41,6 +41,7 @@ function alert(){
                 "가격 : " +  price_comma(res[i].price) + "\n" +
                 "수량 : " +  (res[i].amount) + "\n" +
                 "가치 : " +  amount_comma(res[i].value) + "\n" +
+                "수익 : " +  (res[i].benefit) + "\n" +
                 "수익율 : " +  (res[i].benefitRate) + "\n" +
                 "날짜 : " +  dateArr[0] + "\n" + 
                 "시간 : " +  dateArr[1].split("Z")[0];
