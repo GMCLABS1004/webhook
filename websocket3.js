@@ -145,54 +145,180 @@ client.onmessage = function(e){
 function move_unfilled_to_filled(site, orderID){
     return function(){
         console.log("move_unfilled_to_filled 실행!!!");
-        var data = {};
-        var walletBalance = 0;
+        var myPos = {
+            walletBalance : 0,
+            avgEntryPrice : 0,
+            highPrice : 0,
+            lowPrice : 0,
+            side : "",
+            amount : 0
+        }
+        var unfilled ={};
+        var totalAsset =0;
+        var type = "";
+        var benefit =0;
+        var benefitRate =0;
+
+        var filled = {
+            walletBalance : 0,
+            side : "",
+            amount : 0,
+        }
+        
+        var updateObj = {}
+
         async.waterfall([
             function remove_unfilled_order(cb){
+                //미체결 내역 조회
                 order_unfilled.findOneAndRemove({orderID : orderID}, function(error, json){
                     if(error){
                         console.log(error);
                         return;
                     }
+
                     if(json === null){ //조회결과 없으면
                         return;
                     }
+
                     console.log("체결된 물타기 주문 검색-> 삭제!!");
                     console.log(json);
-                    data = new Object(json);
+                    unfilled = new Object(json);
                     cb(null);
                 });
             },
-            function get_wallet_balance(cb){
+            function get_margin(cb){ //총자산 조회
                 margin.findOne({site : site}, function(error, json){
                     if(error){
                         console.log(error);
                         return;
                     }
-
                     //console.log(json);
-                    walletBalance =json.walletBalance;
+                    myPos.walletBalance =json.walletBalance; //총자산
                     cb(null);
                 });
             },
+            function get_postion(cb){ //진입평균가, 진입수량, 실제 포지션 조회
+                position2.findOne({site : site}, function(error, json){
+                    if(error){
+                        console.log(error);
+                        return;
+                    }
+                    myPos.avgEntryPrice = fixed1(json.avgEntryPrice); //진입평균가
+                    myPos.amount = json.size; //사이즈 
+                    
+                    //실제 포지션
+                    if(json.size > 0){
+                        myPos.side = "long";
+                    }else if(json.size < 0){
+                        myPos.side = "short";
+                    }else{
+                        myPos.side = "exit";
+                    }
+                    cb(null);
+                });
+            },
+            function get_filled_history(cb){ //체결내역 조회
+                orderDB.findOne({site : site}).sort({start_time : "desc"}).limit(1).exec(function(error, json){
+                    if(error){
+                        console.log(error);
+                        return;
+                    }
+                    filled.walletBalance = json.totalAsset;
+                    filled.side = json.type; //long, short, exit
+                    filled.amount = json.amount;
+                    cb(null);
+                });
+            },
+            function isCondition(cb){
+                if(filled.side === 'long' && Math.abs(myPos.amount) > filled.amount && Math.abs(myPos.amount) > unfilled.orderQty){
+                    console.log("물타기 Buy");
+                    type = "long"
+                    totalAsset = filled.walletBalance;
+                    updateObj["entryPrice"] = myPos.avgEntryPrice;
+                    return cb(null);
+                }
+
+                if(filled.side === 'short' && Math.abs(myPos.amount) > filled.amount && Math.abs(myPos.amount) > unfilled.orderQty){
+                    console.log("물타기 Sell");
+                    type = "short"
+                    totalAsset = filled.walletBalance;
+                    updateObj["entryPrice"] = myPos.avgEntryPrice;
+                    return cb(null);
+                }
+
+                if(filled.side === 'exit' && myPos.amount > 0){
+                    console.log("진입 Buy");
+                    totalAsset = filled.walletBalance;
+                    updateObj["side"] = 'long';
+                    updateObj["entryPrice"] = unfilled.price;
+                    updateObj["highPrice"] = unfilled.price;
+                    updateObj["lowPrice"] = unfilled.price;
+                    return cb(null);
+                }
+
+                if(filled.side === 'exit' && myPos.amount < 0){
+                    console.log("진입 Sell");
+                    type = "short"
+                    totalAsset = filled.walletBalance;
+                    updateObj["side"] = 'short';
+                    updateObj["entryPrice"] = unfilled.price;
+                    updateObj["highPrice"] = unfilled.price;
+                    updateObj["lowPrice"] = unfilled.price;
+                    return cb(null);
+                }
+
+                if(filled.side === 'long' && filled.side === myPos.side && 0 < Math.abs(myPos.amount) && Math.abs(myPos.amount) < filled.amount){
+                    console.log("Buy 절반탈출");
+                    type = "exit"
+                    totalAsset = myPos.walletBalance;
+                    benefit = filled.walletBalance - myPos.walletBalance;
+                    benefitRate = (benefit / myPos.walletBalance) * 100; 
+                    updateObj = null;
+                    return cb(null);
+                }
+
+                if(filled.side === 'short' && filled.side === myPos.side && 0 < Math.abs(myPos.amount) && Math.abs(myPos.amount) < filled.amount){
+                    console.log("Sell 절반탈출");
+                    type = "exit"
+                    totalAsset = myPos.walletBalance;
+                    benefit = filled.walletBalance - myPos.walletBalance;
+                    benefitRate = (benefit / myPos.walletBalance) * 100;
+                    updateObj = null;
+                    return cb(null);
+                }
+
+                if(myPos.amount === 0){
+                    console.log("완전탈출");
+                    type = "exit"
+                    totalAsset = myPos.walletBalance;
+                    benefit = filled.walletBalance - myPos.walletBalance;
+                    benefitRate = (benefit / myPos.walletBalance) * 100; 
+
+                    updateObj["side"] = 'exit';
+                    updateObj["entryPrice"] = unfilled.price;
+                    updateObj["highPrice"] = unfilled.price;
+                    updateObj["lowPrice"] = unfilled.price;
+                    return cb(null);
+                }
+            },
             function insert_filled_order(cb){
-                var totalOrdValue = data.orderQty / data.price
+                var totalOrdValue = unfilled.orderQty / unfilled.price
                 var obj={
                     site : site,
                     symbol : 'XBTUSD',
-                    totalAsset : walletBalance,//walletBalance, //총자산
-                    type : getType(data.side), //진입
-                    side : data.side, //Buy or Sell
+                    totalAsset : totalAsset,//walletBalance, //총자산
+                    type : type, //exit, long, short
+                    side : unfilled.side, //Buy or Sell
                     side_num : 0,
-                    start_price : fixed1(data.price), //가격
-                    end_price :  fixed1(data.price), //가격
-                    price :  fixed1(data.price), //가격
-                    amount : data.orderQty, //수량
+                    start_price : fixed1(unfilled.price), //가격
+                    end_price :  fixed1(unfilled.price), //가격
+                    price :  fixed1(unfilled.price), //가격
+                    amount : unfilled.orderQty, //수량
                     value : fixed4(totalOrdValue), //가치
                     feeRate : 0.075 * 0.01,
                     fee : fixed8(totalOrdValue * (0.075 * 0.01) ),
-                    benefit : 0,
-                    benefitRate : 0,
+                    benefit : fixed8(benefit),
+                    benefitRate : fixed4(benefitRate),
                     div_cnt : 1,
                     start_time : new Date().getTime() + (1000 * 60 * 60 * 9),
                     end_time : new Date().getTime() + (1000 * 60 * 60 * 9),
@@ -208,26 +334,20 @@ function move_unfilled_to_filled(site, orderID){
                     cb(null);
                 });
             },
-            function change_side(cb){
-                setTimeout(function(){
-                    setting.findOne({site : site}, function(error, json){
-                        if(error){
-                            console.log(error);
-                            return;
-                        }
-                        
-                        if(json.side === 'exit'){
-                            setting.findByIdAndUpdate(json._id, {$set : {side : getType(data.side)}}, function(error, json){
-                                if(error){
-                                    console.log(error);
-                                    return;
-                                }
-                                console.log("물타기 상태변경!");
-                            });
-                        }
-                        cb(null);
-                    });
-                },1000);
+            function change_status(cb){
+                if(updateObj === null){
+                    console.log("물타기 상태변경X");
+                    return cb(null);
+                }
+
+                setting.updateOne({site : site}, {$set : updateObj}, function(error, json){
+                    if(error){
+                        console.log(error);
+                        return;
+                    }
+                    console.log("물타기 상태변경!");
+                    cb(null);
+                });
             }
         ], function(error, results){
             if(error){
@@ -235,9 +355,10 @@ function move_unfilled_to_filled(site, orderID){
                 return;
             }
             console.log("move_unfilled_to_filled 실행!!!");
-        })
+        });
     }
 }
+
 function getType(side){
     if(side ==='Buy' || side ==='bid'){
         return 'long'
