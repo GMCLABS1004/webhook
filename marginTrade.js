@@ -421,6 +421,41 @@ mongoose.connect(webSetting.dbPath, function(error){
 
 setInterval(marginTrade(), 3000);
 
+
+// function sync_side(){
+//   return function(){
+//     var json=[];
+//     async.waterfall([
+//       function get_setting_side(cb){
+//         settings.find({execFlag : true}, function(error, data){
+//           if(error){
+//             console.log(error);
+//             return;
+//           }
+//           json = new Object(data);
+//           cb(null);
+//         });
+//       },
+//       function get_real_side(cb){
+//         for(var i=0; i<json.length; i++){
+//           position2.findOne({site : json[i].site}, function(error, data){
+//             if(error){
+//               console.log(error);
+//               return;
+//             }
+            
+//           });
+//         }
+//       }
+
+      
+//     ], function(error, results){
+
+//     });
+ 
+//   }
+// }
+
 function marginTrade(){
   return function(){
     signal.find({}).sort({timestamp : "asc"}).exec(function(error, res){

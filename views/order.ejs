@@ -45,6 +45,24 @@
                 size = Math.floor(size);
                 $("#orderQty").val(size);
             });
+            $("#default").click(function(){
+                console.log("default");
+                var price = Number($("#price").val());
+                console.log("price : "+price);
+                if(isNaN(price)){
+                    alert("주문가격을 올바르게 입력하세요. 특수기호 입력불가");
+                    return;
+                }
+                if(price === 0){
+                    alert("주문가격을 먼저 입력하세요");
+                    return;
+                }
+                var availableMargin = Number($("#availableMargin").val());
+                var leverage = Number($("#leverage").val());
+                var margin = Number($("#margin").val()) * 0.01;
+                var size = Math.floor(((availableMargin * margin) * leverage) * price);
+                $("#orderQty").val(size);
+            });
         });
         function fixed1(num){
             var str = new String(num);
@@ -120,9 +138,12 @@
                             console.log(json);
                             $("#last_price").html("현재가 : "+ price_comma(fixed1(json.last_price),'bitmex'));
                             $("#avgEntryPrice").html("현재진입가격 : "+price_comma(fixed1(json.avgEntryPrice),'bitmex'));
-                            
                             $("#size_text").html("현재수량 : "+amount_comma(json.size,'bitmex'));
                             $("#size").val(json.size);
+                            // $("#availableMargin_text").html("이용가능밸런스 : "+value_comma(json.availableMargin,'bitmex'));
+                            $("#availableMargin").val(json.availableMargin);
+                            $("#margin").val(json.margin);
+                            $("#leverage").val(json.leverage);
                         }
                     },
                     error : function(request, status, error){
@@ -145,8 +166,10 @@
                                 var time1 = json[i].timestamp.split("T")[1].split(":");
                                 $("#mytable > tbody:last").append("<tr>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>");  
-                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>");
+                                    
                                         $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");  
                                         $("#mytable > tbody:last").append("<td align='center'>" + price_comma(json[i].price,'bitmex') + "</td>");  
                                         $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(json[i].orderQty,'bitmex')+ "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='right'>" + value_comma(fixed4(json[i].orderQty/json[i].price),'bitmex') + "</td>");
@@ -217,15 +240,21 @@
 </head>
 <body>
     <h2><%=site%> 주문</h2>
-    <input type="hidden" id="site" value="<%=site%>">
-    <input type="hidden" id="size" value="">
+     <input type="hidden" id="site" value="<%=site%>">
+     <input type="hidden" id="size" value="">
+     <input type="hidden" id="availableMargin" value="">
+     <input type="hidden" id="margin" value="">
+     <input type="hidden" id="leverage" value="">
     <div id="last_price">현재가 : </div>
     <div id="avgEntryPrice">현재진입가격 : </div>
     <div id="size_text"">현재수량 : </div>
+    <!-- <div id="availableMargin_text"">이용가능수량 : </div> -->
+    
     주문가격 <input type="text" id="price" value=""><br>
     주문수량 <input type="text" id="orderQty" value="" readonly>
     <input type="button" id="half" value="0.5x"/>
-    <input type="button" id="all" value="1.0x"/><br>
+    <input type="button" id="all" value="1.0x"/>
+    <input type="button" id="default" value="default"/><br>
     <input type="button" id="buy" value="매수"> <input type="button" id="sell" value="매도"><br>
 
     <h2>미체결내역</h2>
@@ -235,6 +264,7 @@
                 <th>no</th>
                 <th>날짜</th>
                 <th>시간</th>
+                <th>타입</th>
                 <th>가격</th>
                 <th>수량</th>
                 <th>가치</th>

@@ -136,7 +136,7 @@ client.onmessage = function(e){
                 console.log("text : "+data[i]["text"]);
                 console.log("--------------");
                 console.log("");
-                setTimeout(move_unfilled_to_filled(username, data[i].orderID));
+                setTimeout(move_unfilled_to_filled(username, data[i].orderID),0);
             }
         }
     }
@@ -144,6 +144,7 @@ client.onmessage = function(e){
 
 function move_unfilled_to_filled(site, orderID){
     return function(){
+        console.log("move_unfilled_to_filled 실행!!!");
         var data = {};
         var walletBalance = 0;
         async.waterfall([
@@ -156,7 +157,8 @@ function move_unfilled_to_filled(site, orderID){
                     if(json === null){ //조회결과 없으면
                         return;
                     }
-                    //console.log(json);
+                    console.log("체결된 물타기 주문 검색-> 삭제!!");
+                    console.log(json);
                     data = new Object(json);
                     cb(null);
                 });
@@ -194,7 +196,7 @@ function move_unfilled_to_filled(site, orderID){
                     div_cnt : 1,
                     start_time : new Date().getTime() + (1000 * 60 * 60 * 9),
                     end_time : new Date().getTime() + (1000 * 60 * 60 * 9),
-                    type_log : "dilute",
+                    type_log : "limit order",
                     isSend : false //telegram 전송여부
                 }
                 orderDB.insertMany(obj, function(error, res){
@@ -206,12 +208,33 @@ function move_unfilled_to_filled(site, orderID){
                     cb(null);
                 });
             },
-
+            function change_side(cb){
+                setTimeout(function(){
+                    setting.findOne({site : site}, function(error, json){
+                        if(error){
+                            console.log(error);
+                            return;
+                        }
+                        
+                        if(json.side === 'exit'){
+                            setting.findByIdAndUpdate(json._id, {$set : {side : getType(data.side)}}, function(error, json){
+                                if(error){
+                                    console.log(error);
+                                    return;
+                                }
+                                console.log("물타기 상태변경!");
+                            });
+                        }
+                        cb(null);
+                    });
+                },1000);
+            }
         ], function(error, results){
             if(error){
                 console.log(error);
                 return;
             }
+            console.log("move_unfilled_to_filled 실행!!!");
         })
     }
 }
@@ -346,7 +369,7 @@ function bitmex_position_parse(site, obj){
   
     if(typeof(obj.unrealisedPnl) !== "undefined" && obj.unrealisedPnl !== null) 
         posObj["unrealisedPnl"] =  obj.unrealisedPnl * 0.00000001;
-  
+    
     if(typeof(obj.unrealisedRoePcnt) !== "undefined" && obj.unrealisedRoePcnt !== null) 
         posObj["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
   

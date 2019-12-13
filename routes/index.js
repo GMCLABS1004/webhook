@@ -2164,7 +2164,7 @@ router.post('/api/order', isAuthenticated, function(req,res){
         price : req.body.price, 
         orderQty :  req.body.orderQty, 
         ordType : "Limit", 
-        text : "dilute"
+        text : "limit order"
       }
       var requestHeader = setRequestHeader(url, apiKey, secreteKey, 'POST','order', obj);
       
@@ -2270,7 +2270,10 @@ router.get('/api/get_order_info', isAuthenticated, function(req,res){
   var obj ={
     last_price : 0,
     avgEntryPrice : 0,
-    size : 0
+    size : 0,
+    availableMargin : 0,
+    levarge : 0,
+    margin : 0
   }
   async.waterfall([
     function get_last_price(cb){
@@ -2298,6 +2301,27 @@ router.get('/api/get_order_info', isAuthenticated, function(req,res){
         obj.size = json.size;
         cb(null);
       });
+    },
+    function get_avail_balance(cb){
+      margin.findOne({site : site}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        obj.availableMargin = json.availableMargin;
+        cb(null);
+      })
+    },
+    function get_leverage_margin(cb){
+      setting.findOne({site : site}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        obj.leverage = json.leverage;
+        obj.margin = json.margin;
+        cb(null);
+      })
     }
   ], function(error, results){
     if(error){
@@ -2356,28 +2380,6 @@ router.get('/api/avg_order_history',  isAuthenticated, function(req, res){
 // });
 
 
-router.get('/bid_restore',  isAuthenticated, function(req, res){
-  res.render('bid_restore');
-});
-
-router.post('/api/bid_restore',  isAuthenticated, function(req, res){
-  var url = 'https://testnet.bitmex.com'
-  var symbol = "XBTUSD";
-  var apiKey = "qFG9oOJ_Xey0cQ17tRlMjsIN"; //bitmex API key
-  var secretKey = "ofmqAoKMzh7IfE4eU7_e5yYfBtzHRBmxx2zo1CuANzbsNB_c"; //bitmex API Secret
-  
-  var binSize = req.body.binSize; //분봉데이터 유형 ex) 1m, 5m, 1h, 1d
-  var d = req.body.date;
-  var interval=req.body.interval;
-  if(interval === 'month'){
-    d = new Date(d+"-01");
-    setTimeout(RestoreBidMonthData(url, apiKey, secretKey, symbol, binSize, d.getFullYear(), d.getMonth()+1),0);
-  }else if(interval === 'day'){
-    d = new Date(d);
-    setTimeout(RestoreBidData(url, apiKey, secretKey, symbol, binSize, d.getFullYear(), d.getMonth()+1,  d.getDate()),0);
-  }
-  res.send({msg : "복구완료"});
-});
 
 
 
@@ -2408,6 +2410,36 @@ router.get('/api/bid_search',  isAuthenticated, function(req, res){
   });
 });
 
+router.get('/bid_restore',  isAuthenticated, function(req, res){
+  res.render('bid_restore');
+});
+
+router.post('/api/bid_restore',  isAuthenticated, function(req, res){
+  
+  // setting.findOne({execFlag : true}, function(error, json){
+  //   if(error){
+  //     console.log(error);
+  //     return;
+  //   }
+
+  // });
+  var url = 'https://www.bitmex.com'
+  var symbol = "XBTUSD";
+  var apiKey = "IYT7EVPuT-d39e2oYbixiFxJ"; //bitmex API key
+  var secretKey = "XT6vsX8GJr9Fpk1alXe9nv9DuVdY99hSNp96e2tIuhMkp-YN"; //bitmex API Secret
+  
+  var binSize = req.body.binSize; //분봉데이터 유형 ex) 1m, 5m, 1h, 1d
+  var d = req.body.date;
+  var interval=req.body.interval;
+  if(interval === 'month'){
+    d = new Date(d+"-01");
+    setTimeout(RestoreBidMonthData(url, apiKey, secretKey, symbol, binSize, d.getFullYear(), d.getMonth()+1),0);
+  }else if(interval === 'day'){
+    d = new Date(d);
+    setTimeout(RestoreBidData(url, apiKey, secretKey, symbol, binSize, d.getFullYear(), d.getMonth()+1,  d.getDate()),0);
+  }
+  res.send({msg : "복구완료"});
+});
 
 
 
