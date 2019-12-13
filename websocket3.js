@@ -271,7 +271,7 @@ function move_unfilled_to_filled(site, orderID){
                     console.log("Buy 절반탈출");
                     type = "exit"
                     totalAsset = myPos.walletBalance;
-                    benefit = filled.walletBalance - myPos.walletBalance;
+                    benefit = myPos.walletBalance - filled.walletBalance;
                     benefitRate = (benefit / myPos.walletBalance) * 100; 
                     updateObj = null;
                     return cb(null);
@@ -281,7 +281,7 @@ function move_unfilled_to_filled(site, orderID){
                     console.log("Sell 절반탈출");
                     type = "exit"
                     totalAsset = myPos.walletBalance;
-                    benefit = filled.walletBalance - myPos.walletBalance;
+                    benefit = myPos.walletBalance - filled.walletBalance;
                     benefitRate = (benefit / myPos.walletBalance) * 100;
                     updateObj = null;
                     return cb(null);
@@ -291,7 +291,7 @@ function move_unfilled_to_filled(site, orderID){
                     console.log("완전탈출");
                     type = "exit"
                     totalAsset = myPos.walletBalance;
-                    benefit = filled.walletBalance - myPos.walletBalance;
+                    benefit = myPos.walletBalance - filled.walletBalance;
                     benefitRate = (benefit / myPos.walletBalance) * 100; 
 
                     updateObj["side"] = 'exit';
