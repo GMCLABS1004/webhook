@@ -29,55 +29,54 @@ client.on('initialize', () => console.log("[" + getCurrentTimeString() +"] " + '
 var last_price = 0;
 
 client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
-  //console.log(`Got update for ${tableName}:${symbol}. Current state:\n${JSON.stringify(data).slice(0, 100)}...`);
-  //console.log("update price1 : "+data[0].price);
-  
   if(tableName === 'trade'){
-    //console.log(data);
-    //console.log(data[0].price);
-    //console.log(data[data.length-1].price);
     if(last_price !== data[data.length-1].price){
         console.log(block_signal);
         last_price = data[data.length-1].price;
-       setTimeout(update_ticker(last_price), 0);
-       setTimeout(update_low_high_price(last_price), 0);
+        setTimeout(update_ticker(last_price), 0);
+        setTimeout(update_low_high_price(last_price), 0);
     }
   }
-  //console.log(data);
-  // Do something with the table data...
 });
 
 
-// client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
-//     if(tableName === 'tradeBin1h'){
-//         //console.log("tradeBin1h");
-//         //console.log(data[length]);
-//         var length = data.length-1;
-//         var json = data[length];
-//         var obj = {
-//             symbol : json.symbol,
-//             timestamp : new Date(json.timestamp).getTime() + (1000 * 60 * 60 * 8),
-//             open : json.open,
-//             high : json.high,
-//             low : json.low,
-//             close : json.close,
-//             trades : json.trades,
-//             volume : json.volume,
-//             vwap : json.vwap,
-//             lastSize : json.lastSize,
-//             turnover : json.turnover,
-//             homeNotional : json.homeNotional,
-//             foreignNotional : json.foreignNotional,
-//             sma1 : 0,
-//             sma2 : 0,
-//             sma3 : 0,
-//             sma4 : 0,
-//             sma5 : 0,
-//             ema : 0,
-//         }
-//         setTimeout(update_bin1h(obj), 0);
-//     }
-// });
+client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
+    if(tableName === 'tradeBin1h'){
+        //console.log("tradeBin1h");
+        //console.log(data[length]);
+
+        ////분봉업데이트
+        // var length = data.length-1;
+        // var json = data[length];
+        // var obj = {
+        //     symbol : json.symbol,
+        //     timestamp : new Date(json.timestamp).getTime() + (1000 * 60 * 60 * 8),
+        //     open : json.open,
+        //     high : json.high,
+        //     low : json.low,
+        //     close : json.close,
+        //     trades : json.trades,
+        //     volume : json.volume,
+        //     vwap : json.vwap,
+        //     lastSize : json.lastSize,
+        //     turnover : json.turnover,
+        //     homeNotional : json.homeNotional,
+        //     foreignNotional : json.foreignNotional,
+        //     sma1 : 0,
+        //     sma2 : 0,
+        //     sma3 : 0,
+        //     sma4 : 0,
+        //     sma5 : 0,
+        //     ema : 0,
+        // }
+        // setTimeout(update_bin1h(obj), 0);
+
+        var length = data.length-1;
+        var json = data[length];
+        var close = json.close;
+
+    }
+});
 
 function update_bin1h(obj){
     return function(){
@@ -283,20 +282,6 @@ function update_low_high_price(last_price){
                 if(json[i].isTrailingStop === true){
                     setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
                 }
-                
-
-                // var exec_trail = true;
-                // for(var j=0; j<check_list.length; j++){
-                //     if(check_list[j] === obj.scriptNo){
-                //         exec_trail=false;
-                //     }
-                // }
-
-                // if(exec_trail === true){
-                //     //트레일링 스탑 실행
-                //     setTimeout(trailingStop(last_price, lowPrice, highPrice, obj), 0);
-                //     check_list.push(obj.scriptNo);
-                // }
             }
         });
     }
@@ -405,69 +390,6 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
         //});
     }
 }
-
-// function trailingStop(last_price, lowPrice, highPrice, obj){
-//     return function(){
-//         //position(obj, function(isPosition){
-            
-//             //console.log("isPosition :" + isPosition);
-//             var entryPrice = obj.entryPrice; //진입가격
-//             var trailingHighRate = obj.trailingHighRate * 0.01; 
-//             var trailingLowRate = obj.trailingLowRate * 0.01; 
-//             var trailFee = entryPrice * (obj.trailFeeRate * 0.01);
-//             var scriptNo = obj.scriptNo;
-//             var side_num = obj.side_num;
-//             var alpha = 0;
-            
-//             console.log("highPrice : "+ highPrice);
-//             console.log("entryPrice : "+ entryPrice);
-//             console.log("highPrice - entryPrice : "+ (highPrice - entryPrice));
-//             console.log("trailingHighRate : "+ trailingHighRate);
-//             console.log("trailFee :"+ trailFee);
-//             // console.log("val : "+ (highPrice - entryPrice) * trailingHighRate)
-//             // console.log("entryPrice + val : "+ (entryPrice+val) )
-//             console.log(obj.side);
-            
-//             //포지션 조회
-//             if(obj.side === 'long'){//isPosition === 'long'
-//                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
-//                 console.log("alpha : "+alpha);
-//                 console.log("entryPrice + alpha : "+ (entryPrice + alpha));
-//                 console.log("last_price : "+ (last_price));
-//                 console.log("entryPrice + trailFee : "+ (entryPrice + trailFee));
-//                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
-//                     console.log({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
-//                     signal.insertMany({scriptNo : scriptNo , side : "Buy Exit", side_num : side_num, type_log : "trailingStop"});
-//                 }
-//             }else if(obj.side === 'short'){ //isPosition === 'short'
-//                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
-//                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
-//                     console.log({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
-//                     signal.insertMany({scriptNo : scriptNo , side : "Sell Exit", side_num : side_num, type_log : "trailingStop"});
-//                 }
-//             }
-            
-//             //현재포지션 exit, 셋팅 : long -> 롱재진입
-//             if(obj.side === 'long'){ //isPosition === 'exit' && 
-//                 alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
-//                 console.log("alpha : "+alpha);
-//                 console.log("entryPrice + alpha : "+ (entryPrice + alpha));
-//                 console.log("last_price : "+ (last_price));
-//                 console.log("entryPrice + trailFee : "+ (entryPrice + trailFee));
-//                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(고점가 - 진입가) * 비율
-//                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - trailFee){ //진입가 + 
-//                     console.log({scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
-//                     signal.insertMany({scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "long rentry"});
-//                 }
-//             }else if(obj.side === 'short' ){ //isPosition === 'exit' && 
-//                 if(entryPrice + trailFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
-//                     console.log({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
-//                     signal.insertMany({scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "short retry"});
-//                 }
-//             }
-//         //});
-//     }
-// }
 
 
 function position(data, cb){
