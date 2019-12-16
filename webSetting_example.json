@@ -4,5 +4,6 @@
     "dbPath2" : "mongodb://127.0.0.1:27017/finance",
     "url" : "http://127.0.0.1",
     "redis_exec" : true,
-    "redis_server" : "52.79.228.147"
+    "redis_server" : "52.79.228.147",
+    "down_path" : "/home/gmc/바탕화면/workspace/webhook/download/"
 }
