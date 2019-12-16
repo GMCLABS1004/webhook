@@ -39,25 +39,25 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
   }
 });
 
-
-var first_ts_falg =false; //1시간 분봉에서만 사용
 client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
     if(tableName === 'tradeBin1h'){
         var length = data.length-1;
         var json = data[length];
         var close_price = json.close;
-        if(first_ts_falg ===false){
-            first_ts_falg = true;
+       
+        var min = new Date().getMinutes();
+        if(min > 0){
+            console.log("[" + getCurrentTimeString() +"] " + "ts 실행X");
             return;
-        }
-        
+        }   
+
         //1시간봉 종가를 기준으로 트레일링 스탑 실행
         settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
             if(error){
                 console.log("[" + getCurrentTimeString() +"] " + error);
                 return;
             }
-            console.log("[" + getCurrentTimeString() +"] " + "ts 실행");
+            console.log("[" + getCurrentTimeString() +"] " + "ts 실행O");
             for(var i=0; i<json.length; i++){
                 //현재가를 기준으로 트레일링 스탑
                 if(json[i].isTrailingStop === true){
