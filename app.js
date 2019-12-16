@@ -16,6 +16,9 @@ var flash = require('connect-flash');
 var users = require('./routes/users');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var json2xls = require('json2xls');
+
+
 var webSetting = require('./webSetting.json');
 if(webSetting.redis_exec){
   var client = redis.createClient({host: webSetting.redis_server, port: 6379});
@@ -46,6 +49,7 @@ if(webSetting.redis_exec){
     }
   }));
 }
+app.use(json2xls.middleware);
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
