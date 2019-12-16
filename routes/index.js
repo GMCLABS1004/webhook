@@ -2444,7 +2444,6 @@ router.get('/api/bid_download',  isAuthenticated, function(req, res){
     console.log("엑셀 전송");
     res.xls('data.xlsx', arr);
   });
-  
 });
 
 function price_comma(num, site){

@@ -248,6 +248,7 @@ function move_unfilled_to_filled(site, orderID){
 
                 if(filled.side === 'exit' && myPos.amount > 0){
                     console.log("진입 Buy");
+                    type="long";
                     totalAsset = filled.walletBalance;
                     updateObj["side"] = 'long';
                     updateObj["entryPrice"] = unfilled.price;
