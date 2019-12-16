@@ -150,7 +150,7 @@ router.post('/api/updateScript', isAuthenticated,  function(req, res, next){
     short4 : create_array(req.body.short4),
     short5 : create_array(req.body.short5)
   }
-  console.log(data);
+  //console.log(data);
   script.updateOne({scriptNo : scriptNo}, {$set : data}, function(error, bpdy){
     if(error){
       console.log(error);
@@ -193,9 +193,9 @@ router.get('/api/findScript', isAuthenticated,  function(req, res, next){
 });
 
 router.post('/api/insertScript', isAuthenticated,  function(req, res, next){
-  console.log('/api/insertScript');
+  //console.log('/api/insertScript');
   var data = new Object(req.body);
-  console.log(data);
+  //console.log(data);
   var obj = {
     scriptName  : req.body.scriptName,
     scriptNo  : Number(req.body.scriptNo),
@@ -207,7 +207,7 @@ router.post('/api/insertScript', isAuthenticated,  function(req, res, next){
       console.log(error);
       return;
     }
-    console.log(body);
+    //console.log(body);
     res.send({});
   });
 });
@@ -603,7 +603,7 @@ router.get('/api/positionAll_internal', isAuthenticated,  function(req, res, nex
       res.send(error);
       return;
     }
-    console.log(json);
+    //console.log(json);
     res.send(json[0]);
   });
 
@@ -1468,7 +1468,7 @@ router.get('/api/manage',  function(req, res, next){
       console.log(error);
       return;
     }
-    console.log(json);
+    //console.log(json);
     for(i=0; i<json.length; i++){
       var flag = "unchecked";
       (json[i].execFlag === true)? flag = "checked" : flag = "unchecked"
@@ -1486,7 +1486,7 @@ router.get('/api/manage',  function(req, res, next){
           res.render('financialTradeSet',status);
       }
       else if(processes){
-        console.log(processes);
+        //console.log(processes);
         //실행중인 봇 체크 
         for(i=0; i<botArr.length; i++){
           for(j=0; j<processes.length; j++){
@@ -1495,7 +1495,7 @@ router.get('/api/manage',  function(req, res, next){
             }
           }
         }
-        console.log("botArr : " + JSON.stringify(botArr));
+        //console.log("botArr : " + JSON.stringify(botArr));
       }
       
       status["isMargin"]["execBot"] = botArr[0].isExec;
@@ -1658,25 +1658,10 @@ router.get('/setting',  isAuthenticated, function(req,res){
       res.render('setting',error);
       return;
     }
-    console.log(json);
+    //console.log(json);
     res.render('setting',json);
   })
 });
-
-
-
-router.get('/setting',  isAuthenticated, function(req,res){
-  var site = req.query.site;
-  setting.findOne({site : site},function(error, json){
-    if(error){
-      res.render('setting',error);
-      return;
-    }
-    console.log(json);
-    res.render('setting',json);
-  });
-});
-
 
 
 router.get('/api/read_setting',  isAuthenticated, function(req,res){
@@ -1686,7 +1671,7 @@ router.get('/api/read_setting',  isAuthenticated, function(req,res){
       res.render('setting',error);
       return;
     }
-    console.log(json);
+    //console.log(json);
     res.send(json);
   });
 });
@@ -1753,7 +1738,7 @@ router.post('/api/setting_status',  isAuthenticated,  function(req,res){
       console.log(error);
       return;
     }
-    console.log(body);
+    //console.log(body);
     res.send({"msg" : "설정업데이트 성공"});
   });
 });
@@ -1774,6 +1759,7 @@ router.get('/api/setting_trailing',  isAuthenticated, function(req,res){
       res.render('setting_trailing',error);
       return;
     }
+    console.log(json);
     obj["site"] = json.site;
     obj["trailingHighRate"] = json.trailingHighRate;
     obj["trailingLowRate"] = json.trailingLowRate;
@@ -1783,6 +1769,13 @@ router.get('/api/setting_trailing',  isAuthenticated, function(req,res){
     obj["entryPrice"] = json.entryPrice;
     obj["highPrice"] = json.highPrice;
     obj["lowPrice"] = json.lowPrice;
+
+    if(json.site === 'bithumb' || json.site === 'coinone' || json.site === 'upbit' || json.site === 'korbit'){
+      obj["isSide"] = null;
+      res.send(obj);
+      return;
+    }
+
     position2.findOne({site : json.site}, function(error, data){
       if(error){
         res.render('setting_trailing',error);
@@ -1884,7 +1877,7 @@ router.post('/api/siteOnOff', isAuthenticated, function(req,res){
   var execFlag = Boolean(Number(req.body.execFlag));
   console.log("site : " + site);
   console.log("execFlag : " + execFlag);
-
+  
   setting.updateOne({site : site},{$set : {execFlag : execFlag}},function(error, body){
     if(error){
       console.log(error);
@@ -2054,8 +2047,8 @@ router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
       order.find({site : site}).count(function(error, count){
         total_cnt = count;
         //total_cnt / cntPerPage / page;
-        console.log("total_cnt : " + total_cnt);
-        console.log("cntPerPage : " + cntPerPage);
+        // console.log("total_cnt : " + total_cnt);
+        // console.log("cntPerPage : " + cntPerPage);
         // totalPageSize = Math.ceil(total_cnt / cntPerPage) -1;  //총 페이지 사이즈 = (글 갯수 - 1 / w_size ) + 1
         // if(totalPageSize % cntPerPage > 0){
         //   totalPageSize = totalPageSize+1;
@@ -2077,7 +2070,7 @@ router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
           isPrev=true;
           prev_page_num = start_page_num-1; //이전페이지 번호
         }
-        
+
         //다음페이지 활성화
         if(end_page_num < totalPageSize){
           isNext = true;
@@ -2092,16 +2085,16 @@ router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
       console.log(error);
       res.send(error);
     }
-    console.log("page : "+ page);
-    console.log("total_cnt : "+ total_cnt);
-    console.log("cntPerPage : "+ cntPerPage);
-    console.log("totalPageSize : "+ totalPageSize);
-    console.log("start_page_num : "+ start_page_num);
-    console.log("end_page_num : "+ end_page_num);
-    console.log("start_asset : "+start_asset);
-    console.log("end_asset : "+end_asset);
-    console.log("totalBenefit : "+totalBenefit);
-    console.log("totalBenefitRate : "+totalBenefitRate);
+    // console.log("page : "+ page);
+    // console.log("total_cnt : "+ total_cnt);
+    // console.log("cntPerPage : "+ cntPerPage);
+    // console.log("totalPageSize : "+ totalPageSize);
+    // console.log("start_page_num : "+ start_page_num);
+    // console.log("end_page_num : "+ end_page_num);
+    // console.log("start_asset : "+start_asset);
+    // console.log("end_asset : "+end_asset);
+    // console.log("totalBenefit : "+totalBenefit);
+    // console.log("totalBenefitRate : "+totalBenefitRate);
     var obj = {
       idx : (page -1) * cntPerPage,
       page : page, //현재 페이지
@@ -2249,7 +2242,8 @@ router.post('/api/orderCancel', isAuthenticated, function(req,res){
     },
     function remove_unfilled_order(cb){
       if(isCancel === true){
-        order_unfilled.findOneAndRemove({orderID : orderID}, function(error, json){          if(error){
+        order_unfilled.findOneAndRemove({orderID : orderID}, function(error, json){          
+          if(error){
             console.log(error);
             return;
           }
@@ -2358,13 +2352,13 @@ router.get('/avg_order_history',  isAuthenticated,  function(req, res){
 router.get('/api/avg_order_history',  isAuthenticated, function(req, res){
   console.log("/api/avg_order_history 실행");
   var site_type = req.query.site_type;
-  console.log('site_type : '+ site_type);
+  //console.log('site_type : '+ site_type);
   orderDB2.find({site_type : site_type}).sort({start_time : "desc"}).exec(function(error, result){
     if(error){
       console.log(error);
       res.send(error);
     }
-    console.log(result);
+    //console.log(result);
     res.send(result);
   });
 });

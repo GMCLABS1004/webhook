@@ -2,9 +2,7 @@
 'use strict';
 var ticker = require('./models/ticker');
 var bid_1h = require('./models/bid_1h');
-
 var signal = require('./models/signal'); 
-
 var settings = require("./models/setting");
 var mongoose = require('mongoose');
 var webSetting = require('./webSetting.json');
@@ -44,13 +42,13 @@ client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
         var length = data.length-1;
         var json = data[length];
         var close_price = json.close;
-       
+        
         var min = new Date().getMinutes();
         if(min > 0){
             console.log("[" + getCurrentTimeString() +"] " + "ts 실행X");
             return;
-        }   
-
+        }
+        
         //1시간봉 종가를 기준으로 트레일링 스탑 실행
         settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
             if(error){
