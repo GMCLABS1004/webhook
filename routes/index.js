@@ -2077,7 +2077,7 @@ router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
           isPrev=true;
           prev_page_num = start_page_num-1; //이전페이지 번호
         }
-
+        
         //다음페이지 활성화
         if(end_page_num < totalPageSize){
           isNext = true;
@@ -2414,46 +2414,46 @@ router.get('/api/bid_search',  isAuthenticated, function(req, res){
   });
 });
 
-router.get('/api/bid_download',  isAuthenticated, function(req, res){
-  const file = webSetting.down_path+'data.xlsx';
-  fs.access(file, fs.F_OK, (err) => {
-    if(err) {
-      console.error(err)
-      return
-    }
-    res.download(file); // Set disposition and send it.
-  });
-
-  // bid_1h.find({}).sort({timestamp : "asc"}).exec(function(error, json){
-  //   if(error){
-  //     console.log(error);
-  //     res.send(error);
+router.get('/api/bid_down',  isAuthenticated, function(req, res){
+  // const file = webSetting.down_path+'data.xlsx';
+  // fs.access(file, fs.F_OK, (err) => {
+  //   if(err) {
+  //     console.error(err)
+  //     return
   //   }
-  //   var arr = [];
-  //   for(var i=0; i<json.length; i++){
-  //     var time1 = json[i].timestamp.toISOString();
-  //     var time1 = time1.split("T")[0];
-  //     var time2 = json[i].timestamp.toISOString();
-  //     var time2 = time2.split("T")[1].split(":");
-  //     var obj = {
-  //       t1 : time1,
-  //       t2 : time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0],
-  //       open : price_comma(json[i].open, 'bitmex'),
-  //       high : price_comma(json[i].high, 'bitmex'),
-  //       low : price_comma(json[i].low, 'bitmex'),
-  //       close : price_comma(json[i].close, 'bitmex'),
-
-  //       sma1 : price_comma(json[i].sma1, 'bitmex'),
-  //       sma2 : price_comma(json[i].sma2, 'bitmex'),
-  //       sma3 : price_comma(json[i].sma3, 'bitmex'),
-  //       sma4 : price_comma(json[i].sma4, 'bitmex'),
-  //       ema : price_comma(json[i].ema, 'bitmex'),
-  //     };
-  //     arr.push(obj);
-  //   }
-  //   console.log("엑셀 전송");
-  //   res.xls('data.xlsx', arr);
+  //   res.download(file); // Set disposition and send it.
   // });
+  var start_time = req.query.start_time;
+  var end_time = req.query.end_time;
+  bid_1h.find({"timestamp" : {"$gte": new Date(start_time+"T00:00:00.000Z"),"$lte": new Date(end_time+"T23:59:59.000Z")}}).sort({timestamp : "asc"}).exec(function(error, json){
+    if(error){
+      console.log(error);
+      res.send(error);
+    }
+    var arr = [];
+    for(var i=0; i<json.length; i++){
+      var time1 = json[i].timestamp.toISOString();
+      var time1 = time1.split("T")[0];
+      var time2 = json[i].timestamp.toISOString();
+      var time2 = time2.split("T")[1].split(":");
+      var obj = {
+        t1 : time1,
+        t2 : time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0],
+        open : price_comma(json[i].open, 'bitmex'),
+        high : price_comma(json[i].high, 'bitmex'),
+        low : price_comma(json[i].low, 'bitmex'),
+        close : price_comma(json[i].close, 'bitmex'),
+
+        sma1 : price_comma(json[i].sma1, 'bitmex'),
+        sma2 : price_comma(json[i].sma2, 'bitmex'),
+        sma3 : price_comma(json[i].sma3, 'bitmex'),
+        sma4 : price_comma(json[i].sma4, 'bitmex'),
+        ema : price_comma(json[i].ema, 'bitmex'),
+      };
+      arr.push(obj);
+    }
+    res.xls('bid.xlsx', arr);
+  });
 });
 
 function price_comma(num, site){

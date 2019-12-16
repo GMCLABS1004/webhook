@@ -1,6 +1,6 @@
 var json2xls = require('json2xls');
-var json2excel = require('js2excel').json2excel;
-console.log(json2excel);
+// var json2excel = require('js2excel').json2excel;
+// console.log(json2excel);
 var numeral = require('numeral');
 var webSetting = require("./webSetting");
 var bid_1h = require("./models/bid_1h");

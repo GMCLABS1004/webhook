@@ -8,7 +8,9 @@
     
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script>
-
+        function bid_down(start_time, end_time){
+            location.href = 'api/bid_down?start_time='+start_time+'&end_time='+end_time;
+        }
         function bid_search(start_time, end_time){
             $.ajax({
                 type : "GET",
@@ -70,14 +72,19 @@
                 var end_time = $("#end_time").val();
                 bid_search(start_time, end_time);
             });
+            $("#bid_down").click(function(){
+                var start_time = $("#start_time").val();
+                var end_time = $("#end_time").val();
+                bid_down(start_time, end_time);
+            })
         });
     </script>
     <title>Document</title>
 </head>
 <body>
     시작일자 : <input type='date' id="start_time"/><br>
-    종료일자 : <input type='date' id="end_time"/> <input type="button" id="logSearch" value="조회"/><br>
-    <a href="api/bid_download">엑셀 다운로드</a>
+    종료일자 : <input type='date' id="end_time"/> <input type="button" id="logSearch" value="조회"/>&nbsp;<input type="button" id="bid_down" value="다운"/><br>
+    
     <h2>분봉 조회</h2>
     <table id="mytable" border="1px">
         <tr>
