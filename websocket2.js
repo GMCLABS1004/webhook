@@ -29,7 +29,7 @@ var last_price = 0;
 client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
   if(tableName === 'trade'){
     if(last_price !== data[data.length-1].price){
-        console.log(block_signal);
+        //console.log(block_signal);
         last_price = data[data.length-1].price;
         setTimeout(update_ticker(last_price), 0);
         setTimeout(update_low_high_price(last_price), 0);
@@ -212,7 +212,7 @@ function update_ticker(last_price){
                     console.log("[" + getCurrentTimeString() +"] " + error);
                     return;
                 }
-                console.log("[" + getCurrentTimeString() +"] " + "update price : "+last_price);
+                //console.log("[" + getCurrentTimeString() +"] " + "update price : "+last_price);
             }
         );
     }

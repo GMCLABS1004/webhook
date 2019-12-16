@@ -63,7 +63,7 @@ client.onclose = function(){
     //setTimeout(startWebsocket(), 10000);
     setTimeout(function() {
         process.exit(1);//connect();
-    }, 10000);
+    }, 500);
 };
  
 client.onmessage = function(e){
@@ -98,7 +98,7 @@ client.onmessage = function(e){
                             return;
                         }
                         //console.log(body);
-                        console.log("margin 갱신");
+                        //console.log("margin 갱신");
                     }
                 )
             }
@@ -121,7 +121,7 @@ client.onmessage = function(e){
                             return;
                         }
                     
-                        console.log("position 갱신");
+                        //console.log("position 갱신");
                     }
                 )
             }
