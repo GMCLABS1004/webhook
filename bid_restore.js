@@ -22,21 +22,24 @@ var apiKeyId = "IYT7EVPuT-d39e2oYbixiFxJ"; //bitmex API key
 var apiSecret = "XT6vsX8GJr9Fpk1alXe9nv9DuVdY99hSNp96e2tIuhMkp-YN"; //bitmex API Secret
 console.log('restore by day' + d);
 
-//1달 데이터 수집
-setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, 2016, 11),0);
+setTimeout(RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, 2019, 12, 12),0);
 
-setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, 2016, 12),1000 * 20);
 
-//setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, d.getFullYear(), d.getMonth()+1),1000 * 20);
+// //1달 데이터 수집
+// setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, 2016, 11),0);
 
-//1년 데이터 수집
-setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2017), 1000 * 60);
+// setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, 2016, 12),1000 * 20);
 
-//1년 데이터 수집
-setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2018), 1000 * 60 * 6);
+// //setTimeout(RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, d.getFullYear(), d.getMonth()+1),1000 * 20);
 
-//1년 데이터 수집
-setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2019), 1000 * 60 * 12);
+// //1년 데이터 수집
+// setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2017), 1000 * 60);
+
+// //1년 데이터 수집
+// setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2018), 1000 * 60 * 6);
+
+// //1년 데이터 수집
+// setTimeout(RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, 2019), 1000 * 60 * 12);
 
 
 function RestoreBidYearData(url, apiKeyId, apiSecret, symbol, binSize, year){
@@ -284,8 +287,8 @@ function RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, year, mo
                         temp["foreignNotional"] = result[i].foreignNotional;
                         data1.push(temp);
                     }
-                    //console.log("data1");
-                    //console.log(data1);
+                    console.log("data1");
+                    console.log(data1);
                     //분봉데이터 DB에 저장, 데이터 중복 허용 X
                     for(var i in data1){
                         bid_1h.updateOne({
@@ -339,8 +342,8 @@ function RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, year, mo
                         data2.push(temp);
                     }
     
-                    //console.log("data2");
-                    //console.log(data2);
+                    console.log("data2");
+                    console.log(data2);
                     //분봉데이터 DB에 저장, 데이터 중복 허용 X
                     for(var i in data2){
                         bid_1h.updateOne({

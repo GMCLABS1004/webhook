@@ -1,7 +1,10 @@
 
 'use strict';
 var ticker = require('./models/ticker');
+var bid_1h = require('./models/bid_1h');
+
 var signal = require('./models/signal'); 
+
 var settings = require("./models/setting");
 var mongoose = require('mongoose');
 var webSetting = require('./webSetting.json');
@@ -33,8 +36,7 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
     //console.log(data);
     //console.log(data[0].price);
     //console.log(data[data.length-1].price);
-    
-    if(last_price !== data[data.length-1].price){ //
+    if(last_price !== data[data.length-1].price){
         console.log(block_signal);
         last_price = data[data.length-1].price;
        setTimeout(update_ticker(last_price), 0);
@@ -44,6 +46,167 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
   //console.log(data);
   // Do something with the table data...
 });
+
+
+// client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
+//     if(tableName === 'tradeBin1h'){
+//         //console.log("tradeBin1h");
+//         //console.log(data[length]);
+//         var length = data.length-1;
+//         var json = data[length];
+//         var obj = {
+//             symbol : json.symbol,
+//             timestamp : new Date(json.timestamp).getTime() + (1000 * 60 * 60 * 8),
+//             open : json.open,
+//             high : json.high,
+//             low : json.low,
+//             close : json.close,
+//             trades : json.trades,
+//             volume : json.volume,
+//             vwap : json.vwap,
+//             lastSize : json.lastSize,
+//             turnover : json.turnover,
+//             homeNotional : json.homeNotional,
+//             foreignNotional : json.foreignNotional,
+//             sma1 : 0,
+//             sma2 : 0,
+//             sma3 : 0,
+//             sma4 : 0,
+//             sma5 : 0,
+//             ema : 0,
+//         }
+//         setTimeout(update_bin1h(obj), 0);
+//     }
+// });
+
+function update_bin1h(obj){
+    return function(){
+        bid_1h.find({}).sort({timestamp : 'desc'}).limit(339).exec(function(error, json){
+            if(error){
+                console.log(error);
+                return;
+            }
+         
+            var list = new Object(json);
+            
+            list.unshift(new Object(obj));
+            var standard = "low"
+       
+            if(checkUsefulData(list)){
+                //console.log("1시간차이 -> sma, ema 계산")
+                obj["sma1"] = getSMA8(list, 0, standard);
+                obj["sma2"] = getSMA26(list, 0, standard);
+                obj["sma3"] = getSMA54(list, 0, standard);
+                obj["sma4"] = getSMA90(list, 0, standard);
+                obj["sma5"] = getSMA340(list, 0, standard);
+                obj["ema"] = getEMA340(list, 0, standard, list[1].ema);
+
+                bid_1h.findOneAndUpdate(
+                    {timestamp : obj.timestamp},
+                    {$set : obj},
+                    {upsert : true},
+                    function(error, body){
+                        if(error){
+                            console.log(error);
+                            return;
+                        }
+                        console.log("bid update : " + new Date(obj.timestamp).toISOString());
+                    }
+                )
+            }
+            
+        });
+    }
+}
+
+//배열길이가 340개 인지 , 분봉 간격이 1시간차이가 맞는지 확인
+function checkUsefulData(list){
+    if(list.length !== 340){
+        return false;
+    }
+
+    var t1 = list[0].timestamp;
+    var t2 = 0;
+    for(var i=1; i<list.length; i++){
+        t2 = new Date(list[i].timestamp).getTime();
+        if((t1 - t2) !== (1000 * 60 * 60)){ //최근분봉 - DB최신분봉 === 1시간차
+              return false;
+        }
+        t1 = t2;
+    }
+    return true;
+}
+
+function getSMA8(list, idx, standard){
+    if((idx+7) > (list.length-1)){
+        return 0;
+    }
+    var beforeTime = 0;
+    var sma =0;
+    for(var i=idx; i<=idx+7; i++){
+        sma += list[i][standard];
+    }
+    return Number(Number(sma / 8).toFixed(11));
+    //return fixed1(sma / 8);
+}
+
+
+function getSMA26(list, idx, standard){
+    if(idx+25 > list.length-1){
+        return 0;
+    }
+    var sma =0;
+    for(var i=idx; i<=idx+25; i++){
+        sma += list[i][standard];
+    }
+    return Number(Number(sma / 26).toFixed(11));
+    //return fixed1(sma / 26);
+}
+
+function getSMA54(list, idx, standard){
+    if( idx+53 > list.length-1 ){
+        return 0;
+    }
+    var sma =0;
+    for(var i=idx; i<=idx+53; i++){
+        sma += list[i][standard];
+    }
+    return Number(Number(sma / 54).toFixed(11));
+    //return fixed1(sma / 54);
+}
+
+function getSMA90(list, idx, standard){
+    if( idx+89 > list.length-1 ){
+        return 0;
+    }
+
+    var sma =0;
+    for(var i=idx; i<=idx+89; i++){
+        sma += list[i][standard];
+    }
+    return Number(Number(sma / 90).toFixed(11));
+    //return fixed1(sma / 90);
+}
+
+
+function getSMA340(list, idx, standard){
+    if(idx+339 > list.length-1){
+        return 0;
+    }
+
+    var sma =0;
+    for(var i=idx; i<=idx+339; i++){
+        sma += list[i][standard];
+    }
+    return Number(Number(sma / 340).toFixed(11));
+    //return fixed1(sma / 340);
+}
+
+function getEMA340(list, idx, standard, beforeEMA){
+    ema = ((list[idx][standard] - beforeEMA) * (2/(340+1))) + beforeEMA;
+    return Number(Number(ema).toFixed(11));
+}
+
 
 function update_ticker(last_price){
     return function(){
@@ -63,7 +226,6 @@ function update_ticker(last_price){
                     return;
                 }
                 console.log("[" + getCurrentTimeString() +"] " + "update price : "+last_price);
-                //console.log(doc);
             }
         );
     }

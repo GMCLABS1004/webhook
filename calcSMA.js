@@ -59,7 +59,7 @@ function getSMA8(list, idx, standard){
 
 
 function getSMA26(list, idx, standard){
-    if( idx+25 > list.length-1 ){
+    if(idx+25 > list.length-1){
         return 0;
     }
     var sma =0;
