@@ -372,34 +372,34 @@ td {
 @media screen and (max-width: 425px){
 
 	.___3098 {
-		width: 70px;
+		width: 40px;
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
 	  }
 
 	.___3099 {
-		width: 70px;
+		width: 50px;
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
-		  padding: 0px 10px;
+		  /* padding: 0px 10px; */
 	  }
 	  
 	  .___3100 {
-		width: 70px;
+		/* width: 70px; */
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
-		  padding: 0px 10px;
+		  /* padding: 0px 10px; */
 	  }
 	  
 	  .___3101 {
-		width: 70px;
+		/* width: 70px; */
 		overflow: visible;
 		text-align: center;
 		  white-space: nowrap;
-		  padding: 0px 10px;
+		  /* padding: 0px 10px; */
 	  }
 
 	.BITMEX01 {
@@ -646,8 +646,8 @@ td {
 
 @media screen and (max-width: 570px) {
   td {
-	  width: 74px;
-    padding: 3px 3px 3px 3px;
+	width: 50px;
+    padding: 4px 3px 4px 3px;
     border-bottom: 1px solid rgba(243, 243, 243, 0.541); 
   }
 
