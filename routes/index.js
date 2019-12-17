@@ -1760,7 +1760,7 @@ router.get('/api/setting_trailing',  isAuthenticated, function(req,res){
       res.render('setting_trailing',error);
       return;
     }
-    console.log(json);
+    //console.log(json);
     obj["site"] = json.site;
     obj["trailingHighRate"] = json.trailingHighRate;
     obj["trailingLowRate"] = json.trailingLowRate;
@@ -2068,7 +2068,7 @@ function get_site_benefitRate(site, callback){
         console.log(error);
         res.send(error);
       }
-      console.log(data);
+      //console.log(data);
       callback(null, data);
     });
   
@@ -2846,7 +2846,7 @@ function RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, year, month, 
                               timestamp : data1[i].timestamp
                           }, {
                               symbol : data1[i].symbol,
-                              timestamp : new Date(data1[i].timestamp),
+                              timestamp : data1[i].timestamp,
                               open : data1[i].open,
                               high : data1[i].high,
                               low : data1[i].low,
