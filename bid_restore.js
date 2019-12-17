@@ -15,14 +15,14 @@ mongoose.connect(webSetting.dbPath, function(error){
 var url = 'https://www.bitmex.com'
 var symbol = "XBTUSD";
 var binSize = "1h"; //분봉데이터 유형 ex) 1m, 5m, 1h, 1d
-var d = "2019-03-11"; 
+var d = "2019-12-12"; 
 d = new Date(d);
 //var username = req.user.username; 
 var apiKeyId = "IYT7EVPuT-d39e2oYbixiFxJ"; //bitmex API key
 var apiSecret = "XT6vsX8GJr9Fpk1alXe9nv9DuVdY99hSNp96e2tIuhMkp-YN"; //bitmex API Secret
 console.log('restore by day' + d);
 
-setTimeout(RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, 2019, 12, 12),0);
+ setTimeout(RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, 2019, 12, 12),0);
 
 
 // //1달 데이터 수집
@@ -229,7 +229,7 @@ function RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, year, mo
     return endDay;
   }
   
-
+  
   function RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, year, month, startday){
     return function(){
         var startDay = (startday < 10)? "0" + startday : startday;
@@ -351,7 +351,6 @@ function RestoreBidMonthData(url, apiKeyId, apiSecret, symbol, binSize, year, mo
                                 timestamp : data2[i].timestamp
                             }, {
                                 symbol : data2[i].symbol,
-                                 
                                 timestamp : data2[i].timestamp,
                                 open : data2[i].open,
                                 high : data2[i].high,
