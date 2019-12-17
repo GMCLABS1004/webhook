@@ -19,7 +19,7 @@
                         $("#mytable > tbody:last").empty();
                         for(i=0; i<json.length; i++){
                             var time1 = json[i].start_time.split("T")[1].split(":");
-                            var time2 = json[i].end_time.split("T")[1].split(":")
+                            var time2 = json[i].end_time.split("T")[1].split(":");
                             $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td align='right'>" + (i+1) + "</td>"); 
                                     $("#mytable > tbody:last").append("<td align='right'>" + json[i].start_time.split("T")[0] + "</td>"); 

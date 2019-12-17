@@ -1960,7 +1960,7 @@ router.get('/orderHistoryTotal',  isAuthenticated,  function(req, res){
 });
 
 
-router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
+router.get('/api/orderHistoryTotal', isAuthenticated, function(req, res){
   console.log("/api/orderHistoryTotal 실행");
   var site = req.query.site; //.skip(0).limit(20)
   order.find({site : site}).sort({start_time : "desc"}).exec(function(error, result){
@@ -1972,6 +1972,108 @@ router.get('/api/orderHistoryTotal',  isAuthenticated, function(req, res){
     res.send(result);
   });
 });
+
+
+router.get('/site_total_benefit', isAuthenticated, function(req, res){
+  res.render('site_total_benefit');
+});
+
+router.get('/api/site_total_benefit', isAuthenticated, function(req, res){
+  console.log("/api/site_total_benefit 실행");
+  var list = []  
+  for(var i=1; i<=10; i++){
+    get_site_benefitRate("bitmex"+i, function(error, data){
+      if(error){
+        console.log(error);
+        return;
+      }
+
+      list.push(data);
+    
+      if(list.length === 10){
+        list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
+          return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
+        });
+        res.send(list);
+      }
+    });
+  }
+});
+
+function get_site_benefitRate(site, callback){
+  
+    var data = {
+      site : site,
+      start_asset : 0,
+      end_asset : 0,
+      benefit : 0,
+      benefitRate : 0,
+      type : "",
+      type_log : "",
+      timestamp : "",
+    }
+
+    async.waterfall([
+      function get_start_asset(cb){
+        order.findOne({site : site}).sort({start_time : "asc"}).limit(1).exec(function(error, json){
+          if(error){
+            console.log(error);
+            res.send(error);
+          }
+
+          if(json=== null){
+            return cb(null);
+          }
+          
+          data.start_asset = json.totalAsset;
+          cb(null);
+        });
+      },
+      function get_end_asset(cb){
+        order.findOne({site : site}).sort({start_time : "desc"}).limit(1).exec(function(error, json){
+          if(error){
+            console.log(error);
+            res.send(error);
+          }
+
+          if(json=== null){
+            return cb(null);
+          }
+  
+          data.end_asset = json.totalAsset;
+          cb(null);
+        });
+      },
+      function get_last_exit_history(cb){
+        order.findOne({site : site, type : "exit"}).sort({start_time : "desc"}).limit(1).exec(function(error, json){
+          if(error){
+            console.log(error);
+            res.send(error);
+          }
+  
+          if(json=== null){
+            return cb(null);
+          }
+  
+          data.type = json.type;
+          data.type_log = json.type_log;
+          data.benefit = json.benefit;
+          data.benefitRate = json.benefitRate;
+          data.timestamp = json.end_time;
+          cb(null);
+        });
+      }
+    ], function(error, results){
+      if(error){
+        console.log(error);
+        res.send(error);
+      }
+      console.log(data);
+      callback(null, data);
+    });
+  
+}
+
 
 
 router.get('/orderHistoryTotalPage',  isAuthenticated,  function(req, res){
