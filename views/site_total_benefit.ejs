@@ -59,13 +59,13 @@
                             if(json[i].start_asset !== 0){
                                 var time1 = json[i].timestamp.split("T")[1].split(":");
                                 $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td align='right'>" + (i+1) + "</td>"); 
-                                        $("#mytable > tbody:last").append("<td align='right'>" + json[i].timestamp.split("T")[0] + "</td>"); 
-                                        $("#mytable > tbody:last").append("<td align='right'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='center'><a href="+ url + json[i].site +">"+ json[i].site + "</a></td>"); 
-                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].type_log + "</td>"); 
-                                        $("#mytable > tbody:last").append("<td align='right'>" + asset_comma(json[i].benefit, "bitmex") + "</td>");
-                                        $("#mytable > tbody:last").append("<td align='right'>" + benefit_comma(json[i].benefitRate) + "</td>");
+                                        $("#mytable > tbody:last").append("<td class='typeLog' align='center'>" + json[i].type_log + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json[i].benefit, "bitmex") + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + benefit_comma(json[i].benefitRate) + "</td>");
                                 $("#mytable > tbody:last").append("<tr>");
                                 start_asset_total += json[i].start_asset;
                                 end_asset_total += json[i].end_asset;
@@ -95,9 +95,8 @@
         });
     </script>
 </head>
-<body>
-    
 
+<body>
     <div class="section-62">
         <div class="w-container">
             <h2 style="display: inline-block;" class="historyTitle">통합 거래 내역</h2>
@@ -127,33 +126,30 @@
 
             <div class="w-container">
                 <div class="html-embed w-embed">
-                    
                     <!--  01  -->
-                    <div>
-                        <div class="____1463">
-                            <table class="historyTable" id="mytable">
-                                <thead>
+                    <div class="____1463">
+                        <table class="historyTable" id="mytable">
+                            <thead>
                                 <tr>
-                                    <th>no</th>
+                                    <th class="numberHd">no</th>
                                     <th>날짜</th>
                                     <th>시간</th>
                                     <th>계정</th>
-                                    <th>주문타입</th>
+                                    <th class="typeLog">주문타입</th>
                                     <th>수익</th>
                                     <th>수익율</th>
                                 </tr>
                             </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                    
-
-                        </div>
-                        <div>
-                        </div>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+    </div>
+    </div>
+</body>
 </html>

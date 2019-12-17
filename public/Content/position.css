@@ -42,6 +42,25 @@ table {
 
 .bitmexTitle{
  padding-left: 10px;
+ display: inline-block;
+}
+
+.positionTitleButton_1, .positionTitleButton_2{
+	float: right;
+	margin: 14px 16px;
+	padding: 4px;
+	width: 100px;
+	height: 30px;
+	background-color: rgb(187, 187, 187);
+	text-align: center;
+	border-radius: 5px;
+	color: white;
+	text-decoration: none;
+}
+
+.positionTitle{
+	width: 940px;
+	padding-right: 10px;
 }
 
 /* headTable */
@@ -69,6 +88,11 @@ table {
 	  width: 188px;
 	  padding: 5px 10px 5px 10px;
 	}
+
+	.positionTitle{
+		width: 728px;
+		padding-right: 10px;
+	}
   }
   
   @media screen and (max-width: 570px){
@@ -83,14 +107,42 @@ table {
 	  border: 1px solid rgba(199, 199, 199, 0.198);
 	  padding: 5px 8px 5px 8px;
 	}
+	.positionTitle{
+		width: 410px;
+		padding-right: 10px;
+	}
+	.bitmexTitle{
+		font-size: 25px;
+	   }
+	   .positionTitleButton_1, .positionTitleButton_2{
+		float: left;
+		margin: 4px 12px 20px 10px;
+		padding: 4px;
+		width: 90px;
+		height: 30px;
+		background-color: rgb(187, 187, 187);
+		text-align: center;
+		border-radius: 5px;
+		color: white;
+		text-decoration: none;
+		font-size: 12px;
+	}
+	.bitmexTitle{
+		padding-left: 10px;
+		display: block;
+	   }
   }
 
   
 @media screen and (max-width: 375px){
 	.head td{
-	  width: 85px;
+	  width: 90px;
 	  font-size: 12px;
 	  padding: 4px 2px 4px 2px;
+	}
+	.positionTitle{
+		width: 343px;
+		padding-right: 10px;
 	}
   }
 
@@ -98,6 +150,10 @@ table {
 	.head td{
 	  padding: 1px 0px 1px 0px;
 	  font-size: 12px;
+	}
+	.positionTitle{
+		width: 300px;
+		padding-right: 10px;
 	}
   }
 
