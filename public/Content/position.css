@@ -158,6 +158,28 @@ td {
   white-space: nowrap;
 }
 
+.___3102 {
+	width: 160px;
+	overflow: visible;
+	text-align: center;
+	white-space: nowrap;
+  }
+
+  .___3103 {
+	width: 160px;
+	overflow: visible;
+	text-align: center;
+	white-space: nowrap;
+  }
+
+  .tdHidden_2{
+	  /* display: none; */
+  }
+
+  .tdHidden {
+	display: none;
+  }
+
 .BITMEX01 {
 	overflow: visible;
 	float: right;
@@ -402,6 +424,30 @@ td {
 		  /* padding: 0px 10px; */
 	  }
 
+	  .___3102 {
+		/* width: 70px; */
+		overflow: visible;
+		text-align: center;
+		  white-space: nowrap;
+		  /* padding: 0px 10px; */
+	  }
+	
+	  .___3103 {
+		/* width: 70px; */
+		overflow: visible;
+		text-align: center;
+		  white-space: nowrap;
+		  /* padding: 0px 10px; */
+	  }
+
+	  .tdHidden_2{
+		display: none;
+	}
+  
+	.tdHidden {
+	  display: none;
+	}
+
 	.BITMEX01 {
 		overflow: visible;
 		float: left;
@@ -579,6 +625,20 @@ td {
 		  white-space: nowrap;
 	  }
 	  .___3101 {
+		width: 50px;
+		overflow: visible;
+		text-align: center;
+		  white-space: nowrap;
+	  }
+
+	  .___3102 {
+		width: 50px;
+		overflow: visible;
+		text-align: center;
+		  white-space: nowrap;
+	  }
+
+	  .___3103 {
 		width: 50px;
 		overflow: visible;
 		text-align: center;

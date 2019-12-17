@@ -184,10 +184,12 @@
                                 console.log(list[i].isTrailingStop);
                                 $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td class='tdHidden_2'></td>");
                                     $("#mytable > tbody:last").append("<td></td>");
                                     $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td class='___3100'>" + "<a class='____1_A63_Rectangle_5' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
-                                    $("#mytable > tbody:last").append("<td colspan='2' class='___3100'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
+                                    $("#mytable > tbody:last").append("<td class='___3102'>" + "<a class='____1_A63_Rectangle_5' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2' class='___3103'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
+                                    $("#mytable > tbody:last").append("<td class='tdHidden'></td>");
                                     $("#mytable > tbody:last").append("</tr>");
 
                                     $("#mytable > tbody:last").append("<tr>");
