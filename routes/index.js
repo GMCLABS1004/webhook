@@ -353,7 +353,7 @@ function getPosition_bitmex(set, callback){
             
             data["size"] = obj.size;
             data["value"] = obj.value;
-  
+            
             data["leverage"] = set.leverage;
             data["margin"] = set.margin;
             // data["leverage_real"] = obj.leverage;
@@ -361,6 +361,7 @@ function getPosition_bitmex(set, callback){
             data["scriptNo"] = set.scriptNo;
             data["side_num"] = set.side_num;
             data["pgSide"] = set.side;
+            data["isTrailingStop"] = (set.isTrailingStop === true)? "checked" : "unchecked";
             cb(null);
           });
         },
@@ -2732,8 +2733,10 @@ function RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, year, month, 
                       temp["foreignNotional"] = result[i].foreignNotional;
                       data1.push(temp);
                   }
-                  //console.log("data1");
-                  //console.log(data1);
+                  
+                  console.log("data1");
+                  console.log(body);
+                  console.log(data1);
                   //분봉데이터 DB에 저장, 데이터 중복 허용 X
                   for(var i in data1){
                       bid_1h.updateOne({
@@ -2741,7 +2744,7 @@ function RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, year, month, 
                               timestamp : data1[i].timestamp
                           }, {
                               symbol : data1[i].symbol,
-                              timestamp : data1[i].timestamp,
+                              timestamp : new Date(data1[i].timestamp),
                               open : data1[i].open,
                               high : data1[i].high,
                               low : data1[i].low,
@@ -2765,8 +2768,9 @@ function RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, year, month, 
           (async function main() {
               var requestOptions = setRequestHeader(url, apiKeyId, apiSecret,'GET', 'trade/bucketed', param2);
   
-              request(requestOptions.url, function(err,response, body){
+              request(requestOptions, function(err,response, body){
                   var result = JSON.parse(body);
+
                   var data2 = new Array();
                   for(var i=0; i<result.length; i++){
                       var temp = {};
@@ -2787,8 +2791,9 @@ function RestoreBidData(url, apiKeyId, apiSecret, symbol, binSize, year, month, 
                       data2.push(temp);
                   }
   
-                  //console.log("data2");
-                  //console.log(data2);
+                  console.log("data2");
+                  console.log(body);
+                  console.log(data2);
                   //분봉데이터 DB에 저장, 데이터 중복 허용 X
                   for(var i in data2){
                       bid_1h.updateOne({
