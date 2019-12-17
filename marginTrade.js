@@ -109,7 +109,7 @@ var logfileName6_1 = './log/korbit' +'.log'; //로그파일 경로1
 var logfileName6_2 = './log/korbit' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName6_1, logfileName6_2, function(loggerHandle){ logger_korbit = loggerHandle; logger_korbit.info("코빗");}); //logger 생성
 
-
+//status
 //tv action
 const doSkip = /*무시*/ {text : "무시", isSkip : true, isStatus : false, isExit : false, isEntry : false}
 const doStatus = /*상태값변경 */ {text : "상태값변경", isSkip : true, isStatus : true, isExit : false, isEntry : false}
@@ -144,7 +144,7 @@ const action_table = [
     {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Buy", /*무시*/ action : doSkip},
     {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Buy Exit", /*상태값변경 */ action : doStatus},
     {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
-    {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Buy', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},  //1111111
     
     // {type : '', pgSide : 'Buy', isSide : 'Sell', sigSide : "Buy", /*스위칭 */action : doSwitch},
     // {type : '', pgSide : 'Buy', isSide : 'Sell', sigSide : "Buy Exit", /*무시*/ action : doSkip},
@@ -162,9 +162,9 @@ const action_table = [
     {type : '', pgSide : 'Sell', isSide : 'Sell', sigSide : "Sell Exit", /*탈출 */action : doExit},
     
     {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
-    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip}, 
     {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Sell", /*무시*/ action : doSkip},
-    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Sell Exit", /*상태값변경 */ action : doStatus},
+    {type : '', pgSide : 'Sell', isSide : 'none', sigSide : "Sell Exit", /*상태값변경 */ action : doStatus}, //1111111
  
     // {type : '', pgSide : 'Exit', isSide : 'Buy', sigSide : "Buy", /*상태값변경 */ action : doStatus},
     // {type : '', pgSide : 'Exit', isSide : 'Buy', sigSide : "Buy Exit", /*무시*/ action : doSkip},
@@ -1852,7 +1852,7 @@ function trade_bitmex(_signal, siteName){
         console.log("_signal.side : "+ _signal.side);
         var action = bitmex_decide_action(_signal.type_log, data.pgSide, data.isSide, _signal.side);
 
-        if(action.status === true){
+        if(action.isStatus === true){
           console.log("상태변경");
           settings.updateOne(
             {site : data.site}, 
