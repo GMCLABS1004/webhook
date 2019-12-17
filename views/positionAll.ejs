@@ -11,7 +11,6 @@
   <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
   <link href="../Content/position.css" rel="stylesheet" type="text/css">
 
-  <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
   <link rel="stylesheet" type="text/css" href="../Content/lc_switch.css">
 
   <!-- [if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" type="text/javascript"></script><![endif] -->
@@ -21,6 +20,7 @@
 
   <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+  <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
     
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
@@ -101,7 +101,7 @@
                                     $("#mytable > tbody:last").append("<td class='___3098'></td>");
                                     $("#mytable > tbody:last").append("<td class='___3099'></td>");
                                     $("#mytable > tbody:last").append("<td class='___3100'>" + "<a class='____1_A63_Rectangle_5' href=''><strong>"+ "TS설정" +"</strong></a>" + "</td>");
-                                    $("#mytable > tbody:last").append("<td class='___3101'><input type='checkbox'/></td>");
+                                    $("#mytable > tbody:last").append("<td><input type='checkbox' id='finance_tag' name='bot' class='lcs_check setting_check'/></td>");
                                     $("#mytable > tbody:last").append("</tr>");
 
                                     $("#mytable > tbody:last").append("<tr>");
@@ -363,7 +363,7 @@
 
                     </tbody>
               </table>
-             
+              
             </div>
             <div>
         </div>
@@ -374,5 +374,89 @@
       <!-- <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.4.1.min.220afd743d.js" type="text/javascript" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
       <script src="js/webflow.js" type="text/javascript"></script> -->
       <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
-</body>
+
+       <script type="text/javascript">
+        $(document).ready(function (e) {
+
+            $('.lcs_check').lc_switch();
+            var finance_url = window.location.origin + ":3000/financialTradeSet";
+            $("#finance_tag").attr("href",finance_url);
+            $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+                
+                var askType = $(this).attr('name');
+                console.log("name : " +askType)
+                console.log("name : " +$(this).attr('id'));
+                if(askType === 'bot'){ //봇 on/off
+               
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    obj["id"] = $(this).attr('id');
+                    (status === "checked") ?  obj["flag"] = "start" : obj["flag"] = "stop";
+                    $.ajax({
+                        type: "POST",
+                        url: "api/botOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body) {
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }else if(askType === 'func'){ // 기능 on/off 
+                    console.log("기능 On/Off");
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    var arr = $(this).attr('id').split("_");
+                    obj["site"] = arr[0]; //bitmex
+                    (status === "checked") ?  obj["execFlag"] = 1 : obj["execFlag"] = 0;
+                    console.log(JSON.stringify(obj));
+                    $.ajax({
+                        type: "POST",
+                        url: "api/siteOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body){
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }else if(askType === 'trailing'){ // 기능 on/off 
+                    console.log("트레일링 On/Off");
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    var arr = $(this).attr('id').split("_");
+                    obj["site"] = arr[0]; //bitmex
+                    (status === "checked") ?  obj["isTrailingStop"] = 1 : obj["isTrailingStop"] = 0;
+                    console.log(JSON.stringify(obj));
+                    $.ajax({
+                        type: "POST",
+                        url: "api/trailingOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body){
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    </body>
 </html>
