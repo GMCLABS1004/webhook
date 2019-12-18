@@ -184,12 +184,11 @@
                                 console.log(list[i].isTrailingStop);
                                 $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
-                                    $("#mytable > tbody:last").append("<td class='tdHidden_2'></td>");
                                     $("#mytable > tbody:last").append("<td></td>");
                                     $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td class='___3102'>" + "<a class='____1_A63_Rectangle_5' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
-                                    $("#mytable > tbody:last").append("<td colspan='2' class='___3103'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
-                                    $("#mytable > tbody:last").append("<td class='tdHidden'></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td class='___3102'>" + "<a class='____1_A63_Rectangle_4' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
+                                    $("#mytable > tbody:last").append("<td class='___3103'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
                                     $("#mytable > tbody:last").append("</tr>");
 
                                     $("#mytable > tbody:last").append("<tr>");
@@ -405,8 +404,8 @@
     <div class="w-container">
         <div class="positionTitle">
             <h2 class="bitmexTitle">비트맥스 포지션</h2>
-            <a class="positionTitleButton_2" href="site_total_benefit"><strong>통합거래내역</strong></a>
             <a class="positionTitleButton_1" href="manage"><strong>통합설정</strong></a>
+            <a class="positionTitleButton_2" href="site_total_benefit"><strong>거래내역</strong></a>
         </div>
 
       <br>
