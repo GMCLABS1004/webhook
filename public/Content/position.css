@@ -804,7 +804,7 @@ td {
 	color: rgba(181,53,53,1);
 	border-radius: 5px;
 	font-size: 12px;
-	padding: 4px 9px;
+	padding: 3px 9px;
 	text-decoration: none;
 }
 
@@ -819,7 +819,7 @@ td {
 	color: rgba(88,125,201,1);
 	border-radius: 5px;
 	font-size: 12px;
-	padding: 4px 9px;
+	padding: 3px 9px;
 	text-decoration: none;
 }
 
@@ -896,7 +896,7 @@ td {
 	  color: rgba(181,53,53,1);
 	  border-radius: 5px;
 	  font-size: 12px;
-	  padding: 4px 6px;
+	  padding: 3px 7px;
 	  text-decoration: none;
   }
   
@@ -911,7 +911,7 @@ td {
 	  color: rgba(88,125,201,1);
 	  border-radius: 5px;
 	  font-size: 12px;
-	  padding: 4px 6px;
+	  padding: 3px 7px;
 	  text-decoration: none;
   }
   
