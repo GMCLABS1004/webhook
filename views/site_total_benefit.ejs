@@ -65,7 +65,7 @@
                                         $("#mytable > tbody:last").append("<td align='center'><a href="+ url + json[i].site +">"+ json[i].site + "</a></td>"); 
                                         $("#mytable > tbody:last").append("<td class='typeLog' align='center'>" + json[i].type_log + "</td>"); 
                                         $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json[i].benefit, "bitmex") + "</td>");
-                                        $("#mytable > tbody:last").append("<td align='center'>" + benefit_comma(json[i].benefitRate) + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].benefitRate + "</td>"); //benefit_comma(json[i].benefitRate)
                                 $("#mytable > tbody:last").append("<tr>");
                                 start_asset_total += json[i].start_asset;
                                 end_asset_total += json[i].end_asset;
