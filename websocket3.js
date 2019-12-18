@@ -136,7 +136,7 @@ client.onmessage = function(e){
                 console.log("text : "+data[i]["text"]);
                 console.log("--------------");
                 console.log("");
-                setTimeout(move_unfilled_to_filled(username, data[i].orderID),0);
+                setTimeout(move_unfilled_to_filled(username, data[i].orderID),3000);
             }
         }
     }
