@@ -44,7 +44,7 @@
                 url : "api/site_total_benefit",
                 success : function(json){
                     if(json){
-                        //console.log(json);
+                        console.log(json);
                         var url = window.location.origin + '/orderHistoryTotalPage?site='
                         var start_asset_total=0;
                         var end_asset_total=0;
@@ -70,7 +70,6 @@
                                 start_asset_total += json[i].start_asset;
                                 end_asset_total += json[i].end_asset;
                             }
-                          
                         }
                         totalBenefit = (end_asset_total - start_asset_total);
                         totalBenefitRate = ((totalBenefit/start_asset_total) *100);

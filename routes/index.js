@@ -271,6 +271,7 @@ router.get('/api/positionAll', isAuthenticated,  function(req, res){
     }
   },
   function getPosition(set_list, cb){
+    console.log(set_list)
     for(i=0; i<set_list.length; i++){
       setTimeout(getPosition_bitmex(set_list[i], function(error, data){
         if(error){
@@ -343,7 +344,8 @@ function getPosition_bitmex(set, callback){
             // console.log("getPosition_bitmex");
             // console.log(body);
             //var obj = JSON.parse(body)
-            
+
+            console.log(obj);
             data["site"] = obj.site;
             data["avgEntryPrice"] = obj.avgEntryPrice;
             data["isOpen"] = obj.isOpen;
@@ -1989,11 +1991,34 @@ router.get('/api/site_total_benefit', isAuthenticated, function(req, res){
       }
 
       list.push(data);
-    
+      
       if(list.length === 10){
-        list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
-          return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
+        
+        list.sort(function(a,b){ //시간순 내림차순 정렬(1,2,3..)
+          return b.timestamp - a.timestamp;
         });
+        
+        var before_end_asset_total=0;
+        var end_asset_total=0;
+        for(i in list){
+          if(list[i].start_asset !== 0){
+            end_asset_total += list[i].end_asset;
+          }
+        }
+        
+        before_end_asset_total = end_asset_total;
+        for(i in list){
+          if(list[i].start_asset !== 0){
+            before_end_asset_total = before_end_asset_total - list[i].benefit;
+            list[i].benefitRate = fixed4(list[i].benefit / before_end_asset_total) * 100;
+          }
+        }
+        
+        //console.log(list);
+        // list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
+        //   return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
+        // });
+        
         res.send(list);
       }
     });
@@ -2010,7 +2035,7 @@ function get_site_benefitRate(site, callback){
       benefitRate : 0,
       type : "",
       type_log : "",
-      timestamp : "",
+      timestamp : -1,
     }
 
     async.waterfall([
@@ -2054,7 +2079,7 @@ function get_site_benefitRate(site, callback){
           if(json=== null){
             return cb(null);
           }
-  
+          
           data.type = json.type;
           data.type_log = json.type_log;
           data.benefit = json.benefit;
