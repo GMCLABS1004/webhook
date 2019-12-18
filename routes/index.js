@@ -2010,7 +2010,7 @@ router.get('/api/site_total_benefit', isAuthenticated, function(req, res){
         for(i in list){
           if(list[i].start_asset !== 0){
             before_end_asset_total = before_end_asset_total - list[i].benefit;
-            list[i].benefitRate = fixed4(list[i].benefit / before_end_asset_total) * 100;//fixed4
+            list[i].benefitRate = (list[i].benefit / before_end_asset_total) * 100;//fixed4
           }
         }
         
