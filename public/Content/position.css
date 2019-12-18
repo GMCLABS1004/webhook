@@ -416,6 +416,19 @@ td {
 		font-size: 12px;
 		color: rgba(112,112,112,1);
 	}
+	.positionTitleButton_1, .positionTitleButton_2{
+		float: right;
+		margin: 14px 6px 14px 6px;
+		padding: 4px;
+		width: 74px;
+		height: 30px;
+		background-color: rgb(187, 187, 187);
+		text-align: center;
+		border-radius: 5px;
+		color: white;
+		text-decoration: none;
+		font-size: 12px;
+	}
 
 }
 
