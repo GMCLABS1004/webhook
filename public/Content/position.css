@@ -416,6 +416,19 @@ td {
 		font-size: 12px;
 		color: rgba(112,112,112,1);
 	}
+	.positionTitleButton_1, .positionTitleButton_2{
+		float: right;
+		margin: 14px 6px 14px 6px;
+		padding: 5px;
+		width: 74px;
+		height: 30px;
+		background-color: rgb(187, 187, 187);
+		text-align: center;
+		border-radius: 5px;
+		color: white;
+		text-decoration: none;
+		font-size: 12px;
+	}
 
 }
 
@@ -623,7 +636,7 @@ td {
 	.positionTitleButton_1, .positionTitleButton_2{
 		float: right;
 		margin: 14px 6px 14px 6px;
-		padding: 4px;
+		padding: 5px;
 		width: 74px;
 		height: 30px;
 		background-color: rgb(187, 187, 187);
@@ -647,7 +660,7 @@ td {
 	.positionTitleButton_1, .positionTitleButton_2{
 		float: right;
 		margin: 14px 6px 14px 6px;
-		padding: 3px;
+		padding: 4px;
 		width: 60px;
 		height: 28px;
 		background-color: rgb(187, 187, 187);
@@ -791,7 +804,7 @@ td {
 	color: rgba(181,53,53,1);
 	border-radius: 5px;
 	font-size: 12px;
-	padding: 4px 9px;
+	padding: 3px 9px;
 	text-decoration: none;
 }
 
@@ -806,7 +819,7 @@ td {
 	color: rgba(88,125,201,1);
 	border-radius: 5px;
 	font-size: 12px;
-	padding: 4px 9px;
+	padding: 3px 9px;
 	text-decoration: none;
 }
 
@@ -848,7 +861,7 @@ td {
 	color: white;
 	border-radius: 5px;
 	font-size: 12px;
-	padding: 5px 5px;
+	padding: 4px 5px;
 	text-decoration: none;
 }
 
@@ -883,7 +896,7 @@ td {
 	  color: rgba(181,53,53,1);
 	  border-radius: 5px;
 	  font-size: 12px;
-	  padding: 4px 6px;
+	  padding: 3px 7px;
 	  text-decoration: none;
   }
   
@@ -898,7 +911,7 @@ td {
 	  color: rgba(88,125,201,1);
 	  border-radius: 5px;
 	  font-size: 12px;
-	  padding: 4px 6px;
+	  padding: 3px 7px;
 	  text-decoration: none;
   }
   
@@ -940,7 +953,7 @@ td {
 	  color: white;
 	  border-radius: 5px;
 	  font-size: 12px;
-	  padding: 5px 5px;
+	  padding: 4px 5px;
 	  text-decoration: none;
   }
   

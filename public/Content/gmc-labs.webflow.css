@@ -404,7 +404,7 @@ p {
   background-color: #dadada;
   font-size: 12px;
   color: #000;
-  width: 100px;
+  width: 80px;
 }
 .avg_order_history {
   display: -webkit-box;
@@ -425,7 +425,7 @@ p {
   background-color: #dadada;
   font-size: 12px;
   color: #000;
-  width: 100px;
+  width: 80px;
 }
 
 .icon-wrapper {
@@ -1437,6 +1437,7 @@ p {
 .text-block-60 {
   padding-left: 20px;
   font-size: 20px;
+  white-space: nowrap;
 }
 
 .button-8 {
@@ -1491,7 +1492,7 @@ p {
   grid-column-gap: 10px;
   grid-template-areas: "Area Area-2 Area-3 Area-4 Area-5 Area-6";
   -ms-grid-columns: 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1.5fr 0.25fr 0.25fr 0.25fr 0.25fr 0.25fr;
   -ms-grid-rows: auto;
   grid-template-rows: auto;
   border: 1px none #000;
@@ -7384,6 +7385,7 @@ border-radius: 5px;
   border-radius: 5px;
   background-color: #dadada;
   color: #000;
+  width: 80px;
 }
 
 .section-taurus-project {
@@ -7696,9 +7698,9 @@ border-radius: 5px;
   .grid-18 {
     width: auto;
     grid-column-gap: 7px;
-    grid-template-areas: "Area Area-2 Area-3 Area-4 Area-5 Area-6";
+    grid-template-areas: "Area Area-2 Area-3 Area-4 Area-5";
     -ms-grid-columns: 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 0.25fr 0.25fr 0.25fr 0.25fr;
     -ms-grid-rows: auto;
     grid-template-rows: auto;
   }
@@ -8064,9 +8066,9 @@ border-radius: 5px;
   .grid-41 {
     width: auto;
     grid-column-gap: 10px;
-    grid-template-areas: ". . Area-3 Area-4 Area-5";
+    grid-template-areas: "Area Area-2 Area-3 Area-4 Area-5 Area-6";
     -ms-grid-columns: 0.5fr 10px 0.25fr 10px 0.25fr 10px 0.25fr 10px 0.25fr;
-    grid-template-columns: 0.75fr 0.25fr 0.25fr 0.25fr 0.25fr;
+    grid-template-columns: 0.75fr 0.25fr 0.25fr 0.25fr 0.25fr 0.25fr;
     -ms-grid-rows: auto;
     grid-template-rows: auto;
     margin-right: 5px;
@@ -8076,6 +8078,7 @@ border-radius: 5px;
     margin-left: 10px;
     padding-right: 5px;
     padding-left: 5px;
+    width: 80px;
   }
   .grid-191 {
     grid-template-areas: "Area-9 Area-10 Area-10" "Area-3 Area-3 Area-3" ". Area-7 Area-7" "Area-8 Area-8 Area-8";
@@ -8130,7 +8133,7 @@ border-radius: 5px;
     background-color: #dadada;
     font-size: 12px;
     color: #000;
-    width: 100px;
+    width: 80px;
 
   }
   .section-intriduction.footer {
@@ -8194,6 +8197,7 @@ border-radius: 5px;
   }
   .text-block-60 {
     font-size: 16px;
+    white-space: nowrap;
   }
   .button-8 {
     padding-top: 5px;
@@ -8205,7 +8209,7 @@ border-radius: 5px;
   }
   .grid-18 {
     grid-column-gap: 7px;
-    grid-template-areas: "Area Area-2 Area-3" "Area-4 Area-5 Area-6";
+    grid-template-areas: "Area Area-2 Area-3 Area-4 Area-5 Area-6";
     -ms-grid-columns: 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     -ms-grid-rows: auto;
@@ -8221,7 +8225,7 @@ border-radius: 5px;
     display: -ms-flexbox;
     display: flex;
     margin: 10px 3px;
-    padding: 5px;
+    padding: 5px 5px;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     -webkit-flex-direction: column;
@@ -8237,6 +8241,7 @@ border-radius: 5px;
     align-items: center;
     border-radius: 5px;
     background-color: #dadada;
+    width: 80px;
   }
 
   .button-log-bot {
@@ -8908,9 +8913,9 @@ border-radius: 5px;
   }
   .grid-41 {
     grid-column-gap: 10px;
-    grid-template-areas: ". . Area-3 Area-4 Area-5" ". . . . Area-6";
+    grid-template-areas: "Area-1 Area-2 Area-3 Area-4 Area-5";
     -ms-grid-columns: 1fr 10px 0.75fr 10px 1fr 10px 1.25fr 10px 1.25fr;
-    grid-template-columns: 1fr 0.75fr 1fr 1.25fr 1.25fr;
+    grid-template-columns: 1fr 0.25fr 0.25fr 0.25fr 0.25fr;
     -ms-grid-rows: auto auto;
     grid-template-rows: auto auto;
   }
@@ -8920,13 +8925,14 @@ border-radius: 5px;
     display: -ms-flexbox;
     display: flex;
     margin: 10px 3px;
-    padding: 5px;
+    padding: 5px 5px;
     -webkit-box-pack: center;
     -webkit-justify-content: center;
     -ms-flex-pack: center;
     justify-content: center;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: #dadada;
+    width: 80px;
   }
   .section-taurus-project {
     padding: 34px 10px;
@@ -8995,6 +9001,7 @@ border-radius: 5px;
     grid-template-rows: auto auto auto auto auto;
   }
 }
+
 
 @media (max-width: 479px) {
   .section-intriduction {
@@ -9167,6 +9174,7 @@ border-radius: 5px;
     padding-right: 18px;
   } */
   .text-block-60 {
+    white-space: nowrap;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -9224,7 +9232,7 @@ border-radius: 5px;
     background-color: #dadada;
     font-size: 12px;
     color: #000;
-    width: 100px;
+    width: 80px;
   }
   .avg_order_history {
     display: -webkit-box;
@@ -9245,7 +9253,7 @@ border-radius: 5px;
     background-color: #dadada;
     font-size: 12px;
     color: #000;
-    width: 100px;
+    width: 80px;
   }
   .button-8 {
     display: -webkit-box;
@@ -9320,6 +9328,7 @@ border-radius: 5px;
   }
   .bold-text-24 {
     font-size: 18px;
+    white-space: nowrap;
   }
   .bold-text-25 {
     font-size: 18px;
@@ -9342,7 +9351,7 @@ border-radius: 5px;
     background-color: #dadada;
     color: #000;
     font-size: 12px;
-    width: 100px;
+    width: 80px;
   }
   .button-log-bot {
     display: -webkit-box;
@@ -11347,7 +11356,7 @@ border-radius: 5px;
     background-color: #dadada;
     color: #000;
     font-size: 12px;
-    width: 100px;
+    width: 80px;
   }
   .section-taurus-project {
     width: auto;
@@ -11535,6 +11544,7 @@ border-radius: 5px;
     padding-right: 18px;
   } */
   .text-block-60 {
+    white-space: nowrap;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11592,7 +11602,7 @@ border-radius: 5px;
     background-color: #dadada;
     font-size: 12px;
     color: #000;
-    width: 100px;
+    width: 80px;
   }
   .avg_order_history {
     display: -webkit-box;
@@ -11613,7 +11623,7 @@ border-radius: 5px;
     background-color: #dadada;
     font-size: 12px;
     color: #000;
-    width: 100px;
+    width: 80px;
   }
   .button-8 {
     display: -webkit-box;
@@ -11688,6 +11698,7 @@ border-radius: 5px;
   }
   .bold-text-24 {
     font-size: 18px;
+    white-space: nowrap;
   }
   .bold-text-25 {
     font-size: 18px;
@@ -13715,7 +13726,7 @@ border-radius: 5px;
     background-color: #dadada;
     color: #000;
     font-size: 12px;
-    width: 100px;
+    width: 80px;
   }
   .section-taurus-project {
     width: auto;
