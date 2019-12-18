@@ -1893,14 +1893,17 @@ function trade_bitmex(_signal, siteName){
                 openingQty : 0, //진입한 포지션 수량 
                 side : "",
                 side_num : _signal.side_num,
-                minAmtRate : data.minOrdRate, //최소주문비율  
-                maxAmtRate : data.minOrdRate, //최대주문비율 
+                minAmtRate : data.minOrdRate, //최소주문비율
+                maxAmtRate : data.minOrdRate, //최대주문비율
                 start_time : start_time,
                 type_log : _signal.type_log,
+                start_asset_sum : 0, //시작 자산들 총합
+                end_asset_sum : 0, //최근 자산들 총합(탈출전)
                 isOrdered : false, //주문시도 여부
                 isSuccess : false, //주문성공 여부
                 isContinue : false, //주문분할 계속할지 여부
             }
+
             setTimeout(div_exit_bitmex(obj, log_obj), 0);
 
             //탈출시 미체결 내역 전부 취소 및 삭제
@@ -2013,6 +2016,8 @@ function trade_bitmex(_signal, siteName){
     });
   }
 }
+
+
 
 function is_exit(script_data, posName, isSideNum, signal_side_num){
   var name = '';

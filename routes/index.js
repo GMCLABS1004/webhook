@@ -21,6 +21,7 @@ var position2 = require("../models/position2");
 var margin = require("../models/margin");
 var ticker = require("../models/ticker");
 var bid_1h = require("../models/bid_1h");
+var benefitDB = require("../models/benefit");
 var json2xls = require('json2xls');
 var webSetting = require("../webSetting");
 var numeral = require('numeral');
@@ -1980,50 +1981,62 @@ router.get('/benefit_history', isAuthenticated, function(req, res){
   res.render('benefit_history');
 });
 
+
 router.get('/api/benefit_history', isAuthenticated, function(req, res){
-  console.log("/api/benefit_history 실행");
-  var list = []  
-  for(var i=1; i<=10; i++){
-    get_benefit_history("bitmex"+i, function(error, data){
-      if(error){
-        console.log(error);
-        return;
-      }
-
-      list.push(data);
-      
-      if(list.length === 10){
-        
-        list.sort(function(a,b){ //시간순 내림차순 정렬(1,2,3..)
-          return b.timestamp - a.timestamp;
-        });
-        
-        var before_end_asset_total=0;
-        var end_asset_total=0;
-        for(i in list){
-          if(list[i].start_asset !== 0){
-            end_asset_total += list[i].end_asset;
-          }
-        }
-
-        before_end_asset_total = end_asset_total;
-        for(i in list){
-          if(list[i].start_asset !== 0){
-            before_end_asset_total = before_end_asset_total - list[i].benefit;
-            list[i].benefitRate = (list[i].benefit / before_end_asset_total) * 100;//fixed4
-          }
-        }
-        
-        //console.log(list);
-        list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
-          return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
-        });
-        
-        res.send(list);
-      }
-    });
-  }
+  benefitDB.find({}).sort({timestamp : "desc"}).exec(function(error, json){
+    if(error){
+      console.log(error);
+      return;
+    }
+    console.log(json);
+    res.send(json);
+  });
 });
+
+// router.get('/api/benefit_history', isAuthenticated, function(req, res){
+//   console.log("/api/benefit_history 실행");
+//   var list = []  
+//   for(var i=1; i<=10; i++){
+//     get_benefit_history("bitmex"+i, function(error, data){
+//       if(error){
+//         console.log(error);
+//         return;
+//       }
+
+//       list.push(data);
+      
+//       if(list.length === 10){
+        
+//         list.sort(function(a,b){ //시간순 내림차순 정렬(1,2,3..)
+//           return b.timestamp - a.timestamp;
+//         });
+        
+//         var before_end_asset_total=0;
+//         var end_asset_total=0;
+//         for(i in list){
+//           if(list[i].start_asset !== 0){
+//             end_asset_total += list[i].end_asset;
+//           }
+//         }
+
+//         before_end_asset_total = end_asset_total;
+//         for(i in list){
+//           if(list[i].start_asset !== 0){
+//             before_end_asset_total = before_end_asset_total - list[i].benefit;
+//             list[i].benefitRate = (list[i].benefit / before_end_asset_total) * 100;//fixed4
+//           }
+//         }
+        
+//         //console.log(list);
+//         list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
+//           return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
+//         });
+        
+//         res.send(list);
+//       }
+//     });
+//   }
+// });
 
 function get_benefit_history(site, callback){
   

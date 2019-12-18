@@ -46,42 +46,41 @@
                     if(json){
                         console.log(json);
                         var url = window.location.origin + '/orderHistoryTotalPage?site='
-                        var length = json.length;
-                        var start_asset_sum=0;
-                        var end_asset_sum=0;
+                        var start_asset_total=0;
+                        var end_asset_total=0;
                         var totalBenefit=0;
                         var totalBenefitRate=0;
-                        $("#start_asset_sum").html("");
-                        $("#end_asset_sum").html("");
+                        $("#start_asset_total").html("");
+                        $("#end_asset_total").html("");
                         $("#totalBenefit").html("");
                         $("#totalBenefitRate").html("");
                         $("#mytable > tbody:last").empty();
                         for(i=0; i<json.length; i++){
-                            var time1 = json[i].timestamp.split("T")[1].split(":");
-                            $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='center'><a href="+ url + json[i].site +">"+ json[i].site + "</a></td>"); 
-                                    $("#mytable > tbody:last").append("<td class='typeLog' align='center'>" + json[i].type_log + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json[i].benefit, "bitmex") + "</td>");
-                                    $("#mytable > tbody:last").append("<td align='center'>" + benefit_comma(json[i].benefitRate) + "</td>");
-                            $("#mytable > tbody:last").append("<tr>");
+                            if(json[i].start_asset !== 0){
+                                var time1 = json[i].timestamp.split("T")[1].split(":");
+                                $("#mytable > tbody:last").append("<tr>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'><a href="+ url + json[i].site +">"+ json[i].site + "</a></td>"); 
+                                        $("#mytable > tbody:last").append("<td class='typeLog' align='center'>" + json[i].type_log + "</td>"); 
+                                        $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json[i].benefit, "bitmex") + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + benefit_comma(json[i].benefitRate) + "</td>");
+                                $("#mytable > tbody:last").append("<tr>");
+                                start_asset_total += json[i].start_asset;
+                                end_asset_total += json[i].end_asset;
+                            }
                         }
-                        if(length >0){
-                            start_asset_sum = json[length-1].start_asset_sum;
-                            end_asset_sum = json[length-1].end_asset_sum;
-                            totalBenefit = (end_asset_sum - start_asset_sum);
-                            totalBenefitRate = ((totalBenefit/start_asset_sum) *100);
-                            console.log(start_asset_sum);
-                            console.log(end_asset_sum);
-                            console.log(totalBenefit);
-                            console.log(totalBenefitRate);
-                            $("#start_asset_sum").html(asset_comma(start_asset_sum,"bitmex"));
-                            $("#end_asset_sum").html(asset_comma(end_asset_sum, "bitmex"));
-                            $("#totalBenefit").html(asset_comma(totalBenefit,"bitmex"));
-                            $("#totalBenefitRate").html(benefit_comma(totalBenefitRate));
-                        }
+                        totalBenefit = (end_asset_total - start_asset_total);
+                        totalBenefitRate = ((totalBenefit/start_asset_total) *100);
+                        console.log(start_asset_total);
+                        console.log(end_asset_total);
+                        console.log(totalBenefit);
+                        console.log(totalBenefitRate);
+                        $("#start_asset_total").html(asset_comma(start_asset_total,"bitmex"));
+                        $("#end_asset_total").html(asset_comma(end_asset_total, "bitmex"));
+                        $("#totalBenefit").html(asset_comma(totalBenefit,"bitmex"));
+                        $("#totalBenefitRate").html(benefit_comma(totalBenefitRate));
                     }
                 },
                 error : function(){
@@ -105,13 +104,13 @@
             <table class="head">
                 <tr>
                     <td>시작자산</td>
-                    <td id="start_asset_sum"></td>
+                    <td id="start_asset_total"></td>
                     <td>총수익</td>
                     <td id="totalBenefit"></td>
                 </tr>
                 <tr>
                     <td>최근자산</td>
-                    <td id="end_asset_sum"></td>
+                    <td id="end_asset_total"></td>
                     <td>총 수익률</td>
                     <td id="totalBenefitRate"></td>
                 </tr>
