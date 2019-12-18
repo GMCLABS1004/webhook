@@ -2015,9 +2015,9 @@ router.get('/api/site_total_benefit', isAuthenticated, function(req, res){
         }
         
         //console.log(list);
-        // list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
-        //   return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
-        // });
+        list.sort(function(a,b){ //수량을 오름차순 정렬(1,2,3..)
+          return a.site.split('bitmex')[1] - b.site.split('bitmex')[1];
+        });
         
         res.send(list);
       }
