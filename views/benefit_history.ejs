@@ -69,8 +69,8 @@
                             $("#mytable > tbody:last").append("<tr>");
                         }
                         if(length >0){
-                            start_asset_sum = json[length-1].start_asset_sum;
-                            end_asset_sum = json[length-1].after_asset_sum;
+                            start_asset_sum = json[0].start_asset_sum;
+                            end_asset_sum = json[0].after_asset_sum;
                             totalBenefit = (end_asset_sum - start_asset_sum);
                             totalBenefitRate = ((totalBenefit/start_asset_sum) *100);
                             console.log(start_asset_sum);
