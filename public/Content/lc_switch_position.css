@@ -70,7 +70,7 @@
 /* on */
 .lcs_switch.lcs_on {
     background: #09c;
-    box-shadow: 0 0 2px #579022 inset;
+    /* box-shadow: 0 0 2px #579022 inset; */
 }
 
     .lcs_switch.lcs_on .lcs_cursor {
@@ -179,7 +179,7 @@
     /* on */
     .lcs_switch.lcs_on {
         background: #09c;
-        box-shadow: 0 0 2px #579022 inset;
+        /* box-shadow: 0 0 2px #579022 inset; */
     }
     
         .lcs_switch.lcs_on .lcs_cursor {
@@ -290,7 +290,7 @@
     /* on */
     .lcs_switch.lcs_on {
         background: #09c;
-        box-shadow: 0 0 2px #579022 inset;
+        /* box-shadow: 0 0 2px #579022 inset; */
     }
     
         .lcs_switch.lcs_on .lcs_cursor {
@@ -400,7 +400,7 @@
     /* on */
     .lcs_switch.lcs_on {
         background: #09c;
-        box-shadow: 0 0 2px #579022 inset;
+        /* box-shadow: 0 0 2px #579022 inset; */
     }
     
         .lcs_switch.lcs_on .lcs_cursor {
