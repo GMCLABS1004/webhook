@@ -38,10 +38,10 @@
             return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
         }
 
-        function get_site_total_benefit(){
+        function get_benefit_history(){
            $.ajax({
                 method : "GET",
-                url : "api/site_total_benefit",
+                url : "api/benefit_history",
                 success : function(json){
                     if(json){
                         console.log(json);
@@ -89,7 +89,7 @@
            });
         }
         $(document).ready(function(){
-            get_site_total_benefit();
+            get_benefit_history();
             
         });
     </script>

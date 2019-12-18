@@ -271,7 +271,7 @@ router.get('/api/positionAll', isAuthenticated,  function(req, res){
     }
   },
   function getPosition(set_list, cb){
-    console.log(set_list)
+    //console.log(set_list)
     for(i=0; i<set_list.length; i++){
       setTimeout(getPosition_bitmex(set_list[i], function(error, data){
         if(error){
@@ -345,7 +345,7 @@ function getPosition_bitmex(set, callback){
             // console.log(body);
             //var obj = JSON.parse(body)
 
-            console.log(obj);
+            //console.log(obj);
             data["site"] = obj.site;
             data["avgEntryPrice"] = obj.avgEntryPrice;
             data["isOpen"] = obj.isOpen;
@@ -1976,15 +1976,15 @@ router.get('/api/orderHistoryTotal', isAuthenticated, function(req, res){
 });
 
 
-router.get('/site_total_benefit', isAuthenticated, function(req, res){
-  res.render('site_total_benefit');
+router.get('/benefit_history', isAuthenticated, function(req, res){
+  res.render('benefit_history');
 });
 
-router.get('/api/site_total_benefit', isAuthenticated, function(req, res){
-  console.log("/api/site_total_benefit 실행");
+router.get('/api/benefit_history', isAuthenticated, function(req, res){
+  console.log("/api/benefit_history 실행");
   var list = []  
   for(var i=1; i<=10; i++){
-    get_site_benefitRate("bitmex"+i, function(error, data){
+    get_benefit_history("bitmex"+i, function(error, data){
       if(error){
         console.log(error);
         return;
@@ -2025,7 +2025,7 @@ router.get('/api/site_total_benefit', isAuthenticated, function(req, res){
   }
 });
 
-function get_site_benefitRate(site, callback){
+function get_benefit_history(site, callback){
   
     var data = {
       site : site,

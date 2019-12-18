@@ -181,7 +181,7 @@
                                 // obj["side"] = reverse_position(list[i].size);
                                 // obj["side_option"] = "Exit";
                                 // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
-                                console.log(list[i].isTrailingStop);
+                                //console.log(list[i].isTrailingStop);
                                 $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
                                     $("#mytable > tbody:last").append("<td class='tdHidden_2'></td>");
@@ -218,7 +218,7 @@
                                     // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
                                     // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
                                     $("#mytable > tbody:last").append("</tr>");
-
+                                        
                                     $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td class='margin'><span class='ID95_'>" + list[i].margin + "%</span></td>");
                                     $("#mytable > tbody:last").append("<td class='leverage'><span class='ID2X'>" + list[i].leverage + "x</span></td>");
@@ -400,12 +400,12 @@
 </head>
 <body onFocus="parent_disable();" onclick="parent_disable();">
     
- 
+
   <div class="section-62">
     <div class="w-container">
         <div class="positionTitle">
             <h2 class="bitmexTitle">비트맥스 포지션</h2>
-            <a class="positionTitleButton_2" href="site_total_benefit"><strong>통합거래내역</strong></a>
+            <a class="positionTitleButton_2" href="benefit_history"><strong>통합거래내역</strong></a>
             <a class="positionTitleButton_1" href="manage"><strong>통합설정</strong></a>
         </div>
 
