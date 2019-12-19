@@ -128,12 +128,17 @@ client.onmessage = function(e){
         }
     }else if(table === "order"){
         for(var i=0; i<data.length; i++){
-            if(data[i]["ordStatus"] === 'Filled'){ //data[i]["text"] === 'dilute' && 
+            if(data[i]["ordStatus"] === 'Filled' && data[i]["leavesQty"] === 0){ //data[i]["text"] === 'dilute' && 
                 //물타기 한 주문이 체결되면 체결내역으로 데이터 이동
-                console.log("action : "+ json[3]["action"] );
-                console.log("orderID : "+ data[i]["orderID"]);   
-                console.log("ordStatus : "+data[i]["ordStatus"]);   
-                console.log("text : "+data[i]["text"]);
+                // console.log(json);
+                // console.log(json[3].data);
+
+                console.log("[" + getCurrentTimeString() +"]" + "username : "+json[1]);
+                console.log("[" + getCurrentTimeString() +"]" + "action : "+ json[3]["action"] );
+                console.log("[" + getCurrentTimeString() +"]" + "orderID : "+ data[i]["orderID"]);   
+                console.log("[" + getCurrentTimeString() +"]" + "ordStatus : "+data[i]["ordStatus"]); 
+                console.log("[" + getCurrentTimeString() +"]" + "leavesQty : "+data[i]["leavesQty"]);     
+                console.log("[" + getCurrentTimeString() +"]" + "text : "+data[i]["text"]);
                 console.log("--------------");
                 console.log("");
                 setTimeout(move_unfilled_to_filled(username, data[i].orderID),3000);
@@ -144,7 +149,7 @@ client.onmessage = function(e){
 
 function move_unfilled_to_filled(site, orderID){
     return function(){
-        console.log("move_unfilled_to_filled 실행!!!");
+        console.log("[" + getCurrentTimeString() +"]" + "move_unfilled_to_filled 실행!!!");
         var myPos = {
             walletBalance : 0,
             avgEntryPrice : 0,
@@ -166,7 +171,7 @@ function move_unfilled_to_filled(site, orderID){
         }
         
         var updateObj = {}
-
+        
         async.waterfall([
             function remove_unfilled_order(cb){
                 //미체결 내역 조회
@@ -177,10 +182,11 @@ function move_unfilled_to_filled(site, orderID){
                     }
 
                     if(json === null){ //조회결과 없으면
+                        console.log("[" + getCurrentTimeString() +"]" + "미체결 조회결과 없음");
                         return;
                     }
 
-                    console.log("체결된 물타기 주문 검색-> 삭제!!");
+                    console.log("[" + getCurrentTimeString() +"]" + "미체결 주문 검색-> 삭제!!");
                     console.log(json);
                     unfilled = new Object(json);
                     cb(null);
@@ -193,6 +199,7 @@ function move_unfilled_to_filled(site, orderID){
                         return;
                     }
                     //console.log(json);
+                    
                     myPos.walletBalance =json.walletBalance; //총자산
                     cb(null);
                 });
@@ -231,7 +238,7 @@ function move_unfilled_to_filled(site, orderID){
             },
             function isCondition(cb){
                 if(filled.side === 'long' && Math.abs(myPos.amount) > filled.amount && Math.abs(myPos.amount) > unfilled.orderQty){
-                    console.log("물타기 Buy");
+                    console.log("[" + getCurrentTimeString() +"]" + "물타기 Buy");
                     type = "long"
                     totalAsset = filled.walletBalance;
                     updateObj["entryPrice"] = myPos.avgEntryPrice;
@@ -239,7 +246,7 @@ function move_unfilled_to_filled(site, orderID){
                 }
 
                 if(filled.side === 'short' && Math.abs(myPos.amount) > filled.amount && Math.abs(myPos.amount) > unfilled.orderQty){
-                    console.log("물타기 Sell");
+                    console.log("[" + getCurrentTimeString() +"]" + "물타기 Sell");
                     type = "short"
                     totalAsset = filled.walletBalance;
                     updateObj["entryPrice"] = myPos.avgEntryPrice;
@@ -247,7 +254,7 @@ function move_unfilled_to_filled(site, orderID){
                 }
 
                 if(filled.side === 'exit' && myPos.amount > 0){
-                    console.log("진입 Buy");
+                    console.log("[" + getCurrentTimeString() +"]" + "진입 Buy");
                     type="long";
                     totalAsset = filled.walletBalance;
                     updateObj["side"] = 'long';
@@ -258,7 +265,7 @@ function move_unfilled_to_filled(site, orderID){
                 }
 
                 if(filled.side === 'exit' && myPos.amount < 0){
-                    console.log("진입 Sell");
+                    console.log("[" + getCurrentTimeString() +"]" + "진입 Sell");
                     type = "short"
                     totalAsset = filled.walletBalance;
                     updateObj["side"] = 'short';
@@ -269,7 +276,7 @@ function move_unfilled_to_filled(site, orderID){
                 }
 
                 if(filled.side === 'long' && filled.side === myPos.side && 0 < Math.abs(myPos.amount) && Math.abs(myPos.amount) < filled.amount){
-                    console.log("Buy 절반탈출");
+                    console.log("[" + getCurrentTimeString() +"]" + "Buy 절반탈출");
                     type = "exit"
                     totalAsset = myPos.walletBalance;
                     benefit = myPos.walletBalance - filled.walletBalance;
@@ -279,7 +286,7 @@ function move_unfilled_to_filled(site, orderID){
                 }
 
                 if(filled.side === 'short' && filled.side === myPos.side && 0 < Math.abs(myPos.amount) && Math.abs(myPos.amount) < filled.amount){
-                    console.log("Sell 절반탈출");
+                    console.log("[" + getCurrentTimeString() +"]" + "Sell 절반탈출");
                     type = "exit"
                     totalAsset = myPos.walletBalance;
                     benefit = myPos.walletBalance - filled.walletBalance;
@@ -289,7 +296,7 @@ function move_unfilled_to_filled(site, orderID){
                 }
 
                 if(myPos.amount === 0){
-                    console.log("완전탈출");
+                    console.log("[" + getCurrentTimeString() +"]" + "완전탈출");
                     type = "exit"
                     totalAsset = myPos.walletBalance;
                     benefit = myPos.walletBalance - filled.walletBalance;
@@ -331,13 +338,14 @@ function move_unfilled_to_filled(site, orderID){
                         console.log(error);
                         return;
                     }
-                    //console.log(res);
+                    console.log("[" + getCurrentTimeString() +"]" + "이동한 체결내역");
+                    console.log(res);
                     cb(null);
                 });
             },
             function change_status(cb){
                 if(updateObj === null){
-                    console.log("물타기 상태변경X");
+                    console.log("[" + getCurrentTimeString() +"]" +"상태값변경변경X");
                     return cb(null);
                 }
 
@@ -346,7 +354,7 @@ function move_unfilled_to_filled(site, orderID){
                         console.log(error);
                         return;
                     }
-                    console.log("물타기 상태변경!");
+                    console.log("[" + getCurrentTimeString() +"]" +"상태값변경!");
                     cb(null);
                 });
             }
@@ -355,7 +363,7 @@ function move_unfilled_to_filled(site, orderID){
                 console.log(error);
                 return;
             }
-            console.log("move_unfilled_to_filled 실행!!!");
+            console.log("[" + getCurrentTimeString() +"]" +"move_unfilled_to_filled 실행!!!");
         });
     }
 }
