@@ -16,7 +16,7 @@ var orderSchema = new Schema({
     feeRate : {type:Number, default : 0}, //수수료 비율
     fee : {type:Number, default : 0}, //수수료
     benefit : {type:Number, default : 0}, //수익
-    benefitRate : {type:Number, default : 0}, //수익
+    benefitRate : {type:Number, default : 0}, //수익율
     div_cnt : {type:Number, default : 0}, //수익
     start_time : {type : Date, default : Date.now},
     end_time : {type : Date, default : Date.now},
