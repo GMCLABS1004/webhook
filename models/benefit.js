@@ -4,6 +4,8 @@ var benefitSchema = new Schema({
     site: {type:String, default : "bitmex1"},
     site_type: {type:String, default : "oversee"},
     timestamp : {type:Date}, //탈출시간
+    start_time : {type:Date}, //탈출시간
+    end_time : {type:Date}, //탈출시간
     start_asset_sum : {type:Number, default : 0}, //site전체 첫 총자산합
     end_asset_sum : {type:Number, default : 0}, //site전체 첫 총자산합
     before_asset_sum : {type:Number, default : 0}, //탈출전 site전체 총자산합

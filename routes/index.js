@@ -1983,7 +1983,7 @@ router.get('/benefit_history', isAuthenticated, function(req, res){
 
 
 router.get('/api/benefit_history', isAuthenticated, function(req, res){
-  benefitDB.find({}).sort({timestamp : "desc"}).exec(function(error, json){
+  benefitDB.find({}).sort({start_time : "desc"}).exec(function(error, json){
     if(error){
       console.log(error);
       return;

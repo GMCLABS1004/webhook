@@ -75,7 +75,9 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
                     benefit : fixed8(benefit),
                     benefitRate : (benefit / end_asset_sum) * 100,
                     type_log : type_log,
-                    timestamp : end_time
+                    timestamp : end_time,
+                    start_time : start_time,
+                    end_time : end_time,
                 }
                 
                 benefitDB.insertMany(obj, function(error, json){
@@ -96,7 +98,7 @@ function get_total_asset(timestamp, isSort, callback){
     var list = [];
     var total_asset=0;
     for(var i=1; i<=10; i++){
-      orderDB.findOne({"site" : "bitmex"+i, "start_time" : {"$lte" : timestamp}}).sort({"start_time" : isSort}).limit(1).exec(function(error, json){
+      orderDB.findOne({"site" : "bitmex"+i, "start_time" : {"$lt" : timestamp}}).sort({"start_time" : isSort}).limit(1).exec(function(error, json){
         if(error){
           console.log(error);
           return;
