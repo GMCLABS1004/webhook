@@ -68,7 +68,9 @@
                                     $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json[i].after_asset_sum, "bitmex") + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json[i].benefit, "bitmex") + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + benefit_comma(json[i].benefitRate) + "</td>");
-                            $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json[i].after_asset_sum, "bitmex") + "</td>");
+
+                                $("#mytable > tbody:last").append("<tr>");
                         }
                         if(length >0){
                             start_asset_sum = json[0].start_asset_sum;
@@ -139,9 +141,9 @@
                                     <th>계정</th>
                                     <th class="typeLog">주문타입</th>
                                     <th>탈출전 자산합</th>
-                                    <th>탈출후 자산합</th>
                                     <th>수익</th>
                                     <th>수익율</th>
+                                    <th>탈출후 자산합</th>
                                 </tr>
                             </thead>
                             <tbody>
