@@ -17,7 +17,7 @@ mongoose.connect(webSetting.dbPath, function(error){
         // var benefit = json[length].benefit;
         // var type_log = json[length].type_log;
         // setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
-        
+        console.log("count : "+ json.length);
         for(i in json){
             var site = json[i].site;
             var start_time = json[i].start_time;
