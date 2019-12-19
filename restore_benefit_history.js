@@ -24,7 +24,7 @@ mongoose.connect(webSetting.dbPath, function(error){
             var end_time = json[i].end_time;
             var benefit = json[i].benefit;
             var type_log = json[i].type_log;
-            setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
+            setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
         }
     });
 });
