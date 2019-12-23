@@ -63,12 +63,12 @@
                             var time2 = json.list[i].end_time.split("T")[1].split(":");
                             $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='center'>" + json.list[i].start_time.split("T")[0] + "</td>"); 
+                                    $("#mytable > tbody:last").append("<td class='day' align='center'>" + json.list[i].start_time.split("T")[0] + "</td>"); 
                                     $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
                                     // $("#mytable > tbody:last").append("<td align='center'>" + time2[0] + ":" + time2[1] + ":" + time2[2].split(".")[0] + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='center'><a href="+ url + json.list[i].site +">"+ json.list[i].site + "</a></td>"); 
+                                    $("#mytable > tbody:last").append("<td class='bitmexName' align='center'><a href="+ url + json.list[i].site +">"+ json.list[i].site + "</a></td>"); 
                                     $("#mytable > tbody:last").append("<td class='typeLog' align='center'>" + json.list[i].type_log + "</td>"); 
-                                    $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json.list[i].before_asset_sum, "bitmex") + "</td>");
+                                    $("#mytable > tbody:last").append("<td class='before_asset_sum' align='center'>" + asset_comma(json.list[i].before_asset_sum, "bitmex") + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json.list[i].benefit, "bitmex") + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + benefit_comma(json.list[i].benefitRate) + "</td>");
                                     $("#mytable > tbody:last").append("<td align='center'>" + asset_comma(json.list[i].after_asset_sum, "bitmex") + "</td>");
@@ -171,9 +171,9 @@
                                     <th>날짜</th>
                                     <th>시작</th>
                                     <!-- <th>종료</th> -->
-                                    <th>계정</th>
+                                    <th class='bitmexName'>계정</th>
                                     <th class="typeLog">주문타입</th>
-                                    <th>탈출전</th>
+                                    <th class="before_asset_sum">탈출전</th>
                                     <th>수익</th>
                                     <th>수익율</th>
                                     <th>탈출후</th>

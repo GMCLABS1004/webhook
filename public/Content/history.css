@@ -62,6 +62,9 @@ table {
 
 /*====================*/
 /* bitmexTable_1 */
+.day{
+  white-space: nowrap;
+}
 
 .historyTitle{
   margin-left: 10px;
@@ -340,6 +343,10 @@ section {
 }
 
 @media screen and (max-width: 500px) {
+
+  .bitmexName, .before_asset_sum{
+    display: none;
+  }
 
   *{
     font-size: 12px;
