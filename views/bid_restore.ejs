@@ -13,10 +13,19 @@
                 var binSize = $("#binSize option:selected").val()
                 var date = $("#date").val();
                 var month = $("#month").val();
+                var year = $("#year").val();
+                var standard = undefined;
+                if(date !== undefined){
+                    standard = date;
+                }else if(month !== undefined){
+                    standard = month;
+                }else if(year !== undefined){
+                    standard = year;
+                }
                 var data = {
                     interval : interval,
                     binSize : binSize,
-                    date : (date !== undefined)? date : month
+                    date : standard
                 }
                 $.ajax({
                     method : "POST",
@@ -24,7 +33,7 @@
                     dataType : "json",
                     data : data,
                     success : function(json){
-
+                        
                     },
                     error : function(){
 
@@ -39,6 +48,8 @@
                 }else if(val === 'month'){
                     console.log(val);
                     $("#html_date").html('month : <input type="month" id="month" ><br>');
+                }else if(val === 'year'){
+                    $("#html_date").html('year : <input type="text" id="year" ><br>');
                 }
                 init();
             });
@@ -61,6 +72,7 @@
     interval : <select id="interval">
             <option value="day" selected>day</option>
             <option value="month">month</option>
+            <option value="year">year</option>
     </select><br>
     bin size : <select id="binSize">
         <!-- <option value="1m" >1m</option> -->
