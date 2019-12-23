@@ -2030,6 +2030,10 @@ router.get('/api/benefit_history_page', isAuthenticated, function(req, res){
           console.log(error);
           res.send(error);
         }
+        if(json === null){
+          res.send([]);
+          return;
+        }
         start_asset_sum = json.start_asset_sum;
         end_asset_sum = json.after_asset_sum;
         totalBenefit = (end_asset_sum - start_asset_sum)
@@ -2326,14 +2330,15 @@ router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
         //   totalPageSize = totalPageSize+1;
         // }
         totalPageSize = Math.ceil(total_cnt / cntPerPage);  //총 페이지 사이즈 = (글 갯수 - 1 / w_size ) + 1
-       
-        if (totalPageSize < page){
-            page = totalPageSize;
+        
+        if(totalPageSize < page){
+          page = totalPageSize;
         }
-        start_page_num =  (Math.floor((page-1) / 10) * 10) + 1 //시작번호 = ( (페이지 번호 -1) / 총 페이지 사이즈 ) * 총 페이지 사이즈 + 1
+
+        start_page_num = (Math.floor((page-1) / 10) * 10) + 1 //시작번호 = ( (페이지 번호 -1) / 총 페이지 사이즈 ) * 총 페이지 사이즈 + 1
         end_page_num = start_page_num + 10 - 1 //마지막번호 = 시작 페이지 번호 + 페이지 총 사이즈 -1
         //start_page_num = start_page_num - (end_page_num - start_page_num) +1
-        if (end_page_num > totalPageSize) {
+        if(end_page_num > totalPageSize){
           end_page_num = totalPageSize;
         }
         
@@ -2348,7 +2353,6 @@ router.get('/api/orderHistoryTotalPage',  isAuthenticated, function(req, res){
           isNext = true;
           next_page_num = end_page_num+1; //다음 페이지 번호
         }
-
         cb(null);
       });
     },
