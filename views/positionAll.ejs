@@ -180,19 +180,19 @@
                                 $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
                                     $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice1,'bitmex')+"</span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice2,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
                                     $("#mytable > tbody:last").append("<td class='___3102'>" + "<a class='____1_A63_Rectangle_4' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
                                     $("#mytable > tbody:last").append("<td class='___3103'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
                                     $("#mytable > tbody:last").append("</tr>");
-
+                                    
                                     $("#mytable > tbody:last").append("<tr>");
                                     $("#mytable > tbody:last").append("<td colspan='2'></td>");
                                     $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice1,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice2,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
                                     $("#mytable > tbody:last").append("</tr>");
 
                                     $("#mytable > tbody:last").append("<tr>");
@@ -265,7 +265,20 @@
                 });
             }
         }
-
+        function print_trail_price(trailPrice, isSide, pgSide){
+            if((isSide === 'long' && pgSide === 'long') && (isSide === 'short' && pgSide === 'short')){
+                return price_comma(trailPrice,'bitmex');
+            }else{
+                return '';
+            }
+        }
+        function print_rentry_price(rentryPrice, isSide, pgSide){
+            if((isSide === 'long' && pgSide === 'long') && (isSide === 'short' && pgSide === 'short')){
+                return price_comma(rentryPrice,'bitmex');
+            }else{
+                return '';
+            }
+        }
         function manual_order(obj){
             console.log("manual_order 호출");
             console.log(obj)

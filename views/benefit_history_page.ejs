@@ -46,7 +46,7 @@
                 url : 'api/benefit_history_page?cntPerPage='+cntPerPage+'&page='+page,
                 success : function(json){
                     if(json){
-                        //console.log(json);
+                        console.log(json);
                         var url = window.location.origin + '/orderHistoryTotalPage?site='
                         var length = json.list.length;
                         var start_asset_sum=0;

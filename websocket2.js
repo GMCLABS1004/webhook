@@ -43,10 +43,10 @@ client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
         var json = data[length];
         var close_price = json.close;
         var min = new Date().getMinutes();
-        if(min > 0){ //정각에서 벗어난 데이터는 무시
-            console.log("[" + getCurrentTimeString() +"] " + "ts 실행X");
-            return;
-        }
+        // if(min > 0){ //정각에서 벗어난 데이터는 무시
+        //     console.log("[" + getCurrentTimeString() +"] " + "ts 실행X");
+        //     return;
+        // }
         
         //1시간봉 종가를 기준으로 트레일링 스탑 실행
         settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
@@ -291,6 +291,8 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             var alpha = 0;
             var trailPrice1 =0;
             var trailPrice2 =0;
+            var rentryPrice1 =0;
+            var rentryPrice2 =0;
             console.log("[" + getCurrentTimeString() +"] " + "------------------------");
             console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ last_price);
             console.log("[" + getCurrentTimeString() +"] " + "highPrice : "+ highPrice);
@@ -328,8 +330,9 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }else if(obj.side === 'short'){ //isPosition === 'short'
                 console.log("-----------------short exit--------------");
                 alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
-                trailPrice1 = entryPrice - alpha;
-                trailPrice2 = entryPrice - trailFee;
+                trailPrice1 = entryPrice - trailFee;
+                trailPrice2 = entryPrice - alpha;
+                
                 console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
                 // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
@@ -355,8 +358,9 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - rentryFee : "+ (entryPrice - rentryFee));
                 console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha < last_price < entryPrice - rentryFee");
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - rentryFee));
-                trailPrice1 = entryPrice - alpha;
-                trailPrice2 = entryPrice - rentryFee;
+                rentryPrice1 = entryPrice - rentryFee;
+                rentryPrice2 = entryPrice - alpha;
+                
                 if(entryPrice - alpha < last_price &&  last_price < entryPrice - rentryFee){ //진입가 + 
                     console.log({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry"});
                     if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Buy", side_num : side_num, type_log : "rentry", timestamp : new Date().getTime()})){
@@ -372,8 +376,8 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
                 // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + rentryFee : "+ (entryPrice + rentryFee));
                 console.log("[" + getCurrentTimeString() +"] " + "entryPrice + rentryFee < last_price < entryPrice + alpha");
                 console.log("[" + getCurrentTimeString() +"] " + (entryPrice + rentryFee) + " / " + last_price + " / " + (entryPrice + alpha));
-                trailPrice1 = entryPrice + rentryFee;
-                trailPrice2 = entryPrice + alpha;
+                rentryPrice1 = entryPrice + rentryFee;
+                rentryPrice2 = entryPrice + alpha;
                 if(entryPrice + rentryFee < last_price && last_price < entryPrice + alpha){ //진입가 + ahlpa 
                     console.log({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "rentry"});
                     if(is_insert_signal({site : site, scriptNo : scriptNo , side : "Sell", side_num : side_num, type_log : "rentry", timestamp : new Date().getTime()})){
@@ -383,20 +387,22 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
             }
             console.log("trailPrice1 : "+ trailPrice1);
             console.log("trailPrice2 : "+ trailPrice2);
-            if(trailPrice1 !== 0 && trailPrice2 !== 0){
-                settings.findByIdAndUpdate(
-                    obj._id,
-                    {$set : {trailPrice1 : trailPrice1, trailPrice2 : trailPrice2}},
-                    function(error, res){
-                        if(error){
-                            console.log(error);
-                            return;
-                        }
-                        //console.log(res.site + " trail1,2 업데이트 : " + trailPrice1);
-                        console.log(res.site + " trail1,2 업데이트");
+            console.log("rentryPrice1 : "+ rentryPrice1);
+            console.log("rentryPrice2 : "+ rentryPrice2);
+            
+            settings.findByIdAndUpdate(
+                obj._id,
+                {$set : {trailPrice1 : trailPrice1, trailPrice2 : trailPrice2, rentryPrice1 : rentryPrice1, rentryPrice2 : rentryPrice2}},
+                function(error, res){
+                    if(error){
+                        console.log(error);
+                        return;
                     }
-                )
-            }
+                    //console.log(res.site + " trail1,2 업데이트 : " + trailPrice1);
+                    console.log(res.site + " trail1,2 업데이트");
+                }
+            )
+            
             
             console.log("");
         //});

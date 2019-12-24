@@ -367,6 +367,8 @@ function getPosition_bitmex(set, callback){
             data["isTrailingStop"] = (set.isTrailingStop === true)? "checked" : "unchecked";
             data["trailPrice1"] = set.trailPrice1;
             data["trailPrice2"] = set.trailPrice2;
+            data["rentryPrice1"] = set.rentryPrice1;
+            data["rentryPrice2"] = set.rentryPrice2;
             cb(null);
           });
         },
@@ -2060,7 +2062,7 @@ router.get('/api/benefit_history_page', isAuthenticated, function(req, res){
 
         totalPageSize = Math.ceil(total_cnt / cntPerPage);  //총 페이지 사이즈 = (글 갯수 - 1 / w_size ) + 1
        
-        if (totalPageSize < page){
+        if(totalPageSize < page){
             page = totalPageSize;
         }
         start_page_num =  (Math.floor((page-1) / 10) * 10) + 1 //시작번호 = ( (페이지 번호 -1) / 총 페이지 사이즈 ) * 총 페이지 사이즈 + 1

@@ -27,8 +27,10 @@ var settingSchema = new Schema({
     entryPrice : {type:Number, default : 0}, //진입가격
     highPrice : {type:Number, default : 0}, //진입후 ticker중 가장 높은 가격 업데이트
     lowPrice : {type:Number, default : 0}, //진입후 ticker중 가장 낮은 가격 업데이트
-    trailPrice1 : {type:Number, default : 0}, //진입가격
-    trailPrice2 : {type:Number, default : 0}, //진입가격
+    trailPrice1 : {type:Number, default : 0},
+    trailPrice2 : {type:Number, default : 0},
+    rentryPrice1 : {type:Number, default : 0},
+    rentryPrice2 : {type:Number, default : 0},
 });
 settingSchema.index({site :1, site_type : 1});
 module.exports = mongoose.model('setting', settingSchema,'setting');
