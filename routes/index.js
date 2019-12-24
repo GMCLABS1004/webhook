@@ -365,6 +365,8 @@ function getPosition_bitmex(set, callback){
             data["side_num"] = set.side_num;
             data["pgSide"] = set.side;
             data["isTrailingStop"] = (set.isTrailingStop === true)? "checked" : "unchecked";
+            data["trailPrice1"] = set.trailPrice1;
+            data["trailPrice2"] = set.trailPrice2;
             cb(null);
           });
         },
