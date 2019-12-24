@@ -344,7 +344,7 @@ section {
 
 @media screen and (max-width: 500px) {
 
-  .bitmexName, .before_asset_sum{
+  .bitmexName, .before_asset_sum, .lastTime{
     display: none;
   }
 
