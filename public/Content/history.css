@@ -347,6 +347,9 @@ section {
   .bitmexName, .before_asset_sum, .lastTime{
     display: none;
   }
+  .typeLog {
+    display: none;
+  }
 
   *{
     font-size: 12px;
