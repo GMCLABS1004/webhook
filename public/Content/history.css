@@ -80,8 +80,11 @@ table {
 
 .historyTable td {
   /* width: 100px; */
-  padding: 6px 10px 6px 10px;
-  border: 1px solid rgba(243, 243, 243, 0.541); 
+  padding: 6px 2px 6px 2px;
+  border-bottom: 1px solid rgba(216, 216, 216, 0.246); 
+}
+.historyTable th {
+  border-bottom: 1px solid rgba(216, 216, 216, 0.246); 
 }
 .select {
   float: right; 
