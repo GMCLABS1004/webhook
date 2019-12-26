@@ -2121,15 +2121,108 @@ router.get('/api/benefit_history_page', isAuthenticated, function(req, res){
     }
     res.send(obj);
   });
+});
 
-  // benefitDB.find({}).sort({start_time : "desc"}).exec(function(error, json){
-  //   if(error){
-  //     console.log(error);
-  //     return;
-  //   }
-  //   console.log(json);
-  //   res.send(json);
-  // });
+
+router.post('/api/benefit_history_update',isAuthenticated, function(req, res){
+  var _id = req.body._id;
+  var start_time = new Date(req.body.start_time);
+  var benefit = Number(req.body.benefit);
+  var end_asset_sum = 0;
+  var before_asset_sum = 0;
+  async.waterfall([
+    function benefit_update(cb){
+      benefitDB.findByIdAndUpdate(_id, {$set : {benefit :  benefit}}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        console.log("수익율 업데이트");
+        console.log(json);
+        cb(null);
+      });
+    },
+    function refesh_benefit_his(){
+      benefitDB.find({start_time : {$gte : start_time}}).sort({start_time : "asc"}).exec(function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+    
+        for(var i=0; i<json.length; i++){
+          if(i === 0){
+            before_asset_sum = json[0].before_asset_sum;
+            after_asset_sum = json[0].before_asset_sum + json[0].benefit;
+          }
+
+          var obj = {
+            end_asset_sum : before_asset_sum,
+            before_asset_sum : before_asset_sum,
+            after_asset_sum : before_asset_sum + json[i].benefit,
+            benefitRate : ((after_asset_sum - before_asset_sum) / before_asset_sum) * 100,
+            start_time : json[i].start_time
+          }
+          console.log(obj);
+          benefitDB.findByIdAndUpdate(
+              json[i]._id,
+              {$set : obj},
+              function(error, res){
+                  if(error){
+                      console.log(error);
+                      return;
+                  }
+              }
+          )
+          end_asset_sum = obj.after_asset_sum;
+          before_asset_sum = obj.after_asset_sum;
+        }
+        console.log(json);
+        res.send({});
+      });
+    }
+  ], function(error, json){
+    if(error){
+      console.log(error);
+      return;
+    }
+  });
+});
+
+router.get('/benefit_history_update',isAuthenticated, function(req, res){
+  // console.log(req.body);
+  // res.send({});
+  benefitDB.findById(req.query._id, function(error, json){
+    if(error){
+      console.log(error);
+      return;
+    }
+    console.log(json);
+    res.render("benefit_history_update",json);
+  });
+});
+
+
+router.post('/api/benefit_history_delete', isAuthenticated, function(req, res){
+  var deleteArr = req.body.deleteArr; //start or stop
+  console.log("deleteArr : "+req.body.obj);
+  console.log("deleteArr : "+req.body.deleteArr);
+  console.log("length : " + deleteArr.length);
+  console.log("typeof : " + typeof(deleteArr));
+  var length = deleteArr.length;
+  var checkArr = [];
+  for(i=0; i<deleteArr.length; i++){
+    benefitDB.findByIdAndDelete(deleteArr[i],function(error, json){
+      if(error){
+        console.log(error);
+        return;
+      }
+      console.log(json);
+      checkArr.push(json);
+      if(checkArr.length === length){
+        res.send({});
+      }
+    });
+  }
 });
 
 // router.get('/api/benefit_history', isAuthenticated, function(req, res){

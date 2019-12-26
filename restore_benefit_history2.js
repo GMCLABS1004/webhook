@@ -73,7 +73,7 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
                 });
             }, 
             function get_end_asset_sum(cb){ //탈출전 자산 합
-
+                
                 //최초 한번만 실행
                 get_total_asset(start_time, "desc",function(error, asset){
                     if(error){
