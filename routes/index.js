@@ -2142,7 +2142,7 @@ router.post('/api/benefit_history_update',isAuthenticated, function(req, res){
         cb(null);
       });
     },
-    function refesh_benefit_his(){
+    function refesh_benefit_his(cb){
       benefitDB.find({start_time : {$gte : start_time}}).sort({start_time : "asc"}).exec(function(error, json){
         if(error){
           console.log(error);
@@ -2152,32 +2152,35 @@ router.post('/api/benefit_history_update',isAuthenticated, function(req, res){
         for(var i=0; i<json.length; i++){
           if(i === 0){
             before_asset_sum = json[0].before_asset_sum;
-            after_asset_sum = json[0].before_asset_sum + json[0].benefit;
+            //after_asset_sum = json[0].before_asset_sum + json[0].benefit;
           }
 
           var obj = {
             end_asset_sum : before_asset_sum,
             before_asset_sum : before_asset_sum,
-            after_asset_sum : before_asset_sum + json[i].benefit,
-            benefitRate : ((after_asset_sum - before_asset_sum) / before_asset_sum) * 100,
-            start_time : json[i].start_time
+            after_asset_sum : (before_asset_sum + json[i].benefit),
+            benefitRate : (((before_asset_sum + json[i].benefit) - before_asset_sum) / before_asset_sum) * 100
           }
-          console.log(obj);
+
+          //console.log(obj);
           benefitDB.findByIdAndUpdate(
               json[i]._id,
               {$set : obj},
               function(error, res){
-                  if(error){
-                      console.log(error);
-                      return;
-                  }
+                if(error){
+                    console.log(error);
+                    return;
+                }
+                console.log(res);
+
               }
           )
-          end_asset_sum = obj.after_asset_sum;
+          // end_asset_sum = obj.after_asset_sum;
           before_asset_sum = obj.after_asset_sum;
         }
-        console.log(json);
-        res.send({});
+       
+        cb(null);
+        
       });
     }
   ], function(error, json){
@@ -2185,6 +2188,7 @@ router.post('/api/benefit_history_update',isAuthenticated, function(req, res){
       console.log(error);
       return;
     }
+    res.send({});
   });
 });
 

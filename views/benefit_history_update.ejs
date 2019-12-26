@@ -30,6 +30,12 @@
                     data : data,
                     success : function(json){
                         console.log(json);
+                        alert("수정완료");
+                        opener.location.reload();//부모창 새로고침
+                        //현재창 종료
+                        self.opener = null; 
+                        self.close();
+
                     }
                 });
             });

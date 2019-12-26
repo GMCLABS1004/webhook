@@ -123,7 +123,7 @@
         }
         $(document).ready(function(){
             get_benefit_history(1);
-            $('#cntPerPage').on('change', function (e){
+            $('#cntPerPage').on('change', function(e){
                 get_benefit_history(1);
             });
 
@@ -214,8 +214,8 @@
                 popupWindow = window.open(url, 'popup-test', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top)
             }
         }
-        function parent_disable() {
-            if (popupWindow && !popupWindow.closed)
+        function parent_disable(){
+            if(popupWindow && !popupWindow.closed)
                 popupWindow.focus();
         }
     </script>
