@@ -21,33 +21,11 @@ mongoose.connect(webSetting.dbPath, function(error){
                 console.log(i);
                 console.log("first_restore_benefit_history");
                 setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
-                
             }else{
                 console.log("restore_benefit_history");
                 setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *200);
-                
             }
         }
-
-
-        // for(i in json){
-        //     var site = json[i].site;
-        //     var start_time = json[i].start_time;
-        //     var end_time = json[i].end_time;
-        //     var benefit = json[i].benefit;
-        //     var type_log = json[i].type_log;
-        //     //console.log(i);
-        //     if(i===0){
-        //         console.log(i);
-        //         console.log("first_restore_benefit_history");
-        //         setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
-                
-        //     }else{
-        //         // console.log("restore_benefit_history");
-        //         // setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *200);
-                
-        //     }
-        // }
     });
 });
 
@@ -72,21 +50,21 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
                     cb(null);
                 });
             }, 
-            function get_end_asset_sum(cb){ //탈출전 자산 합
-                
-                //최초 한번만 실행
-                get_total_asset(start_time, "desc",function(error, asset){
-                    if(error){
-                        console.log(error);
-                        return;
-                    }
-                    // console.log("end_asset : "+asset);
+            // function get_end_asset_sum(cb){ //탈출전 자산 합
 
-                    end_asset_sum = asset;
-                    cb(null);
-                });
-            },
-            function restore(){
+            //     //최초 한번만 실행
+            //     get_total_asset(start_time, "desc",function(error, asset){
+            //         if(error){
+            //             console.log(error);
+            //             return;
+            //         }
+            //         // console.log("end_asset : "+asset);
+
+            //         end_asset_sum = asset;
+            //         cb(null);
+            //     });
+            // },
+            function restore(cb){
                 var obj = {
                     site : site,
                     start_asset_sum : fixed8(start_asset_sum),
@@ -106,6 +84,7 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
                         return;
                     }
                     console.log(json);
+                    cb(null);
                 })
             }
             
@@ -114,8 +93,6 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
         })
     }
 }
-
-
 
 function first_restore_benefit_history(site, start_time, end_time, benefit, type_log){
     return function(){
@@ -151,7 +128,7 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
                     cb(null);
                 });
             },
-            function restore(){
+            function restore(cb){
                 var obj = {
                     site : site,
                     start_asset_sum : fixed8(start_asset_sum),
@@ -171,6 +148,7 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
                         return;
                     }
                     console.log(json);
+                    cb(null);
                 })
             }
             
@@ -179,7 +157,6 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
         })
     }
 }
-
 
 function get_total_asset(timestamp, isSort, callback){
     var list = [];
@@ -206,9 +183,7 @@ function get_total_asset(timestamp, isSort, callback){
     }
   }
 
-
-
-  function fixed8(num){
+function fixed8(num){
     var str = new String(num);
     var arr = str.split(".");
 	if(arr.length>1){

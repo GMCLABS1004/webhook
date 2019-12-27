@@ -18,8 +18,11 @@
 
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script>
+        var isPause = false;
+        var intevHandle = null;
         var hisArr=[];
         var page =1;
+        var restore_goal_cnt =0;
          function asset_comma(num, site){
             var site_type='';
             if(site.indexOf("bitmex") !== -1){
@@ -121,6 +124,47 @@
                 }
            });
         }
+
+        function check_restore_progress(){
+            return function(){
+                if(isPause === false){
+                    $.ajax({
+                        method : "GET",
+                        url : "/api/check_restore_progress",
+                        success : function(json){
+                            if(restore_goal_cnt === json.cnt){
+                                isPause = true;
+                                clearInterval(intevHandle);
+                                alert("복구 완료");
+                                window.location.reload();
+                            }
+                        }
+                    })
+                }
+                
+            }
+        }
+        
+
+        function check_calc_progress(){
+            return function(){
+                if(isPause === false){
+                    $.ajax({
+                        method : "GET",
+                        url : "/api/check_calc_progress",
+                        success : function(json){
+                            if(json.cnt === 0){
+                                isPause = true;
+                                clearInterval(intevHandle);
+                                alert("계산 완료");
+                                window.location.reload();
+                            }
+                        }
+                    })
+                }
+            }
+        }
+
         $(document).ready(function(){
             get_benefit_history(1);
             $('#cntPerPage').on('change', function(e){
@@ -157,6 +201,40 @@
                 
             });
            
+            $("#restore").click(function(){
+                console.log("restore");
+                if(confirm("복구하시겠습니까?")){
+                    console.log("복구성공");
+                    $.ajax({
+                        method : "POST",
+                        url : "/api/benefit_history_restore",
+                        success(json){
+                            isPause = false;
+                            console.log(json);
+                            restore_goal_cnt = json.restore_goal_cnt;
+                            alert('복구시작 : ' + restore_goal_cnt);
+                            intevHandle = setInterval(check_restore_progress(), 3000);
+                        }
+                    });
+                }
+            });
+
+            $("#calc").click(function(){
+                console.log("calc");
+                if(confirm("수익율계산 하시겠습니까?")){
+                    console.log("수익율계산 성공");
+                    $.ajax({
+                        method : "POST",
+                        url : "/api/benefit_history_calc",
+                        success(json){
+                            console.log(json.calc_goal_cnt);
+                            intevHandle = setInterval(check_calc_progress(), 3000);
+                            alert("수익율계산 시작 : " + json.calc_goal_cnt);
+                        }
+                    });
+                }
+            });
+
             $("#delete").click(function(){
                 console.log("delete");
                 if(confirm("거래내역을 삭제합니다")){
@@ -193,14 +271,13 @@
                         }
                     });
                 }
-               
             });
         });
     </script>
 
     <script>
         var popupWindow = null;
-        function child_open(url) {
+        function child_open(url){
             var _width = '700';
             var _height = '600';
             
@@ -282,7 +359,10 @@
                         </table>
                         <div id="page_link" class="pageNumber"></div>
                         <!-- <button id="insert">추가</button> -->
+                        <button id="calc" class="select">계산</button>
+                        <button id="restore" class="select">복구</button>
                         <button id="update" class="select">수정</button>
+                        
                         <!-- <button id="delete">삭제</button> -->
                     </div>
                 </div>

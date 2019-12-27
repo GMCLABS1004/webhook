@@ -2124,6 +2124,354 @@ router.get('/api/benefit_history_page', isAuthenticated, function(req, res){
 });
 
 
+router.get('/api/check_restore_progress',isAuthenticated, function(req, res){
+  benefitDB.count({}, function(error, cnt){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send({cnt : cnt});
+  })
+});
+
+router.get('/api/check_calc_progress',isAuthenticated, function(req, res){
+  benefitDB.count({end_asset_sum : 0, before_asset_sum : 0, after_asset_sum : 0}, function(error, cnt){
+    if(error){
+      console.log(error);
+      return;
+    }
+    res.send({cnt : cnt});
+  })
+});
+
+router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
+  console.log("restore");
+  var restore_goal_cnt=0;
+  async.waterfall([
+    function remove(cb){
+      benefitDB.remove({}, function(error, json){
+        if(error){
+          console.log(error);
+          return;
+        }
+        console.log(json);
+        cb(null);
+      });
+    },
+    function restore(cb){
+      order.find({site : {$regex : "bitmex"}, type : "exit"}).sort({start_time : "asc"}).exec(function(error, json){
+        if(error){
+            console.log(error);
+            return;
+        }
+    
+        console.log("count : "+ json.length);
+        restore_goal_cnt = json.length;
+        for(var i=0; i<json.length; i++){
+            var site = json[i].site;
+            var start_time = json[i].start_time;
+            var end_time = json[i].end_time;
+            var benefit = json[i].benefit;
+            var type_log = json[i].type_log;
+            //console.log(i);
+            if(i===0){
+                console.log(i);
+                console.log("first_restore_benefit_history");
+                setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
+            }else{
+                console.log("restore_benefit_history");
+                setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *200);
+            }
+        }
+        cb(null);
+      });
+    }
+  ], function(error, json){
+    res.send({restore_goal_cnt : restore_goal_cnt});
+  });
+});
+
+
+function restore_benefit_history(site, start_time, end_time, benefit, type_log){
+  return function(){
+      // console.log(start_time);
+      // console.log(end_time);
+      var start_asset_sum = 0;
+      var end_asset_sum = 0;
+      async.waterfall([
+          //첫 자산들 총합
+          function get_start_asset_sum(cb){
+              //최초 한번만 실행
+              get_total_asset(start_time, "asc",function(error, asset){
+                  if(error){
+                      console.log(error);
+                      return;
+                  }
+                  // console.log("start_asset : "+asset);
+                  start_asset_sum = asset;
+                  cb(null);
+              });
+          },
+          function restore(cb){
+              var obj = {
+                  site : site,
+                  start_asset_sum : fixed8(start_asset_sum), 
+                  benefit : fixed8(benefit),
+                  type_log : type_log,
+                  timestamp : end_time,
+                  start_time : start_time,
+                  end_time : end_time,
+              }
+              
+              benefitDB.insertMany(obj, function(error, json){
+                  if(error){
+                      return;
+                  }
+                  console.log(json);
+                  cb(null);
+              })
+          }
+      ], function(error, results){
+
+      })
+  }
+}
+
+function first_restore_benefit_history(site, start_time, end_time, benefit, type_log){
+  return function(){
+      // console.log(start_time);
+      // console.log(end_time);
+      var start_asset_sum = 0;
+      var end_asset_sum = 0;
+      async.waterfall([
+          //첫 자산들 총합
+          function get_start_asset_sum(cb){
+              //최초 한번만 실행
+              get_total_asset(start_time, "asc",function(error, asset){
+                  if(error){
+                      console.log(error);
+                      return;
+                  }
+                  // console.log("start_asset : "+asset);
+                  start_asset_sum = asset;
+                  cb(null);
+              });
+          }, 
+          function get_end_asset_sum(cb){ //탈출전 자산 합
+
+              //최초 한번만 실행
+              get_total_asset(start_time, "desc",function(error, asset){
+                  if(error){
+                      console.log(error);
+                      return;
+                  }
+                  // console.log("end_asset : "+asset);
+
+                  end_asset_sum = asset;
+                  cb(null);
+              });
+          },
+          function restore(cb){
+              var obj = {
+                  site : site,
+                  start_asset_sum : fixed8(start_asset_sum),
+                  end_asset_sum : fixed8(end_asset_sum),
+                  before_asset_sum : fixed8(end_asset_sum),  //최근 자산들 총합(탈출전)
+                  after_asset_sum : fixed8(end_asset_sum + benefit),//최근 자산들 총합(탈출후)
+                  benefit : fixed8(benefit),
+                  benefitRate : (benefit / end_asset_sum) * 100,
+                  type_log : type_log,
+                  timestamp : end_time,
+                  start_time : start_time,
+                  end_time : end_time,
+              }
+              
+              benefitDB.insertMany(obj, function(error, json){
+                  if(error){
+                      return;
+                  }
+                  console.log(json);
+                  cb(null);
+              })
+          }
+          
+      ], function(error, results){
+
+      })
+  }
+}
+
+function get_total_asset(timestamp, isSort, callback){
+  var list = [];
+  var total_asset=0;
+  for(var i=1; i<=10; i++){
+    order.findOne({"site" : "bitmex"+i, "start_time" : {"$lt" : timestamp}}).sort({"start_time" : isSort}).limit(1).exec(function(error, json){
+      if(error){
+        console.log(error);
+        return;
+      }
+      
+      list.push(json);
+      if(json !== null){
+        total_asset += json.totalAsset;
+      }
+      
+      if(list.length === 10){
+          // console.log("totalAsset : "+ total_asset);
+          // console.log(list);
+          
+          callback(null, total_asset);
+      }
+    });
+  }
+}
+
+function fixed8(num){
+  var str = new String(num);
+  var arr = str.split(".");
+  if(arr.length>1){
+        var str2 = arr[1].slice(0,8);
+      return Number(arr[0] + '.' + str2);	
+  }
+  return Number(arr[0])
+}
+
+router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
+  filled_data = {};
+  var calc_goal_cnt =0;
+  var end_asset_sum = 0;
+  var before_asset_sum = 0;
+  //var after_asset_sum = 0;
+  async.waterfall([
+      function init(cb){
+          //체결된 주문중 가장 최근 주문 1개
+          benefitDB.find({end_asset_sum : {$gt : 0}}).sort({"start_time" : "desc"}).limit(1).exec(function(error, json){
+              if(error){
+                  console.log(error);
+                  return;
+              }
+              console.log(json);
+              if(json.length > 0){
+                  filled_data=new Object(json[0]);
+                  end_asset_sum = filled_data.after_asset_sum;
+                  before_asset_sum = filled_data.after_asset_sum;
+                  cb(null);
+              }else{
+                  return;
+              }
+             
+          });
+      },
+      function calc(cb){
+          //수익율 계산안된 모든 목록들 수익율 계산
+          benefitDB.find({end_asset_sum : 0, before_asset_sum : 0, after_asset_sum : 0}).sort({"start_time" : "asc"}).exec(function(error, json){
+              if(error){
+                  console.log(error);
+                  return;
+              }
+              calc_goal_cnt = json.length;
+              for(var i=0; i<json.length; i++){
+                  var obj  = {
+                      end_asset_sum : fixed8(end_asset_sum),
+                      before_asset_sum : fixed8(before_asset_sum),
+                      after_asset_sum : fixed8(before_asset_sum + json[i].benefit),
+                      benefitRate : (json[i].benefit / end_asset_sum) * 100,
+                  }
+                  console.log(obj);
+                  benefitDB.findByIdAndUpdate(
+                      json[i]._id,
+                      {$set : obj},
+                      function(error, res){
+                          if(error){
+                              console.log(error);
+                              return;
+                          }
+                      }
+                  )
+                  end_asset_sum = obj.after_asset_sum;
+                  before_asset_sum = obj.after_asset_sum;
+              }
+              cb(null);
+          });
+      }
+  ], function(error, results){
+      if(error){
+          console.log(error);
+          return;
+      }
+      res.send({calc_goal_cnt : calc_goal_cnt});
+      //console.log(res);
+  });
+});
+
+function calc_benefit_rate(){
+  return function(){
+      filled_data = {};
+      var end_asset_sum = 0;
+      var before_asset_sum = 0;
+      //var after_asset_sum = 0;
+      async.waterfall([
+          function init(cb){
+              //체결된 주문중 가장 최근 주문 1개
+              benefitDB.find({end_asset_sum : {$gt : 0}}).sort({"start_time" : "desc"}).limit(1).exec(function(error, json){
+                  if(error){
+                      console.log(error);
+                      return;
+                  }
+                  console.log(json);
+                  if(json.length > 0){
+                      filled_data=new Object(json[0]);
+                      end_asset_sum = filled_data.after_asset_sum;
+                      before_asset_sum = filled_data.after_asset_sum;
+                      cb(null);
+                  }else{
+                      return;
+                  }
+                 
+              });
+          },
+          function calc(cb){
+              //수익율 계산안된 모든 목록들 수익율 계산
+              benefitDB.find({end_asset_sum : 0, before_asset_sum : 0, after_asset_sum : 0}).sort({"start_time" : "asc"}).exec(function(error, json){
+                  if(error){
+                      console.log(error);
+                      return;
+                  }
+
+                  for(var i=0; i<json.length; i++){
+                      var obj  = {
+                          end_asset_sum : fixed8(end_asset_sum),
+                          before_asset_sum : fixed8(before_asset_sum),
+                          after_asset_sum : fixed8(before_asset_sum + json[i].benefit),
+                          benefitRate : (json[i].benefit / end_asset_sum) * 100,
+                      }
+                      console.log(obj);
+                      benefitDB.findByIdAndUpdate(
+                          json[i]._id,
+                          {$set : obj},
+                          function(error, res){
+                              if(error){
+                                  console.log(error);
+                                  return;
+                              }
+                          }
+                      )
+                      end_asset_sum = obj.after_asset_sum;
+                      before_asset_sum = obj.after_asset_sum;
+                  }
+                  cb(null);
+              });
+          }
+      ], function(error, res){
+          if(error){
+              console.log(error);
+              return;
+          }
+          console.log(res);
+      });
+  }
+}
+
 router.post('/api/benefit_history_update',isAuthenticated, function(req, res){
   var _id = req.body._id;
   var start_time = new Date(req.body.start_time);
@@ -2178,9 +2526,7 @@ router.post('/api/benefit_history_update',isAuthenticated, function(req, res){
           // end_asset_sum = obj.after_asset_sum;
           before_asset_sum = obj.after_asset_sum;
         }
-       
         cb(null);
-        
       });
     }
   ], function(error, json){
