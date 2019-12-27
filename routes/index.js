@@ -2185,7 +2185,7 @@ router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
                 console.log("first_restore_benefit_history");
                 setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
             }else{
-                //console.log("restore_benefit_history");
+                console.log("restore_benefit_history");
                 //setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
             }
         }
@@ -2291,7 +2291,7 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
                   start_time : start_time,
                   end_time : end_time,
               }
-              
+              console.log(obj);
               benefitDB.insertMany(obj, function(error, json){
                   if(error){
                       return;
