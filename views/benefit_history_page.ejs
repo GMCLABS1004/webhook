@@ -23,6 +23,7 @@
         var hisArr=[];
         var page =1;
         var restore_goal_cnt =0;
+        var calc_goal_cnt =0;
          function asset_comma(num, site){
             var site_type='';
             if(site.indexOf("bitmex") !== -1){
@@ -137,11 +138,12 @@
                                 clearInterval(intevHandle);
                                 alert("복구 완료");
                                 window.location.reload();
+                            }else{
+                                $("#progress").val(json.cnt);
                             }
                         }
                     })
                 }
-                
             }
         }
         
@@ -153,11 +155,13 @@
                         method : "GET",
                         url : "/api/check_calc_progress",
                         success : function(json){
-                            if(json.cnt === 0){
+                            if(calc_goal_cnt - json.cnt === calc_goal_cnt){
                                 isPause = true;
                                 clearInterval(intevHandle);
                                 alert("계산 완료");
                                 window.location.reload();
+                            }else{
+                                $("#progress").val(calc_goal_cnt - json.cnt);
                             }
                         }
                     })
@@ -202,7 +206,7 @@
             });
            
             $("#restore").click(function(){
-                console.log("restore");
+                
                 if(confirm("복구하시겠습니까?")){
                     console.log("복구성공");
                     $.ajax({
@@ -214,6 +218,9 @@
                             restore_goal_cnt = json.restore_goal_cnt;
                             alert('복구시작 : ' + restore_goal_cnt);
                             intevHandle = setInterval(check_restore_progress(), 3000);
+                            $("#progress").attr("max",182);
+                            var dd =$("#progress").attr("max")
+                            console.log(dd);
                         }
                     });
                 }
@@ -228,8 +235,12 @@
                         url : "/api/benefit_history_calc",
                         success(json){
                             console.log(json.calc_goal_cnt);
+                            calc_goal_cnt = json.calc_goal_cnt;
+                            isPause = false;
                             intevHandle = setInterval(check_calc_progress(), 3000);
-                            alert("수익율계산 시작 : " + json.calc_goal_cnt);
+                            $("#progress").attr("max", calc_goal_cnt);
+                            alert("수익율계산 시작 : " + calc_goal_cnt);
+
                         }
                     });
                 }
@@ -359,9 +370,12 @@
                         </table>
                         <div id="page_link" class="pageNumber"></div>
                         <!-- <button id="insert">추가</button> -->
+                        <progress id="progress" value="0" max="100" class="select"></progress>
                         <button id="calc" class="select">계산</button>
                         <button id="restore" class="select">복구</button>
                         <button id="update" class="select">수정</button>
+                        
+                        
                         
                         <!-- <button id="delete">삭제</button> -->
                     </div>
