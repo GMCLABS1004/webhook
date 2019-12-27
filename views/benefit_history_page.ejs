@@ -133,7 +133,7 @@
                         method : "GET",
                         url : "/api/check_restore_progress",
                         success : function(json){
-                            if(json.cnt-1 >= restore_goal_cnt){
+                            if(json.cnt === restore_goal_cnt){
                                 isPause = true;
                                 clearInterval(intevHandle);
                                 alert("복구 완료");
@@ -217,7 +217,7 @@
                         success(json){
                             isPause = false;
                             console.log(json);
-                            restore_goal_cnt = json.restore_goal_cnt;
+                            restore_goal_cnt = json.restore_goal_cnt-1;
                             alert('복구시작 : ' + restore_goal_cnt);
                             intevHandle = setInterval(check_restore_progress(), 3000);
                             $("#progress").attr("max",restore_goal_cnt);
