@@ -2180,7 +2180,7 @@ router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
                 setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
             }else{
                 console.log("restore_benefit_history");
-                setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), 500);//i *200
+                setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
             }
         }
         cb(null);
@@ -2385,7 +2385,7 @@ router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
                       benefitRate : (json[i].benefit / end_asset_sum) * 100,
                   }
                   console.log(obj);
-                  setTimeout(update_benefit_rate(json[i]._id, obj), 0);//
+                  setTimeout(update_benefit_rate(json[i]._id, obj), i *100);//
 
                   // benefitDB.findByIdAndUpdate(
                   //     json[i]._id,
