@@ -2180,10 +2180,10 @@ router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
             var benefit = json[i].benefit;
             var type_log = json[i].type_log;
             //console.log(i);
-            if(i<=2){
+            if(i===0){
                 console.log(i);
                 console.log("first_restore_benefit_history");
-                setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
+                setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), i * 100);
             }else{
                 console.log("restore_benefit_history");
                 setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
