@@ -2237,6 +2237,7 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
   }
 }
 
+
 function first_restore_benefit_history(site, start_time, end_time, benefit, type_log){
   return function(){
       // console.log(start_time);
@@ -2378,16 +2379,18 @@ router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
                       benefitRate : (json[i].benefit / end_asset_sum) * 100,
                   }
                   console.log(obj);
-                  benefitDB.findByIdAndUpdate(
-                      json[i]._id,
-                      {$set : obj},
-                      function(error, res){
-                          if(error){
-                              console.log(error);
-                              return;
-                          }
-                      }
-                  )
+                  setTimeout(update_benefit_rate(json[i]._id, obj), i * 200);
+
+                  // benefitDB.findByIdAndUpdate(
+                  //     json[i]._id,
+                  //     {$set : obj},
+                  //     function(error, res){
+                  //         if(error){
+                  //             console.log(error);
+                  //             return;
+                  //         }
+                  //     }
+                  // )
                   end_asset_sum = obj.after_asset_sum;
                   before_asset_sum = obj.after_asset_sum;
               }
@@ -2403,6 +2406,24 @@ router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
       //console.log(res);
   });
 });
+
+function update_benefit_rate(_id, obj){
+  return function(){
+    benefitDB.findByIdAndUpdate(
+      _id,
+      {$set : obj},
+      function(error, res){
+          if(error){
+              console.log(error);
+              return;
+          }
+          console.log(res);
+      }
+    ) 
+  }
+}
+
+
 
 function calc_benefit_rate(){
   return function(){
