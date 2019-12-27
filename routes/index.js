@@ -2338,6 +2338,7 @@ function fixed8(num){
 }
 
 router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
+  console.log("/api/benefit_history_calc");
   filled_data = {};
   var calc_goal_cnt =0;
   var end_asset_sum = 0;
@@ -2351,13 +2352,16 @@ router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
                   console.log(error);
                   return;
               }
+              console.log("초기화");
               console.log(json);
               if(json.length > 0){
+                console.log("초기화O");
                   filled_data=new Object(json[0]);
                   end_asset_sum = filled_data.after_asset_sum;
                   before_asset_sum = filled_data.after_asset_sum;
                   cb(null);
               }else{
+                console.log("초기화X");
                   return;
               }
              
@@ -2370,6 +2374,7 @@ router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
                   console.log(error);
                   return;
               }
+              console.log("calc");
               calc_goal_cnt = json.length;
               for(var i=0; i<json.length; i++){
                   var obj  = {
