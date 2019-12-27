@@ -2180,13 +2180,13 @@ router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
             var benefit = json[i].benefit;
             var type_log = json[i].type_log;
             //console.log(i);
-            if(i===0){
+            if(i<=2){
                 console.log(i);
                 console.log("first_restore_benefit_history");
                 setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
             }else{
                 console.log("restore_benefit_history");
-                //setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
+                setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
             }
         }
         cb(null);
@@ -2196,7 +2196,6 @@ router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
     res.send({restore_goal_cnt : restore_goal_cnt});
   });
 });
-
 
 function restore_benefit_history(site, start_time, end_time, benefit, type_log){
   return function(){
@@ -2242,7 +2241,6 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
       })
   }
 }
-
 
 function first_restore_benefit_history(site, start_time, end_time, benefit, type_log){
   return function(){
