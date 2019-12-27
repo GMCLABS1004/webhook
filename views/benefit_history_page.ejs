@@ -133,7 +133,7 @@
                         method : "GET",
                         url : "/api/check_restore_progress",
                         success : function(json){
-                            if(restore_goal_cnt === json.cnt){
+                            if(json.cnt-1 >= restore_goal_cnt){
                                 isPause = true;
                                 clearInterval(intevHandle);
                                 alert("복구 완료");
@@ -237,7 +237,7 @@
                         url : "/api/benefit_history_calc",
                         success(json){
                             console.log(json.calc_goal_cnt);
-                            calc_goal_cnt = json.calc_goal_cnt;
+                            calc_goal_cnt = json.calc_goal_cnt-1;
                             isPause = false;
                             intevHandle = setInterval(check_calc_progress(), 3000);
                             $("#progress").attr("max", calc_goal_cnt);
