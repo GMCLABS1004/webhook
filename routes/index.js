@@ -2167,7 +2167,13 @@ router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
     
         console.log("count : "+ json.length);
         restore_goal_cnt = json.length;
+        console.log(json[0]);
+        console.log(json[1]);
+        console.log(json[2]);
+        console.log(json[3]);
+        console.log(json[4]);
         for(var i=0; i<json.length; i++){
+            
             var site = json[i].site;
             var start_time = json[i].start_time;
             var end_time = json[i].end_time;
@@ -2179,8 +2185,8 @@ router.post('/api/benefit_history_restore',isAuthenticated, function(req, res){
                 console.log("first_restore_benefit_history");
                 setTimeout(first_restore_benefit_history(site, start_time, end_time, benefit, type_log), 0);
             }else{
-                console.log("restore_benefit_history");
-                setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
+                //console.log("restore_benefit_history");
+                //setTimeout(restore_benefit_history(site, start_time, end_time, benefit, type_log), i *100);
             }
         }
         cb(null);
@@ -2259,7 +2265,6 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
               });
           }, 
           function get_end_asset_sum(cb){ //탈출전 자산 합
-
               //최초 한번만 실행
               get_total_asset(start_time, "desc",function(error, asset){
                   if(error){

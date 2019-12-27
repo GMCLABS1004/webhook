@@ -133,7 +133,7 @@
                         method : "GET",
                         url : "/api/check_restore_progress",
                         success : function(json){
-                            if(json.cnt === restore_goal_cnt){
+                            if(json.cnt >= restore_goal_cnt){
                                 isPause = true;
                                 clearInterval(intevHandle);
                                 alert("복구 완료");
@@ -156,7 +156,7 @@
                         method : "GET",
                         url : "/api/check_calc_progress",
                         success : function(json){
-                            if(calc_goal_cnt - json.cnt === calc_goal_cnt){
+                            if(calc_goal_cnt - json.cnt >= calc_goal_cnt){
                                 isPause = true;
                                 clearInterval(intevHandle);
                                 alert("계산 완료");
