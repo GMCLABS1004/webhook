@@ -2346,8 +2346,9 @@ router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
   //var after_asset_sum = 0;
   async.waterfall([
       function init(cb){
+          //end_asset_sum : {$gt : 0}
           //체결된 주문중 가장 최근 주문 1개
-          benefitDB.find({end_asset_sum : {$gt : 0}}).sort({"start_time" : "desc"}).limit(1).exec(function(error, json){
+          benefitDB.find({}).sort({"start_time" : "desc"}).limit(1).exec(function(error, json){
               if(error){
                   console.log(error);
                   return;
