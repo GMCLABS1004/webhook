@@ -218,7 +218,7 @@
                             restore_goal_cnt = json.restore_goal_cnt;
                             alert('복구시작 : ' + restore_goal_cnt);
                             intevHandle = setInterval(check_restore_progress(), 3000);
-                            $("#progress").attr("max",182);
+                            $("#progress").attr("max",restore_goal_cnt);
                             var dd =$("#progress").attr("max")
                             console.log(dd);
                         }
@@ -240,7 +240,6 @@
                             intevHandle = setInterval(check_calc_progress(), 3000);
                             $("#progress").attr("max", calc_goal_cnt);
                             alert("수익율계산 시작 : " + calc_goal_cnt);
-
                         }
                     });
                 }
@@ -370,7 +369,7 @@
                         </table>
                         <div id="page_link" class="pageNumber"></div>
                         <!-- <button id="insert">추가</button> -->
-                        <progress id="progress" value="0" max="100" class="select"></progress>
+                        <progress id="progress" value="0" max="0" class="select"></progress>
                         <button id="calc" class="select">계산</button>
                         <button id="restore" class="select">복구</button>
                         <button id="update" class="select">수정</button>
