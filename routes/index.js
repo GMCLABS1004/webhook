@@ -2207,7 +2207,7 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
           //첫 자산들 총합
           function get_start_asset_sum(cb){
               //최초 한번만 실행
-              get_total_asset(start_time, "asc",function(error, asset){
+              get_restore_total_asset("asc",function(error, asset){
                   if(error){
                       console.log(error);
                       return;
@@ -2237,7 +2237,7 @@ function restore_benefit_history(site, start_time, end_time, benefit, type_log){
               })
           }
       ], function(error, results){
-
+        
       })
   }
 }
