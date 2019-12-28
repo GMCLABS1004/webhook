@@ -2252,7 +2252,7 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
           //첫 자산들 총합
           function get_start_asset_sum(cb){
               //최초 한번만 실행
-              get_total_asset(start_time, "asc",function(error, asset){
+              get_restore_total_asset("asc",function(error, asset){
                   if(error){
                       console.log(error);
                       return;
@@ -2264,7 +2264,7 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
           }, 
           function get_end_asset_sum(cb){ //탈출전 자산 합
               //최초 한번만 실행
-              get_total_asset(start_time, "desc",function(error, asset){
+              get_restore_total_asset( "desc",function(error, asset){
                   if(error){
                       console.log(error);
                       return;
@@ -2305,6 +2305,32 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
   }
 }
 
+function get_restore_total_asset(isSort, callback){
+  var list = [];
+  var total_asset=0;
+  for(var i=1; i<=10; i++){
+    order.findOne({"site" : "bitmex"+i}).sort({"start_time" : isSort}).limit(1).exec(function(error, json){
+      if(error){
+        console.log(error);
+        return;
+      }
+      
+      list.push(json);
+      if(json !== null){
+        total_asset += json.totalAsset;
+      }
+      
+      if(list.length === 10){
+          // console.log("totalAsset : "+ total_asset);
+          // console.log(list);
+          
+          callback(null, total_asset);
+      }
+    });
+  }
+}
+
+
 function get_total_asset(timestamp, isSort, callback){
   var list = [];
   var total_asset=0;
@@ -2341,12 +2367,13 @@ function fixed8(num){
 }
 
 router.post('/api/benefit_history_calc',isAuthenticated, function(req, res){
-  console.log("/api/benefit_history_calc");
+  //console.log("/api/benefit_history_calc");
   filled_data = {};
   var calc_goal_cnt =0;
   var end_asset_sum = 0;
   var before_asset_sum = 0;
   //var after_asset_sum = 0;
+
   async.waterfall([
       function init(cb){
           //end_asset_sum : {$gt : 0}
