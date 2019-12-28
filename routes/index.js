@@ -2259,22 +2259,23 @@ function first_restore_benefit_history(site, start_time, end_time, benefit, type
                   }
                   // console.log("start_asset : "+asset);
                   start_asset_sum = asset;
-                  cb(null);
-              });
-          }, 
-          function get_end_asset_sum(cb){ //탈출전 자산 합
-              //최초 한번만 실행
-              get_restore_total_asset( "desc",function(error, asset){
-                  if(error){
-                      console.log(error);
-                      return;
-                  }
-                  // console.log("end_asset : "+asset);
-
                   end_asset_sum = asset;
                   cb(null);
               });
-          },
+          }, 
+          // function get_end_asset_sum(cb){ //탈출전 자산 합
+          //     //최초 한번만 실행
+          //     get_restore_total_asset( "desc",function(error, asset){
+          //         if(error){
+          //             console.log(error);
+          //             return;
+          //         }
+          //         // console.log("end_asset : "+asset);
+
+          //         end_asset_sum = asset;
+          //         cb(null);
+          //     });
+          // },
           function restore(cb){
               var obj = {
                   site : site,
