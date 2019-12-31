@@ -33,19 +33,8 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
         last_price = data[data.length-1].price;
         setTimeout(update_ticker(last_price), 0);
         setTimeout(update_low_high_price(last_price), 0);
-    }
-  }
-});
 
-client.addStream('XBTUSD', 'tradeBin1m', function(data, symbol, tableName){
-    if(tableName === 'tradeBin1m'){
-        var length = data.length-1;
-        var json = data[length];
-        var close_price = json.close;
-        var min = new Date().getMinutes();
-        
-
-        //1시간봉 종가를 기준으로 트레일링 스탑 실행
+        //ts가격 업데이트 실행
         settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
             if(error){
                 console.log("[" + getCurrentTimeString() +"] " + error);
@@ -55,12 +44,38 @@ client.addStream('XBTUSD', 'tradeBin1m', function(data, symbol, tableName){
             for(var i=0; i<json.length; i++){
                 //현재가를 기준으로 트레일링 스탑
                 if(json[i].isTrailingStop === true){
-                    setTimeout(trailing_price_udpate(close_price, json[i].lowPrice, json[i].highPrice, json[i]), 0);
+                    setTimeout(trailing_price_udpate(last_price, json[i].lowPrice, json[i].highPrice, json[i]), 0);
                 }
             }
         });
-    }   
+    }
+  }
 });
+
+// client.addStream('XBTUSD', 'tradeBin1m', function(data, symbol, tableName){
+//     if(tableName === 'tradeBin1m'){
+//         var length = data.length-1;
+//         var json = data[length];
+//         var close_price = json.close;
+//         var min = new Date().getMinutes();
+        
+
+//         //1시간봉 종가를 기준으로 트레일링 스탑 실행
+//         settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
+//             if(error){
+//                 console.log("[" + getCurrentTimeString() +"] " + error);
+//                 return;
+//             }
+//             console.log("[" + getCurrentTimeString() +"] " + "ts 가격 업데이트 실행");
+//             for(var i=0; i<json.length; i++){
+//                 //현재가를 기준으로 트레일링 스탑
+//                 if(json[i].isTrailingStop === true){
+//                     setTimeout(trailing_price_udpate(close_price, json[i].lowPrice, json[i].highPrice, json[i]), 0);
+//                 }
+//             }
+//         });
+//     }   
+// });
 
 
 client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
@@ -407,7 +422,7 @@ function trailing_price_udpate(last_price, lowPrice, highPrice, obj){
                         return;
                     }
                     //console.log(res.site + " trail1,2 업데이트 : " + trailPrice1);
-                    console.log(res.site + " trail1,2 업데이트");
+                    //console.log(res.site + " trail1,2 업데이트");
                 }
             )
             //console.log("");
