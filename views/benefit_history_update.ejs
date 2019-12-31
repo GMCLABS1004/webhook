@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#update").click(function(){
+                console.log("update");
+                var _id = $("#_id").val();
+                var start_time = $("#start_time").val();
+                var benefit = Number($("#benefit").val());
+                //var before_asset_sum = Number($("#before_asset_sum").val());
+                //var after_asset_sum = before_asset_sum + benefit;
+                // var benefitRate = ((after_asset_sum - before_asset_sum) / before_asset_sum) * 100;
+                var data = {
+                    _id : _id,
+                    start_time : start_time,
+                    benefit :  benefit
+                }
+
+                console.log(data);
+                $.ajax({
+                    method : "POST",
+                    url : "/api/benefit_history_update",
+                    dataType : "json",
+                    data : data,
+                    success : function(json){
+                        console.log(json);
+                        alert("수정완료");
+                        opener.location.reload();//부모창 새로고침
+                        //현재창 종료
+                        self.opener = null; 
+                        self.close();
+
+                    }
+                });
+            });
+        })
+    </script>
+</head>
+<body>
+    <input type="hidden" id="_id" value="<%=_id%>">
+    <input type="hidden" id="start_time" value="<%=start_time%>">
+    <!-- <input type="text" id="before_asset_sum" value="<%=before_asset_sum%>"> -->
+    수익  <input type="text" id="benefit" value="<%=benefit%>"><br>
+    <button id="update">수정</button>
+</body>
+</html>

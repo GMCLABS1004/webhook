@@ -33,9 +33,50 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
         last_price = data[data.length-1].price;
         setTimeout(update_ticker(last_price), 0);
         setTimeout(update_low_high_price(last_price), 0);
+
+        //ts가격 업데이트 실행
+        settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
+            if(error){
+                console.log("[" + getCurrentTimeString() +"] " + error);
+                return;
+            }
+            //console.log("[" + getCurrentTimeString() +"] " + "ts 가격 업데이트 실행");
+            for(var i=0; i<json.length; i++){
+                //현재가를 기준으로 트레일링 스탑
+                if(json[i].isTrailingStop === true){
+                    setTimeout(trailing_price_udpate(last_price, json[i].lowPrice, json[i].highPrice, json[i]), 0);
+                }
+            }
+        });
     }
   }
 });
+
+// client.addStream('XBTUSD', 'tradeBin1m', function(data, symbol, tableName){
+//     if(tableName === 'tradeBin1m'){
+//         var length = data.length-1;
+//         var json = data[length];
+//         var close_price = json.close;
+//         var min = new Date().getMinutes();
+        
+
+//         //1시간봉 종가를 기준으로 트레일링 스탑 실행
+//         settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
+//             if(error){
+//                 console.log("[" + getCurrentTimeString() +"] " + error);
+//                 return;
+//             }
+//             console.log("[" + getCurrentTimeString() +"] " + "ts 가격 업데이트 실행");
+//             for(var i=0; i<json.length; i++){
+//                 //현재가를 기준으로 트레일링 스탑
+//                 if(json[i].isTrailingStop === true){
+//                     setTimeout(trailing_price_udpate(close_price, json[i].lowPrice, json[i].highPrice, json[i]), 0);
+//                 }
+//             }
+//         });
+//     }   
+// });
+
 
 client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
     if(tableName === 'tradeBin1h'){
@@ -43,10 +84,10 @@ client.addStream('XBTUSD', 'tradeBin1h', function(data, symbol, tableName){
         var json = data[length];
         var close_price = json.close;
         var min = new Date().getMinutes();
-        // if(min > 0){ //정각에서 벗어난 데이터는 무시
-        //     console.log("[" + getCurrentTimeString() +"] " + "ts 실행X");
-        //     return;
-        // }
+        if(min > 0){ //정각에서 벗어난 데이터는 무시
+            console.log("[" + getCurrentTimeString() +"] " + "ts 실행X");
+            return;
+        }
         
         //1시간봉 종가를 기준으로 트레일링 스탑 실행
         settings.find({execFlag: true, site_type : "oversee"}, function(error, json){ //, isTrailingStop : true
@@ -275,6 +316,122 @@ function update_low_high_price(last_price){
 }
 
 
+
+function trailing_price_udpate(last_price, lowPrice, highPrice, obj){
+    return function(){
+        //position(obj, function(isPosition){
+            //console.log(obj.site+" 트레일링 스탑 실행");
+            //console.log("isPosition :" + isPosition);
+            var site = obj.site;
+            var entryPrice = obj.entryPrice; //진입가격
+            var trailingHighRate = obj.trailingHighRate * 0.01; 
+            var trailingLowRate = obj.trailingLowRate * 0.01; 
+            var trailFee = entryPrice * (obj.trailFeeRate * 0.01);
+            var rentryFee = entryPrice * (obj.rentryFeeRate * 0.01);
+            var scriptNo = obj.scriptNo;
+            var side_num = obj.side_num;
+            var alpha = 0;
+            var trailPrice1 =0;
+            var trailPrice2 =0;
+            var rentryPrice1 =0;
+            var rentryPrice2 =0;
+            // console.log("[" + getCurrentTimeString() +"] " + "------------------------");
+            // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ last_price);
+            // console.log("[" + getCurrentTimeString() +"] " + "highPrice : "+ highPrice);
+            // console.log("[" + getCurrentTimeString() +"] " + "entryPrice : "+ entryPrice);
+            // console.log("[" + getCurrentTimeString() +"] " + "lowPrice : "+ lowPrice);
+            // console.log("[" + getCurrentTimeString() +"] " + "highPrice - entryPrice : "+ (highPrice - entryPrice) + " * "+ trailingHighRate + " = " + ((highPrice - entryPrice) * trailingHighRate));
+            // console.log("[" + getCurrentTimeString() +"] " + "lowPrice - entryPrice : "+ (lowPrice - entryPrice) + " * "+ trailingLowRate + " = " + ((lowPrice - entryPrice) * trailingLowRate));
+            // console.log("[" + getCurrentTimeString() +"] " + "trailFee : "+ trailFee);
+            // console.log("[" + getCurrentTimeString() +"] " + "rentryFee : "+ rentryFee);
+
+            // console.log("[" + getCurrentTimeString() +"] " + "trailingHighRate : "+ trailingHighRate);
+            // console.log("[" + getCurrentTimeString() +"] " + "trailFee :"+ trailFee);
+            // console.log("val : "+ (highPrice - entryPrice) * trailingHighRate)
+            // console.log("entryPrice + val : "+ (entryPrice+val) )
+            //console.log(obj.side);
+            
+            //포지션 조회
+            if(obj.side === 'long'){//isPosition === 'long'
+                alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
+                //console.log("-----------------long exit--------------");
+                // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+ alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee : "+ (entryPrice + trailFee));
+                //console.log("[" + getCurrentTimeString() +"] " + "entryPrice + trailFee < last_price < entryPrice + alpha");
+                //console.log("[" + getCurrentTimeString() +"] " + (entryPrice + trailFee) + " / " + last_price + " / " + (entryPrice + alpha));
+                trailPrice1 = entryPrice + trailFee;
+                trailPrice2 = entryPrice + alpha;
+               
+            }else if(obj.side === 'short'){ //isPosition === 'short'
+                //console.log("-----------------short exit--------------");
+                alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
+                trailPrice1 = entryPrice - trailFee;
+                trailPrice2 = entryPrice - alpha;
+                
+                //console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - trailFee : "+ (entryPrice - trailFee));
+                //console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha < last_price < entryPrice - trailFee");
+               // console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - trailFee));
+                
+                
+            }
+            
+            //현재포지션 exit, 셋팅 : long -> 롱재진입
+            if(obj.side === 'long'){ //isPosition === 'exit' && 
+                alpha = (entryPrice - lowPrice) * trailingLowRate; //(진입가- 저점가) * 비율
+               // console.log("-----------------long entry--------------");
+               // console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha : "+ (entryPrice - alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice - rentryFee : "+ (entryPrice - rentryFee));
+                //console.log("[" + getCurrentTimeString() +"] " + "entryPrice - alpha < last_price < entryPrice - rentryFee");
+                //console.log("[" + getCurrentTimeString() +"] " + (entryPrice - alpha) + " / " + last_price + " / " + (entryPrice - rentryFee));
+                rentryPrice1 = entryPrice - rentryFee;
+                rentryPrice2 = entryPrice - alpha;
+                
+                
+            }else if(obj.side === 'short' ){ //isPosition === 'exit' && 
+                alpha = (highPrice - entryPrice) * trailingHighRate; //(고점가 - 진입가) * 비율
+                //console.log("-----------------short entry--------------");
+                //console.log("[" + getCurrentTimeString() +"] " + "alpha : "+alpha);
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + alpha : "+ (entryPrice + alpha));
+                // console.log("[" + getCurrentTimeString() +"] " + "last_price : "+ (last_price));
+                // console.log("[" + getCurrentTimeString() +"] " + "entryPrice + rentryFee : "+ (entryPrice + rentryFee));
+                //console.log("[" + getCurrentTimeString() +"] " + "entryPrice + rentryFee < last_price < entryPrice + alpha");
+                //console.log("[" + getCurrentTimeString() +"] " + (entryPrice + rentryFee) + " / " + last_price + " / " + (entryPrice + alpha));
+                rentryPrice1 = entryPrice + rentryFee;
+                rentryPrice2 = entryPrice + alpha;
+                
+            }
+            
+            // console.log("trailPrice1 : "+ trailPrice1);
+            // console.log("trailPrice2 : "+ trailPrice2);
+            // console.log("rentryPrice1 : "+ rentryPrice1);
+            // console.log("rentryPrice2 : "+ rentryPrice2);
+            
+            settings.findByIdAndUpdate(
+                obj._id,
+                {$set : {trailPrice1 : trailPrice1, trailPrice2 : trailPrice2, rentryPrice1 : rentryPrice1, rentryPrice2 : rentryPrice2}},
+                function(error, res){
+                    if(error){
+                        console.log(error);
+                        return;
+                    }
+                    //console.log(res.site + " trail1,2 업데이트 : " + trailPrice1);
+                    //console.log(res.site + " trail1,2 업데이트");
+                }
+            )
+            //console.log("");
+        //});
+    }
+}
+
+
+
 function trailingStop(last_price, lowPrice, highPrice, obj){
     return function(){
         //position(obj, function(isPosition){
@@ -408,6 +565,8 @@ function trailingStop(last_price, lowPrice, highPrice, obj){
         //});
     }
 }
+
+
 
 
 function position(data, cb){

@@ -18,6 +18,12 @@
 
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script>
+        var isPause = false;
+        var intevHandle = null;
+        var hisArr=[];
+        var page =1;
+        var restore_goal_cnt =0;
+        var calc_goal_cnt =0;
          function asset_comma(num, site){
             var site_type='';
             if(site.indexOf("bitmex") !== -1){
@@ -47,6 +53,8 @@
                 success : function(json){
                     if(json){
                         console.log(json);
+                        hisArr = new Object(json.list);
+                        page = json.page;
                         var url = window.location.origin + '/orderHistoryTotalPage?site='
                         var length = json.list.length;
                         var start_asset_sum=0;
@@ -62,6 +70,7 @@
                             var time1 = json.list[i].start_time.split("T")[1].split(":");
                             var time2 = json.list[i].end_time.split("T")[1].split(":");
                             $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td align='center'><input type='checkbox' name='user_CheckBox' ></td>"); 
                                     $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>"); 
                                     $("#mytable > tbody:last").append("<td class='day' align='center'>" + json.list[i].start_time.split("T")[0] + "</td>"); 
                                     $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
@@ -116,14 +125,189 @@
                 }
            });
         }
+
+        function check_restore_progress(){
+            return function(){
+                if(isPause === false){
+                    $.ajax({
+                        method : "GET",
+                        url : "/api/check_restore_progress",
+                        success : function(json){
+                            if(json.cnt >= restore_goal_cnt){
+                                isPause = true;
+                                clearInterval(intevHandle);
+                                alert("복구 완료");
+                                window.location.reload();
+                            }else{
+                                $("#progress").val(json.cnt);
+                                console.log(json.cnt+"/"+restore_goal_cnt);
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        
+
+        function check_calc_progress(){
+            return function(){
+                if(isPause === false){
+                    $.ajax({
+                        method : "GET",
+                        url : "/api/check_calc_progress",
+                        success : function(json){
+                            if(calc_goal_cnt - json.cnt >= calc_goal_cnt){
+                                isPause = true;
+                                clearInterval(intevHandle);
+                                alert("계산 완료");
+                                window.location.reload();
+                            }else{
+                                $("#progress").val(calc_goal_cnt - json.cnt);
+                                console.log("json.cnt : "+json.cnt);
+                                console.log(calc_goal_cnt - json.cnt+"/"+calc_goal_cnt);
+                            }
+                        }
+                    })
+                }
+            }
+        }
+
         $(document).ready(function(){
             get_benefit_history(1);
-            $('#cntPerPage').on('change', function (e) {
-                // var optionSelected = $("option:selected", this);
-                // var cntPerPage = this.value;
+            $('#cntPerPage').on('change', function(e){
                 get_benefit_history(1);
             });
+
+            $("#insert").click(function(){
+                console.log("insert");
+            });
+            $("#update").click(function(){
+                console.log("update");
+                var checkbox = $("input[name=user_CheckBox]:checked");
+                var idx =0;
+                var _id = "";
+                var isExec = true;
+                checkbox.each(function(i){
+                    if(idx===0){
+                        idx = Number($(this).parent().next().text()) -1;
+                        _id = hisArr[idx]._id;
+                    }else{
+                        isExec = false;
+                    }
+                });
+                if(_id === ""){
+                    alert("수정할 주문을 선택하세요.");
+                }
+                else if(isExec){
+                    console.log("idx : " +idx);
+                    console.log("_id : " +_id);
+                    child_open(window.location.origin + '/benefit_history_update?_id='+_id);
+                }else{
+                    alert("수정은 1개씩 가능합니다.");
+                }
+                
+            });
+           
+            $("#restore").click(function(){
+                
+                if(confirm("복구하시겠습니까?")){
+                    console.log("복구성공");
+                    $.ajax({
+                        method : "POST",
+                        url : "/api/benefit_history_restore",
+                        success(json){
+                            isPause = false;
+                            console.log(json);
+                            restore_goal_cnt = json.restore_goal_cnt-1;
+                            alert('복구시작 : ' + restore_goal_cnt);
+                            intevHandle = setInterval(check_restore_progress(), 3000);
+                            $("#progress").attr("max",restore_goal_cnt);
+                            var dd =$("#progress").attr("max")
+                            console.log(dd);
+                        }
+                    });
+                }
+            });
+
+            $("#calc").click(function(){
+                console.log("calc");
+                if(confirm("수익율계산 하시겠습니까?")){
+                    console.log("수익율계산 성공");
+                    $.ajax({
+                        method : "POST",
+                        url : "/api/benefit_history_calc",
+                        success(json){
+                            console.log(json.calc_goal_cnt);
+                            calc_goal_cnt = json.calc_goal_cnt-1;
+                            isPause = false;
+                            intevHandle = setInterval(check_calc_progress(), 3000);
+                            $("#progress").attr("max", calc_goal_cnt);
+                            alert("수익율계산 시작 : " + calc_goal_cnt);
+                        }
+                    });
+                }
+            });
+
+            $("#delete").click(function(){
+                console.log("delete");
+                if(confirm("거래내역을 삭제합니다")){
+                    var rowData = new Array(); 
+                    var tdArr = new Array();
+                    var checkbox = $("input[name=user_CheckBox]:checked");
+                    var deleteArr = [];
+                    // 체크된 체크박스 값을 가져온다
+                    checkbox.each(function(i){
+                        var idx = Number($(this).parent().next().text()) -1;
+                        deleteArr.push(hisArr[idx]._id);
+                    });
+                    //console.log(deleteArr);
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/benefit_history_delete",
+                        dataType: "json",
+                        data : {deleteArr : deleteArr},
+                        success: function(body){
+                            if(body){
+                                for(i=0; i<length; i++){
+                                    $("#historyTable > tbody:last > tr:last").remove();
+                                }
+                                $("#start_asset_sum").html("");
+                                $("#end_asset_sum").html("");
+                                $("#totalBenefit").html("");
+                                $("#totalBenefitRate").html("");
+                                $("#mytable > tbody:last").empty();
+                                get_benefit_history(page);
+                            }
+                        },
+                        error : function(request, status, error){
+                            console.log("error : " + error);
+                        }
+                    });
+                }
+            });
         });
+    </script>
+
+    <script>
+        var popupWindow = null;
+        function child_open(url){
+            var _width = '700';
+            var _height = '600';
+            
+            var _left  = Math.ceil((document.body.offsetWidth - _width) /2);
+            var _top  = Math.ceil((document.body.offsetHeight - _height) /2);
+
+            if(popupWindow && !popupWindow.closed){
+                popupWindow.focus();
+            }
+            else{
+                popupWindow = window.open(url, 'popup-test', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top)
+            }
+        }
+        function parent_disable(){
+            if(popupWindow && !popupWindow.closed)
+                popupWindow.focus();
+        }
     </script>
 </head>
 
@@ -131,10 +315,11 @@
     <div class="section-62">
         <div class="w-container">
             <h2 style="display: inline-block;" class="historyTitle">통합 거래 내역</h2>
+     
             <select id="cntPerPage" class="select">
                 <option value="5">5개</option>
-                <option value="10" selected>10개</option>
-                <option value="20">20개</option>
+                <option value="10" >10개</option>
+                <option value="20" selected>20개</option>
                 <option value="50">50개</option>
                 <option value="100">100개</option>
             </select>
@@ -161,7 +346,7 @@
             <div id="w-node-c22241ca7a6a-64777758">총수익율 :</div>
           </div> -->
 
-
+            
             <div class="w-container">
                 <div class="html-embed w-embed">
                     <!--  01  -->
@@ -169,6 +354,7 @@
                         <table class="historyTable" id="mytable">
                             <thead>
                                 <tr>
+                                    <th>선택</th>
                                     <th class="numberHd">no</th>
                                     <th>날짜</th>
                                     <th>시작</th>
@@ -185,6 +371,12 @@
                             </tbody>
                         </table>
                         <div id="page_link" class="pageNumber"></div>
+                        <!-- <button id="insert">추가</button> -->
+                        <progress id="progress" value="0" max="0" class="select"></progress>
+                        <button id="calc" class="select">계산</button>
+                        <button id="restore" class="select">복구</button>
+                        <button id="update" class="select">수정</button>
+                        <!-- <button id="delete" class="select">삭제</button> -->
                     </div>
                 </div>
             </div>

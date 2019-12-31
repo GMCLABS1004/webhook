@@ -10,17 +10,16 @@ console.log(randomInt(0, 10));
 console.log(randomInt(0, 10));
 console.log(randomInt(0, 10));
 console.log(randomInt(0, 10));
-setTimeout(check_benefit_his(), 2000);
+setTimeout(calc_benefit_rate(), 2000);
 
-function check_benefit_his(){
+function calc_benefit_rate(){
     return function(){
         filled_data = {};
         var end_asset_sum = 0;
         var before_asset_sum = 0;
         //var after_asset_sum = 0;
         async.waterfall([
-            function find_filled_benefit(cb){
-                console.log("find_filled_benefit");
+            function init(cb){
                 //체결된 주문중 가장 최근 주문 1개
                 benefitDB.find({end_asset_sum : {$gt : 0}}).sort({"start_time" : "desc"}).limit(1).exec(function(error, json){
                     if(error){
@@ -39,12 +38,8 @@ function check_benefit_his(){
                    
                 });
             },
-            function find_uncecked_benefit(cb){
-                console.log("find_uncecked_benefit");
-                // end_asset_sum : 0, //최근 자산들 총합(탈출전)
-                // before_asset_sum : 0,  //최근 자산들 총합(탈출전)
-                // after_asset_sum : 0,//최근 자산들 총합(탈출후)
-                // 기록안된 주문 수익율 계산
+            function calc(cb){
+                //수익율 계산안된 모든 목록들 수익율 계산
                 benefitDB.find({end_asset_sum : 0, before_asset_sum : 0, after_asset_sum : 0}).sort({"start_time" : "asc"}).exec(function(error, json){
                     if(error){
                         console.log(error);
