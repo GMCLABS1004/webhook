@@ -2950,6 +2950,7 @@ router.post('/api/order', isAuthenticated, function(req,res){
           res.send(error);
           return;
         }
+        
         console.log(body);
         var json = JSON.parse(body);
         var data = {
@@ -2975,6 +2976,9 @@ router.post('/api/order', isAuthenticated, function(req,res){
         });
         
       });
+
+   
+
     }
   ], function(error, results){
     if(error){

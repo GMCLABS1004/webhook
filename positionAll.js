@@ -169,7 +169,7 @@ function getPosition_bitmex(set, cb){
             setTimeout(correct_wrong_pgside(data.size,  data["pgSide"], new Object(set) ),0);
           }
         }
-  
+        
         var requestOptions = setRequestHeader(set.url, set.apiKey, set.secreteKey, 'GET','user/margin','currency=XBt');
         request(requestOptions, function(error, response, body){
             if(error){

@@ -573,7 +573,10 @@ function bitmex_position_parse(site, obj){
     }
         
 
-    
+    // console.log(site+" avgEntryPrice : "+ (obj.avgEntryPrice));
+    // console.log(site+" currentQty : "+ (obj.currentQty));
+    // console.log(site+" value : "+ (obj.currentQty/ obj.avgEntryPrice));
+
 
     if(typeof(obj.symbol) !== "undefined" && obj.symbol !== null)
         posObj["symbol"] = obj.symbol;

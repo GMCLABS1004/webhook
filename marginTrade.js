@@ -1934,7 +1934,7 @@ function trade_bitmex(_signal, siteName){
         });
       },
       function order2(data, cb){
-        var start_time = new Date()
+        var start_time = new Date();
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
         //진입주문
         var obj = {
@@ -1950,7 +1950,8 @@ function trade_bitmex(_signal, siteName){
             firstWalletBalance : 0, //주문넣기 전 총자산 -> 거래내역 출력용
             totalRemainAmt : 0, //미체결 수량
             totalRemainVal : 0, //미체결 가치
-            goalValue : Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker))), //주문 목표 금액
+            goalValue : 0, //주문 목표 금액
+            goalAmount : Math.floor(((((data.availableMargin * data.margin) * data.leverage) * data.ticker))), //주문 목표 금액
             totalOrdValue : 0, //주문넣은 가치 합산
             totalOrdAmount : 0, //주문넣은 가치 합산
             side : _signal.side, //주문 타입
@@ -1964,8 +1965,12 @@ function trade_bitmex(_signal, siteName){
             start_time : start_time,
             type_log : _signal.type_log,
         }
+        
         console.log("진입주문전");
-        //console.log(obj);
+
+        //진입시 미체결 내역 전부 취소 및 삭제
+        setTimeout(all_cancel_unfilled_order(obj.site), 1000);
+
         var obj2= {};
         if(obj.site === 'bitmex1'){
           //obj2 = new Object(logger_bitmex1);
