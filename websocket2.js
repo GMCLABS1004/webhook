@@ -40,7 +40,7 @@ client.addStream('XBTUSD', 'trade', function(data, symbol, tableName){
                 console.log("[" + getCurrentTimeString() +"] " + error);
                 return;
             }
-            console.log("[" + getCurrentTimeString() +"] " + "ts 가격 업데이트 실행");
+            //console.log("[" + getCurrentTimeString() +"] " + "ts 가격 업데이트 실행");
             for(var i=0; i<json.length; i++){
                 //현재가를 기준으로 트레일링 스탑
                 if(json[i].isTrailingStop === true){
