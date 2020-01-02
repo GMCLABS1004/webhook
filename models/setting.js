@@ -14,7 +14,8 @@ var settingSchema = new Schema({
     ordInterval : {type:Number, default : 1},//주문 인터벌
     minOrdRate : {type:Number, default : 50}, //최소주문비율
     maxOrdRate : {type:Number, default : 90}, //최대주문비율
-    side : {type:String, default : ''}, //현재 포지션
+    side : {type:String, default : ''}, //프로그램 포지션1
+    side2 : {type:String, default : 'exit'}, //프로그램 포지션2
     side_num : {type:Number, default : 1}, //현재 포지션번호
     execFlag : {type:Boolean, default : false}, //실행 on/off
     isExiting :  {type:Boolean, default : false}, //탈출중인지 여부
@@ -30,7 +31,7 @@ var settingSchema = new Schema({
     trailPrice1 : {type:Number, default : 0},
     trailPrice2 : {type:Number, default : 0},
     rentryPrice1 : {type:Number, default : 0},
-    rentryPrice2 : {type:Number, default : 0},
+    rentryPrice2 : {type:Number, default : 0}
 });
 settingSchema.index({site :1, site_type : 1});
 module.exports = mongoose.model('setting', settingSchema,'setting');

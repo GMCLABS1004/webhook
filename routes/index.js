@@ -1739,6 +1739,7 @@ router.post('/api/setting_status',  isAuthenticated,  function(req,res){
   console.log(json);
   var obj = {
     side : json.side,
+    side2 : json.side2,
     side_num : Number(json.side_num)
   }
   setting.updateOne({site : json.site},{$set : obj}, function(error,body){
@@ -1774,6 +1775,7 @@ router.get('/api/setting_trailing',  isAuthenticated, function(req,res){
     obj["trailFeeRate"] = json.trailFeeRate;
     obj["rentryFeeRate"] = json.rentryFeeRate;
     obj["pgSide"] = json.side;
+    obj["pgSide2"] = json.side2;
     obj["entryPrice"] = json.entryPrice;
     obj["highPrice"] = json.highPrice;
     obj["lowPrice"] = json.lowPrice;

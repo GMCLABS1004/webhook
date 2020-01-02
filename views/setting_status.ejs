@@ -61,11 +61,18 @@
     
                       <div class="form-block-7 w-form">
                         <form class="form-17">
-                          <div class="text-block-141" for="side">포지션</div>
+                          <div class="text-block-141" for="side">포지션1</div>
                           <input type="text" class="text-field-9 w-input" id="side" placeholder="">
                         </form>
                       </div>
-    
+
+                      <div class="form-block-7 w-form">
+                        <form class="form-17">
+                          <div class="text-block-141" for="side2">포지션2</div>
+                          <input type="text" class="text-field-9 w-input" id="side2" placeholder="">
+                        </form>
+                      </div>
+                      
                       <div class="form-block-7 w-form">
                         <form class="form-6">
                           <div class="text-block-141" for="side_num">포지션 번호</div>
@@ -92,6 +99,7 @@
                 var obj={
                     site : $("#site").val(),
                     side : $("#side").val(),
+                    side2 : $("#side2").val(),
                     side_num : $("#side_num").val()
                 }
                 console.log(JSON.stringify(obj));
@@ -122,6 +130,7 @@
                         $("#isEntering").val(json.isEntering),
                         $("#isExiting").val(json.isExiting),
                         $("#side").val(json.side),
+                        $("#side2").val(json.side2),
                         $("#side_num").val(json.side_num)
                     }
                 },

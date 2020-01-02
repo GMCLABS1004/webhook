@@ -82,10 +82,17 @@
 
                         <div class="form-block-7 w-form">
                             <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
-                              <div class="text-block-141"  for="pgSide">포지션(program)</div>
+                              <div class="text-block-141"  for="pgSide">포지션(program1)</div>
                               <input type="text" maxlength="256" id="pgSide" readonly required="" class="text-field-9 w-input">
                             </form>
                         </div>
+                        
+                        <div class="form-block-7 w-form">
+                          <form id="email-form" name="email-form" data-name="Email Form" class="form-6">
+                            <div class="text-block-141"  for="pgSide2">포지션(program2)</div>
+                            <input type="text" maxlength="256" id="pgSide2" readonly required="" class="text-field-9 w-input">
+                          </form>
+                      </div>
 
 
                         <div class="form-block-7 w-form">
@@ -178,6 +185,7 @@
                         $("#rentryFeeRate").val(json.rentryFeeRate);
                         $("#isSide").val(json.isSide);
                         $("#pgSide").val(json.pgSide);
+                        $("#pgSide2").val(json.pgSide2);
                         $("#entryPrice").val(json.entryPrice);
                         $("#highPrice").val(json.highPrice);
                         $("#lowPrice").val(json.lowPrice);
