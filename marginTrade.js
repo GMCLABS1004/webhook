@@ -195,7 +195,7 @@ const action_table2 = [
   { pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip},
   { pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
   { pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},
-
+  
   //{type : 'rentry', pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
   //{type : 'rentry', pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
 ]
