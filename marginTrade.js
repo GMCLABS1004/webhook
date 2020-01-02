@@ -1739,22 +1739,6 @@ function trade_bitmex(_signal, siteName){
             return;
           }
           
-          if(res[0].execFlag === false){
-            //console.log("비트멕스 off");
-            return;
-          }
-
-          if(res[0].scriptNo !== _signal.scriptNo){
-            //console.log("비트멕스 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
-            return; 
-          }
-
-          //탈출중이거나 진입중이면 신호무시
-          if(res[0].isExiting === true || res[0].isEntering === true){
-            //console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
-            return; 
-          }
-        
           data.url = res[0].url;
           data.symbol = res[0].symbol;
           data.apiKey = res[0].apiKey;
@@ -1770,7 +1754,43 @@ function trade_bitmex(_signal, siteName){
           if(res[0].side2 === 'long') data.pgSide2 = 'Buy';
           else if(res[0].side2 === 'short') data.pgSide2 = 'Sell';
           data.side_num = res[0].side_num;
-          //console.log(data);
+
+
+          if(res[0].scriptNo !== _signal.scriptNo){
+            //console.log("비트멕스 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
+            return; 
+          }
+
+          //탈출중이거나 진입중이면 신호무시
+          if(res[0].isExiting === true || res[0].isEntering === true){
+            //console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
+            return; 
+          }
+
+          //pg 포지션2 상태값변경
+          var isChange = decide_pgside2_change(_signal.type_log, data.pgSide2, _signal.side);
+          if(isChange === true){
+            console.log("pg 포지션2 상태값변경");
+            settings.updateOne(
+              {site : data.site}, 
+              {
+                $set :
+                {
+                  side2 : getType(_signal.side)
+                }
+              }, function(error, res){
+                if(error){
+                  console.log(error);
+                  return;
+                }
+            });
+          }
+
+          if(res[0].execFlag === false){
+            //console.log("비트멕스 off");
+            return;
+          }
+          
           cb(null, data);
         });
       },
@@ -1827,23 +1847,23 @@ function trade_bitmex(_signal, siteName){
         });
       },
       function change_pgside2(data, cb){ //pg 포지션2 상태값변경
-        var isChange = decide_pgside2_change(_signal.type_log, data.pgSide2, _signal.side);
-        if(isChange === true){
-          console.log("pg 포지션2 상태값변경");
-          settings.updateOne(
-            {site : data.site}, 
-            {
-              $set :
-              {
-                side2 : getType(_signal.side)
-              }
-            }, function(error, res){
-              if(error){
-                console.log(error);
-                return;
-              }
-          });
-        }
+        // var isChange = decide_pgside2_change(_signal.type_log, data.pgSide2, _signal.side);
+        // if(isChange === true){
+        //   console.log("pg 포지션2 상태값변경");
+        //   settings.updateOne(
+        //     {site : data.site}, 
+        //     {
+        //       $set :
+        //       {
+        //         side2 : getType(_signal.side)
+        //       }
+        //     }, function(error, res){
+        //       if(error){
+        //         console.log(error);
+        //         return;
+        //       }
+        //   });
+        // }
         cb(null, data);
       },
       function order1(data, cb){ //주문1
