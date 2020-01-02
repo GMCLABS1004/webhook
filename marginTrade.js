@@ -191,13 +191,13 @@ const action_table = [
 
 
 const action_table2 = [
-  {type : '', pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
-  {type : '', pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip},
-  {type : '', pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
-  {type : '', pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},
+  { pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
+  { pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip},
+  { pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
+  { pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},
 
-  {type : 'rentry', pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
-  {type : 'rentry', pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
+  //{type : 'rentry', pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
+  //{type : 'rentry', pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
 ]
 
 
@@ -213,7 +213,7 @@ function bitmex_decide_action(type, pgSide, pgSide2, isSide, sigSide){
   }else{
     //조건4개 짜리 우선순위(psSide2 추가 비교)
     for(var i=0; i<action_table2.length; i++){
-      if(type === action_table2[i].type && pgSide === action_table2[i].pgSide && pgSide2 === action_table2[i].pgSide2 && isSide === action_table2[i].isSide && sigSide === action_table2[i].sigSide){
+      if(pgSide === action_table2[i].pgSide && pgSide2 === action_table2[i].pgSide2 && isSide === action_table2[i].isSide && sigSide === action_table2[i].sigSide){
         return action_table2[i].action;
       }
     }
