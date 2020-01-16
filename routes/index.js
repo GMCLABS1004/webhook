@@ -88,10 +88,7 @@ router.get('/logout', isAuthenticated, function (req, res) {
   res.redirect('/login');
 });
 
-
-
-
-router.get('/changePW',isAuthenticated,  function(req, res) {
+router.get('/changePW', isAuthenticated,  function(req, res) {
   res.render('changePW');
 });
 
@@ -345,7 +342,7 @@ function getPosition_bitmex(set, callback){
             // console.log("getPosition_bitmex");
             // console.log(body);
             //var obj = JSON.parse(body)
-
+            
             //console.log(obj);
             data["site"] = obj.site;
             data["avgEntryPrice"] = obj.avgEntryPrice;
