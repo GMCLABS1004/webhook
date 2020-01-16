@@ -932,15 +932,17 @@ function trade_coinone(_signal){
       function balance_coinone(data, cb){ //코인원 잔액조회
         coinone.balance(function(error, httpResponse, body){
             if(error){
-                console.log("코인원 balance 값 조회 error1 : " + error);
-                return;
+              console.log("코인원 balance 값 조회 error1 : " + error);
+              return;
             }
+            
             try{
                 var json = JSON.parse(body);
             }catch(error){
                 console.log("코인원 balance 값 조회 error1 : " + error);
                 return;
             }
+
             if(json.errorCode !== "0"){
                 console.log("코인원 balance 값 조회 error2 : " + body);
                 return;
@@ -984,7 +986,7 @@ function trade_coinone(_signal){
         }
         var start_time = new Date();
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
-        if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
+        if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수
           //목표금액  => 이용가능금액 * 마진 * 레버리지
           var goalValue = Math.floor(data.avail_pay * data.margin * data.leverage);
           if(goalValue > data.avail_pay){
@@ -1065,7 +1067,6 @@ function trade_coinone(_signal){
           //코인원 탈출 시작
           setTimeout(div_exit_coinone(coinone, obj, logger_coinone), 3000);
           cb(null, data);
-
         }
         
         //cb(null, data);

@@ -35,7 +35,6 @@ app.set('view engine', 'ejs');
 if(webSetting.redis_exec){
   app.use(session({
     secret: 'ssshhhhh',
-    
     // create new redis store.
     store: new redisStore({  client: client, ttl :  1000 * 60 * 60}), //host: webSetting.redis, port: 6379,
     saveUninitialized: false,
@@ -49,6 +48,7 @@ if(webSetting.redis_exec){
     }
   }));
 }
+
 app.use(json2xls.middleware);
 app.use(flash());
 app.use(passport.initialize());
@@ -64,7 +64,7 @@ app.use('/', indexRouter);
 app.use('/remote', usersRouter);
 
 /// catch 404 and forwarding to error handler
-app.use(function(req, res, next) {
+app.use(function(req, res, next){
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -74,7 +74,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if(app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
       res.status(err.status || 500);
       res.render('error', {
