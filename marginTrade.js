@@ -109,8 +109,8 @@ var logfileName6_1 = './log/korbit' +'.log'; //로그파일 경로1
 var logfileName6_2 = './log/korbit' +'.debug.log'; //로그파일 경로2
 create_logger(logfileName6_1, logfileName6_2, function(loggerHandle){ logger_korbit = loggerHandle; logger_korbit.info("코빗");}); //logger 생성
 
-//status
-//tv action
+
+//동작 종류
 const doSkip = /*무시*/ {text : "무시", isSkip : true, isStatus : false, isExit : false, isEntry : false}
 const doStatus = /*상태값변경 */ {text : "상태값변경", isSkip : true, isStatus : true, isExit : false, isEntry : false}
 const doExit = /*탈출 */ {text : "탈출", isSkip : false, isStatus : true, isExit : true, isEntry : false}
@@ -121,7 +121,7 @@ const doSwitch = /*스위칭 */ {text : "스위칭", isSkip : false, isStatus : 
 const doTrailExit = /*탈출 */ {text : "트레일링 탈출", isSkip : false, isStatus : false, isExit : true, isEntry : false}
 
 
-
+//받은 신호에 어떻게 동작할지 나타내는 표(비트멕스 전용)
 const action_table = [
     {type : 'manual', pgSide : '', isSide : 'Buy', sigSide : "Buy", /*무시*/ action : doSkip},
     {type : 'manual', pgSide : '', isSide : 'Buy', sigSide : "Sell", /*스위칭 */action : doSwitch},
@@ -189,20 +189,18 @@ const action_table = [
     {type : 'trailingStop', pgSide : 'Sell', isSide : 'Sell', sigSide : "Sell Exit", /*탈출 */action : doTrailExit},
 ]
 
-
+//받은 신호에 어떻게 동작할지 나타내는 표 (비트멕스 전용)
 const action_table2 = [
   { pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
   { pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy Exit", /*무시*/ action : doSkip},
   { pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
   { pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell Exit", /*무시*/ action : doSkip},
-  
-  //{type : 'rentry', pgSide : 'Buy', pgSide2 : 'Exit', isSide : 'none', sigSide : "Buy", /*진입 */ action : doEntry},
-  //{type : 'rentry', pgSide : 'Sell', pgSide2 : 'Exit', isSide : 'none', sigSide : "Sell", /*진입 */ action : doEntry},
 ]
 
 
 
-
+//받은 신호에 어떻게 동작할지 나타내는 알고리즘(비트멕스 전용)
+//표 내용 하나하나 대조해서 일치하는 동작으로 결정
 function bitmex_decide_action(type, pgSide, pgSide2, isSide, sigSide){
   if(type==='manual'){
     for(var i=0; i<action_table.length; i++){
@@ -228,7 +226,7 @@ function bitmex_decide_action(type, pgSide, pgSide2, isSide, sigSide){
   return doSkip;
 }
 
-//프로그램 상태값 변경 여부 참조
+//프로그램 상태값 변경 여부 참조 테이블 
 const pgside2_table = [
   {type : '', pgSide2 : 'Buy', sigSide : "Buy", /*상태값변경 X */ change : false},
   {type : '', pgSide2 : 'Buy', sigSide : "Buy Exit", /*상태값변경 O */ change : true},
@@ -245,9 +243,9 @@ const pgside2_table = [
   {type : '', pgSide2 : 'Exit', sigSide : "Sell", /*상태값변경 O */ change : true},
   {type : '', pgSide2 : 'Exit', sigSide : "Sell Exit", /*상태값변경 X */ change : false},
 ]
-
+//프로그램 상태값 변경 여부 결정 하는 알고리즘 
 function decide_pgside2_change(type, pgSide2, sigSide){
-  for(var i=0; i<pgside2_table.length; i++){
+  for(var i=0; i<pgside2_table.length; i++){ //표하나하나 대조하여 action 결정
     if(pgside2_table[i].type === type && pgside2_table[i].pgSide2 === pgSide2 && pgside2_table[i].sigSide === sigSide){
       return pgside2_table[i].change;
     }
@@ -283,7 +281,7 @@ mongoose.connect(webSetting.dbPath, function(error){
         return;
     }
     
-    //환경설정 없으면 생성
+    //환경설정 없으면 기본값으로 환경설정 생성
     if(res.length === 0){ 
       var obj = [
         {
@@ -443,23 +441,26 @@ mongoose.connect(webSetting.dbPath, function(error){
   });
 });
 
+//3초마다 신호 왔는지 체크 
 setInterval(marginTrade(), 3000);
+
 
 function marginTrade(){
   return function(){
+    //신호 조회 
     signal.find({}).sort({timestamp : "asc"}).exec(function(error, res){
       if(error){
         console.log(error);
         return;
       }
-
-                                                                        ``
-      if(res.length > 0){
+                                                                  ``
+      if(res.length > 0){ //신호있으면 
         console.log("");
         console.log("");
         console.log("-----신호목록-----");
-        if(res[0].site === 'ALL'){
-          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex1'), 0);
+        if(res[0].site === 'ALL'){ //모든계정 실행
+          //bitmex 1~10 계정 모두 실행
+          setTimeout(trade_bitmex(new Object(res[0]), 'bitmex1'), 0); //
           setTimeout(trade_bitmex(new Object(res[0]), 'bitmex2'), 0);
           setTimeout(trade_bitmex(new Object(res[0]), 'bitmex3'), 0);
           setTimeout(trade_bitmex(new Object(res[0]), 'bitmex4'), 0);
@@ -470,12 +471,13 @@ function marginTrade(){
           setTimeout(trade_bitmex(new Object(res[0]), 'bitmex9'), 0);
           setTimeout(trade_bitmex(new Object(res[0]), 'bitmex10'), 0);
           
-          //어떤 거래소가 진입 or 탈출하는가
-          //모든거래소 거래가 언제 끝나는가
-          setTimeout(trade_bithumb(new Object(res[0])), 0);
-          setTimeout(trade_coinone(new Object(res[0])), 0);
-          setTimeout(trade_upbit(new Object(res[0])), 0);
-          setTimeout(trade_korbit(new Object(res[0])), 0);
+          //국내거래소 실행
+          setTimeout(trade_bithumb(new Object(res[0])), 0); //빗썸
+          setTimeout(trade_coinone(new Object(res[0])), 0); //코인원
+          setTimeout(trade_upbit(new Object(res[0])), 0); //업비트
+          setTimeout(trade_korbit(new Object(res[0])), 0); //코빗
+
+          //국내거래소 거래 종료 확인하고 통합거래내역 저장
           setTimeout(check_is_ordering("korean", new Object(res[0]), 0),500);
           
         }else{ //특정계정에게만 주문실행
@@ -483,7 +485,7 @@ function marginTrade(){
           setTimeout(trade_bitmex(new Object(res[0]), res[0].site), 0);
         }
         
-        //신호 삭제
+        //DB에 저장된 신호 삭제
         signal.findByIdAndRemove(res[0]._id, function(error, res){
           if(error){
             console.log(error);
@@ -504,13 +506,14 @@ function convert_side_str(side){
   }
 }
 
+//빗썸 거래 로직
 function trade_bithumb(_signal){
   return function(){
     var date = new Date( (new Date().getTime() + (1000 * 60 * 60 * 9)));
     console.log("[" + date.toISOString() + "] : " + JSON.stringify(_signal));
     var bithumAPI;
     async.waterfall([
-      function init(cb){
+      function init(cb){ //초기화 
         var data = {
           site : 'bithumb',
           avail_pay : 0,
@@ -527,32 +530,32 @@ function trade_bithumb(_signal){
         cb(null, data);
       },
 
-      function readSetting(data, cb){
+      function readSetting(data, cb){ //셋팅값 조회
         settings.find({site : data.site},function(error, res){
           if(error){
             console.log(error);
             return;
           }
           
+          //실행버튼 off면 로직 종료
           if(res[0].execFlag === false){
             console.log("빗썸 off");
             return;
           }
 
-
+          //스크립트번호 불일치면 로직종료
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("빗썸 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; 
           }
           
-          //탈출중이거나 진입중이면 신호무시
+          //탈출중이거나 진입중이면 로직종료
           if(res[0].isExiting === true || res[0].isEntering === true){
             console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
-          // console.log(res);
-          // console.log(res[0].apiKey);
-          // console.log(res[0].secreteKey);
+          
+          //빗썸 API 생성 및 셋팅값 저장
           bithumAPI = new BithumAPI(res[0].apiKey,res[0].secreteKey);
           data.symbol = res[0].symbol;
           data.leverage = res[0].leverage;
@@ -564,7 +567,7 @@ function trade_bithumb(_signal){
           data.pgSide = res[0].side;
           data.side_num = res[0].side_num;
 
-          //최신신호로 바꿈
+          //셋팅값에 저장된 포지션정보를 최신신호로 업데이트
           settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
             if(error){
                 console.log(error);
@@ -576,21 +579,21 @@ function trade_bithumb(_signal){
         });
       },
   
-      function readScript(data, cb){
+      function readScript(data, cb){ //스크립트 정보 조회
         script.find({scriptNo : _signal.scriptNo}, function(error, json){
           if(error){
             console.log(error);
             return;
           }
-          if(json.length > 0){
-            data.script_data = new Object(json[0]);
+          if(json.length > 0){ //스크립트정보가 있으면 저장
+            data.script_data = new Object(json[0]); 
             cb(null, data);
-          }else{
+          }else{ //스크립트정보가 없으면 로직종료
             return;
           }
         });
       },
-      function orderbook_bithumb(data, cb){ //빗썸 매수/매도 조회
+      function orderbook_bithumb(data, cb){ //빗썸 매수/매도 목록 조회
         bithumAPI.orderbook(data.symbol,function(error,response, body){
           if(error){
               console.log("빗썸 매수/매도 값 조회 error1 : " + error);
@@ -609,13 +612,13 @@ function trade_bithumb(_signal){
               return;
           }
           
-          
+          //매수, 매도 목록 저장
           data.ask = {price : Number(json.data.asks[0].price), amount : Number(json.data.asks[0].quantity) };
           data.bid = {price : Number(json.data.bids[0].price), amount : Number(json.data.bids[0].quantity) };
           cb(null, data);
         });
       },
-      function ticker_bithumb(data,cb){
+      function ticker_bithumb(data,cb){ //현재가 조회
         bithumAPI.ticker("BTC", function(error, response, body){
           if(error){
             console.log("빗썸 balance 값 조회 error1 : " + error);
@@ -635,11 +638,11 @@ function trade_bithumb(_signal){
           var json = JSON.parse(body);
           // console.log("ticker");
           // console.log(json);
-          data.ticker = json.data.closing_price;
+          data.ticker = json.data.closing_price; //현재가 저장
           cb(null,data);
         });
       },
-      function balance_bithumb(data,cb){
+      function balance_bithumb(data,cb){ //자산 조회
         var rgParams = {
           currency : data.symbol
         };
@@ -663,48 +666,43 @@ function trade_bithumb(_signal){
           //console.log(body);
           
           var coin_name = data.symbol.toLowerCase();
-          data.avail_coin = Number(json.data["available_btc"]);
-          data.avail_pay = Math.floor(Number(json.data["available_"+"krw"]));
+          data.avail_coin = Number(json.data["available_btc"]); //이용가능한 btc 갯수 저장
+          data.avail_pay = Math.floor(Number(json.data["available_"+"krw"])); //이용가능한 원화 저장
 
-          if(data.avail_coin > 0.0001){
-            data.isSide = "Buy";
+          if(data.avail_coin > 0.0001){ //현재포지션을 btc수량(0.0001)으로 판단
+            data.isSide = "Buy"; //현재포지션 Buy
           }else{
-            data.isSide = "NONE";
+            data.isSide = "NONE"; //현재포지션 NONE
           }
 
           
-          //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
-          //단 셋팅값이 초기값이면 로직실행
+          //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X, 단 셋팅값이 초기값이면 로직실행
           logger.info("site : " + data.site);
           logger.info("_signal.side : " +convert_side_str(_signal.side));
           logger.info("pgSide : " + data.pgSide);
           logger.info("isSide : " + convert_side_str(data.isSide));
           logger.info("isSide : " + (data.isSide));
-          if(convert_side_str(_signal.side) === data.pgSide){
+          if(convert_side_str(_signal.side) === data.pgSide){ 
             logger.info(data.site+" 로직실행X, 프로그램포지션 === 현재포지션");
             return;
           }
-          // console.log("avail_coin : "+ data.avail_coin);
-          // console.log("ticker : "+ data.ticker);
-          // console.log("_signal : " + _signal.side);
-          // console.log("isSide : " + data.isSide);
           cb(null,data);
         });
       },
-      function order1(data, cb){ //주문1
+      function order1(data, cb){
         if(data.isSide === _signal.side){ //진입한 포지션 === 요청포지션
           console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
-          //res.send({}); 
+          
           return;
         }
         var start_time = new Date();
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
-        if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
+        if(data.isSide === 'NONE' && _signal.side === 'Buy' ){ //현재포지션 === NONE, 신호 === Buy 
           
-          //목표금액  => 이용가능금액 * 마진 * 레버리지
+          //목표금액  = 이용가능금액 * 마진 * 레버리지
           var goalValue = Math.floor(data.avail_pay * data.margin * data.leverage);
-          if(goalValue > data.avail_pay){
-            goalValue = Math.floor(data.avail_pay);
+          if(goalValue > data.avail_pay){ //목표금액 > 이용가능한 금액
+            goalValue = Math.floor(data.avail_pay); //이용가능한 금액만큼한 주문
           }
           
           //빗썸 진입
@@ -738,12 +736,13 @@ function trade_bithumb(_signal){
               total_btc : 0
           }
           logger_bithumb.info("빗썸로그");
-          setTimeout(div_entry_bithumb(bithumAPI, obj, logger_bithumb), 0);
+          //진입로직 실행
+          setTimeout(div_entry_bithumb(bithumAPI, obj, logger_bithumb), 0); 
           cb(null, data);
-        }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
-          //탈출
-          //빗썸탈출 => 재정거래 봇 끄기
+        }//현재포지션 -> Buy, 신호 -> Exit
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ 
+          
+          //탈출 => 재정거래 봇 off
           var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
             if(error){
@@ -780,6 +779,7 @@ function trade_bithumb(_signal){
             total_btc : 0
           }
           console.log("빗썸탈출");
+          //탈출 로직 실행
           setTimeout(div_exit_bithumb(bithumAPI, obj, logger_bithumb), 3000);
           cb(null, data);
           
@@ -802,7 +802,7 @@ function trade_coinone(_signal){
     console.log("[" + date.toISOString() + "] : " + JSON.stringify(_signal));
     var coinone;
     async.waterfall([
-      function init(cb){
+      function init(cb){ //초기화 
         var data = {
           site : "coinone",
           symbol : "",
@@ -819,29 +819,31 @@ function trade_coinone(_signal){
         (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
         cb(null, data);
       },
-      function readSetting(data, cb){
+      function readSetting(data, cb){ //셋팅값 조회
         settings.find({site : data.site},function(error, res){
           if(error){
             console.log(error);
             return;
           }
-          
+           //실행버튼 off면 로직 종료
           if(res[0].execFlag === false){
             console.log("코인원 off");
             return;
           }
 
+          //스크립트번호 불일치면 로직종료
           if(res[0].scriptNo !== _signal.scriptNo){ //설정한 신호 !== 받은 신호
             console.log("코인원 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; //로직종료
           }
 
-          //탈출중이거나 진입중이면 신호무시
+          //탈출중이거나 진입중이면 로직종료
           if(res[0].isExiting === true || res[0].isEntering === true){
             console.log("분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
 
+          //코인원 API 생성 및 셋팅값 저장
           coinone = new coinoneAPI(res[0].apiKey, res[0].secreteKey);
           data.symbol = res[0].symbol;   
           data.leverage = res[0].leverage;
@@ -853,27 +855,27 @@ function trade_coinone(_signal){
           data.pgSide = res[0].side;
           data.side_num = res[0].side_num;
           
-          //최신신호로 바꿈
-          // settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
-          //   if(error){
-          //       console.log(error);
-          //       return;
-          //   }
-          //   console.log(res);
-          // });
+          //셋팅값에 저장된 포지션정보를 최신신호로 업데이트
+          settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
+            if(error){
+                console.log(error);
+                return;
+            }
+            console.log(res);
+          });
           cb(null, data);
         });
       },
-      function readScript(data, cb){
+      function readScript(data, cb){ //스크립트 정보 조회
         script.find({scriptNo : _signal.scriptNo}, function(error, json){
           if(error){
             console.log(error);
             return;
           }
-          if(json.length > 0){
+          if(json.length > 0){ //스크립트정보가 있으면 저장
             data.script_data = new Object(json[0]);
             cb(null, data);
-          }else{
+          }else{ //스크립트정보가 없으면 로직종료
             return;
           }
         });
@@ -897,14 +899,14 @@ function trade_coinone(_signal){
               logger.error("코인원 매수/매도 값 조회 error2 : " + body);
               return;
           }else{
-              //console.log("2.코인원 매수/매도 조회 성공");
+              //매수, 매도 목록 저장
               data.ask = {price : Number(json.ask[0].price), amount : Number(json.ask[0].qty) };
               data.bid = {price : Number(json.bid[0].price), amount : Number(json.bid[0].qty) };
               cb(null, data);
           }
         });
       },
-      function coinone_ticker(data,cb){
+      function coinone_ticker(data,cb){ //현재가 조회
         coinone.ticker("BTC", function(error, response, body){
           if(error){
             logger.error("코인원 매수/매도 값 조회 error1 : " + error);
@@ -923,13 +925,12 @@ function trade_coinone(_signal){
               return;
           }
           var json = JSON.parse(body);
-          //console.log("ticker");
-          //console.log(json);
-          data.ticker = Number(json.last);
+      
+          data.ticker = Number(json.last); //현재가 저장
           cb(null,data);
         });
       },
-      function balance_coinone(data, cb){ //코인원 잔액조회
+      function balance_coinone(data, cb){ //자산 조회
         coinone.balance(function(error, httpResponse, body){
             if(error){
               console.log("코인원 balance 값 조회 error1 : " + error);
@@ -953,13 +954,13 @@ function trade_coinone(_signal){
                 data.avail_coin = Number(json[coin_name].avail);
                 data.avail_pay = Math.floor(Number(json["krw"].avail));
 
-                if(data.avail_coin > 0.0001){ //* data.ticker 
-                  data.isSide = "Buy"
+                if(data.avail_coin > 0.0001){ //현재포지션을 코인갯수(0.0001)로 판단
+                  data.isSide = "Buy" //현재포지션 = Buy
                 }else{
-                  data.isSide = "NONE"
+                  data.isSide = "NONE" //현재포지션 = NONE
                 }
 
-                  //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
+                //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
                 //단 셋팅값이 초기값이면 로직실행
                 logger.info("site : " + data.site);
                 logger.info("_signal.side : " +convert_side_str(_signal.side));
@@ -970,27 +971,24 @@ function trade_coinone(_signal){
                   logger.info(data.site+" 로직실행X, 프로그램포지션 === 현재포지션");
                   return;
                 }
-                // console.log("avail_coin : "+ data.avail_coin);
-                // console.log("ticker : "+ data.ticker);
-                // console.log("_signal : " + _signal.side);
-                // console.log("isSide : " + data.isSide);
+              
                 cb(null, data);
             }
         });
       },
-      function order1(data, cb){ //주문1
+      function order1(data, cb){ 
         if(data.isSide === _signal.side){ //진입한 포지션 === 요청포지션
           console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
-          //res.send({}); 
+         
           return;
         }
         var start_time = new Date();
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
-        if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수
-          //목표금액  => 이용가능금액 * 마진 * 레버리지
+        if(_signal.side === 'Buy' && data.isSide === 'NONE'){//현재포지션 -> NONE, 신호 -> Buy 
+          //목표금액  = 이용가능금액 * 마진 * 레버리지
           var goalValue = Math.floor(data.avail_pay * data.margin * data.leverage);
-          if(goalValue > data.avail_pay){
-            goalValue = Math.floor(data.avail_pay);
+          if(goalValue > data.avail_pay){ //목표금액 > 이용가능한 금액
+            goalValue = Math.floor(data.avail_pay); //이용가능한 금액만큼한 주문
           }
 
           //코인원 진입
@@ -1022,11 +1020,12 @@ function trade_coinone(_signal){
               total_krw : 0,
               total_btc : 0
           }
+          //진입로직 실행
           setTimeout(div_entry_coinone(coinone, obj, logger_coinone), 0);
           cb(null, data);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
-          console.log("코인원탈출");
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){  //현재포지션 -> Buy, 신호 -> Exit
+          //탈출 => 재정거래 봇 off
           var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
             if(error){
@@ -1064,7 +1063,7 @@ function trade_coinone(_signal){
             total_krw : 0,
             total_btc : 0
           }
-          //코인원 탈출 시작
+          //탈출 로직 실행
           setTimeout(div_exit_coinone(coinone, obj, logger_coinone), 3000);
           cb(null, data);
         }
@@ -1088,7 +1087,7 @@ function trade_upbit(_signal){
     console.log("[" + date.toISOString() + "] : " + JSON.stringify(_signal));
     var upbit;
     async.waterfall([
-      function init(cb){
+      function init(cb){ //초기화 
         var data = {
           site : "upbit",
           symbol : "",
@@ -1107,18 +1106,20 @@ function trade_upbit(_signal){
         (side === 'Buy')? data.side = 'bid' : data.side = 'ask';
         cb(null, data);
       },
-      function readSetting(data, cb){
+      function readSetting(data, cb){ //셋팅값 조회
         settings.find({site : data.site},function(error, res){
           if(error){
             console.log(error);
             return;
           }
-         
+
+          //실행버튼 off면 로직 종료
           if(res[0].execFlag === false){
             console.log("업비트 off");
             return;
           }
 
+          //스크립트번호 불일치면 로직종료
           if(res[0].scriptNo !== _signal.scriptNo){
             console.log("업비트 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return;
@@ -1129,7 +1130,8 @@ function trade_upbit(_signal){
             console.log("업비트 분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
-          
+
+          //업비트 API 생성 및 셋팅값 저장
           upbit = new upbitAPI(res[0].apiKey, res[0].secreteKey);
           data.symbol = res[0].symbol;
           data.leverage = res[0].leverage;
@@ -1142,7 +1144,7 @@ function trade_upbit(_signal){
           data.side_num = res[0].side_num;
           
           
-         //최신신호로 바꿈
+         //셋팅값에 저장된 포지션정보를 최신신호로 업데이트
          settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
             if(error){
                 console.log(error);
@@ -1153,21 +1155,21 @@ function trade_upbit(_signal){
           cb(null, data);
         });
       },
-      function readScript(data, cb){
+      function readScript(data, cb){ //스크립트 정보 조회
         script.find({scriptNo : _signal.scriptNo}, function(error, json){
           if(error){
             console.log(error);
             return;
           }
-          if(json.length > 0){
+          if(json.length > 0){ //스크립트정보가 있으면 저장
             data.script_data = new Object(json[0]);
             cb(null, data);
-          }else{
+          }else{ //스크립트정보가 없으면 로직종료
             return;
           }
         });
       },
-      function ticker_upbit(data,cb){
+      function ticker_upbit(data,cb){ //현재가 조회
         upbit.ticker("KRW-BTC", function(error, response, body){
           if(error){
             console.log("업비트 현재가 조회 error1 : " + error);
@@ -1187,13 +1189,12 @@ function trade_upbit(_signal){
           }
 
           var json = JSON.parse(body);
-          // console.log("ticker");
-          // console.log(json);
-          data.ticker = json[0].trade_price;
+         
+          data.ticker = json[0].trade_price; //현재가 저장
           cb(null,data);
         });
       },
-      function orderbook_upbit(data, cb){ //업비트 매수/매도 조회
+      function orderbook_upbit(data, cb){ //매수/매도 목록 조회
 
         //3.업비트
         upbit.orderbook(data.symbol, function(error, response, body){
@@ -1215,12 +1216,13 @@ function trade_upbit(_signal){
             }
             
             var obj = parse('upbit', json);
+            //매수, 매도 목록 저장
             data.ask = {price : obj.asks[0].price, amount : obj.asks[0].amount};
             data.bid = {price : obj.bids[0].price, amount : obj.bids[0].amount};
             cb(null, data);
         });
       },
-      function balance_upbit(data, cb){ //업비트 잔액 조회
+      function balance_upbit(data, cb){//자산 조회
        
         upbit.accounts(function(error, response, body){
             if (error){
@@ -1242,17 +1244,17 @@ function trade_upbit(_signal){
 
             json.forEach(element => {
                 if(element.currency === 'KRW'){ //KRW
-                  data.avail_pay = Math.floor(Number(element.balance));
+                  data.avail_pay = Math.floor(Number(element.balance)); //이용가능한 금액
                 }
                 else if(element.currency === 'BTC'){
-                  data.avail_coin = Number(element.balance);
+                  data.avail_coin = Number(element.balance); //이용가능한 코인
                 }
             });
             
-            if(data.avail_coin > 0.0003){ //업비트만 0.0003
-              data.isSide = "Buy"
+            if(data.avail_coin > 0.0003){ //현재포지션을 코인갯수로 판단, 업비트만 0.0003
+              data.isSide = "Buy" //현재포지션 = Buy
             }else{
-              data.isSide = "NONE"
+              data.isSide = "NONE" //현재포지션 = NONE
             }
 
 
@@ -1267,28 +1269,24 @@ function trade_upbit(_signal){
               logger.info(data.site+" 로직실행X, 프로그램포지션 === 현재포지션");
               return;
             }
-            // console.log("avail_coin : "+ data.avail_coin);
-            // console.log("ticker : "+ data.ticker);
-            // console.log("_signal : " + _signal.side);
-            // console.log("isSide : " + data.isSide);
+         
             cb(null,data);
             
         });
       },
-      function order1(data, cb){ //주문1
-        if(data.isSide === _signal.side){ //진입한 포지션 === 요청포지션
+      function order1(data, cb){ 
+        if(data.isSide === _signal.side){  //진입한 포지션 === 요청포지션
           console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
-          //res.send({}); 
           return;
         }
         var start_time = new Date();
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
-        if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
+        if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE, 신호 -> Buy 
           
-          //목표금액  => 이용가능금액 * 마진 * 레버리지
+          //목표금액  = 이용가능금액 * 마진 * 레버리지
           var goalValue = Math.floor((data.avail_pay * data.margin * data.leverage) * 0.99);
-          if(goalValue > data.avail_pay){
-            goalValue = Math.floor(data.avail_pay * 0.99);
+          if(goalValue > data.avail_pay){ //목표금액 > 이용가능한 금액
+            goalValue = Math.floor(data.avail_pay * 0.99);  //이용가능한 금액만큼한 주문
           }
 
           //업비트 진입
@@ -1320,12 +1318,12 @@ function trade_upbit(_signal){
               total_krw : 0,
               total_btc : 0
           }
+          //진입로직 실행
           setTimeout(div_entry_upbit(upbit, obj, logger_upbit), 0);
           cb(null, data);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
-          //탈출
-          //빗썸탈출
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> Buy, 신호 -> Exit
+          //탈출 => 재정거래 봇 off
           console.log("업비트탈출");
           var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
@@ -1363,6 +1361,7 @@ function trade_upbit(_signal){
             total_krw : 0,
             total_btc : 0
           }
+          //탈출 로직 실행
           setTimeout(div_exit_upbit(upbit, obj, logger_upbit), 3000);
           cb(null, data);
         }
@@ -1408,12 +1407,13 @@ function trade_korbit(_signal){
             console.log(error);
             return;
           }
-          
+          //실행버튼 off면 로직 종료
           if(res[0].execFlag === false){
             console.log("코빗 off");
             return;
           }
 
+          //스크립트번호 불일치면 로직종료
           if(res[0].scriptNo !== _signal.scriptNo){ //설정한 신호 !== 받은 신호
             console.log("코빗 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; //로직종료
@@ -1424,7 +1424,7 @@ function trade_korbit(_signal){
             console.log("코빗 분할주문중 -> 로직종료"+ res[0].isExiting + " " + res[0].isEntering);
             return; 
           }
-
+          //코빗 API 생성 및 셋팅값 저장
           korbit = new korbitAPI(res[0].apiKey, res[0].secreteKey);
           korbit.access_token(function(error, response, body){
             if(error){
@@ -1449,7 +1449,7 @@ function trade_korbit(_signal){
             data.pgSide = res[0].side;
             data.side_num = res[0].side_num;
             
-             //최신신호로 바꿈
+            //최신신호로 바꿈
             settings.updateOne({site : data.site}, {$set :{side : convert_side_str(_signal.side) }}, function(error, res){
               if(error){
                   console.log(error);
@@ -1461,16 +1461,17 @@ function trade_korbit(_signal){
           });
         });
       },
-      function readScript(data, cb){
+      function readScript(data, cb){ //스크립트 정보 조회
         script.find({scriptNo : _signal.scriptNo}, function(error, json){
           if(error){
             console.log(error);
             return;
           }
-          if(json.length > 0){
+
+          if(json.length > 0){ //스크립트정보가 있으면 저장
             data.script_data = new Object(json[0]);
             cb(null, data);
-          }else{
+          }else{ //스크립트정보가 없으면 로직종료
             return;
           }
         });
@@ -1494,7 +1495,7 @@ function trade_korbit(_signal){
           cb(null, data);
         });
       },
-      function korbit_ticker(data,cb){
+      function korbit_ticker(data,cb){ //현재가 조회
         korbit.ticker("btc_krw", function(error, response, body){
           if(error){
             logger.error("코인원 매수/매도 값 조회 error1 : " + error);
@@ -1507,11 +1508,11 @@ function trade_korbit(_signal){
               logger.error("코인원 매수/매도 값 조회 error1 : " + error);
               return;
           }
-          data.ticker = Number(json.last);
+          data.ticker = Number(json.last); //현재가 저장
           cb(null,data);
         });
       },
-      function balance_korbit(data, cb){ //코인원 잔액조회
+      function balance_korbit(data, cb){ //매수/매도 목록 조회
         korbit.balances(function(error, response, body){
           if(error){
               logger.error("코빗 balance 값 조회 error1 : " + error);
@@ -1531,13 +1532,13 @@ function trade_korbit(_signal){
 
           var obj = {};
       
-          data.avail_coin = Number(json["btc"].available);
-          data.avail_pay = Math.floor(Number(json["krw"].available));
+          data.avail_coin = Number(json["btc"].available); //이용가능한 코인
+          data.avail_pay = Math.floor(Number(json["krw"].available));  //이용가능한 금액
 
-          if(data.avail_coin > 0.0001){ //* data.ticker 
-            data.isSide = "Buy"
+          if(data.avail_coin > 0.0001){ //현재포지션을 코인갯수(0.0001)로 판단,  
+            data.isSide = "Buy" //현재포지션 = Buy
           }else{
-            data.isSide = "NONE"
+            data.isSide = "NONE" //현재포지션 = NONE
           }
 
           //프로그램 기억 포지션 !== 현재포지션 -> 로직실행X
@@ -1551,14 +1552,11 @@ function trade_korbit(_signal){
             logger.info(data.site+" 로직실행X, 프로그램포지션 === 현재포지션");
             return;
           }
-          // console.log("avail_coin : "+ data.avail_coin);
-          // console.log("ticker : "+ data.ticker);
-          // console.log("_signal : " + _signal.side);
-          // console.log("isSide : " + data.isSide);
+    
           cb(null, data);
         });
       },
-      function order1(data, cb){ //주문1
+      function order1(data, cb){ 
         if(data.isSide === _signal.side){ //진입한 포지션 === 요청포지션
           console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
           //res.send({}); 
@@ -1567,10 +1565,10 @@ function trade_korbit(_signal){
         var start_time = new Date();
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
         if(_signal.side === 'Buy' && data.isSide === 'NONE'){ //현재포지션 -> NONE and 신호 -> 매수 
-          //목표금액  => 이용가능금액 * 마진 * 레버리지
+          //목표금액  = 이용가능금액 * 마진 * 레버리지
           var goalValue = Math.floor(data.avail_pay * data.margin * data.leverage);
-          if(goalValue > data.avail_pay){
-            goalValue = Math.floor(data.avail_pay);
+          if(goalValue > data.avail_pay){ //목표금액 > 이용가능한 금액
+            goalValue = Math.floor(data.avail_pay); //이용가능한 금액만큼한 주문
           }
 
           //코인원 진입
@@ -1602,12 +1600,12 @@ function trade_korbit(_signal){
               total_krw : 0,
               total_btc : 0
           }
+          //진입로직 실행
           setTimeout(div_entry_korbit(korbit, obj, logger_korbit), 0);
           cb(null, data);
         }
-        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> 매수 and 신호 -> 탈출
-          //탈출
-          //빗썸탈출
+        else if(_signal.side === 'Exit' && data.isSide === 'Buy' && is_exit(data.script_data, "Buy", data.side_num, _signal.side_num)){ //현재포지션 -> Buy, 신호 -> Exit
+          //탈출 => 재정거래 봇 off
           console.log("코빗탈출");
           var options = getFinanceBotOffOption("BTC_KRW", "stop");
           request(options, function(error, response, body){
@@ -1647,6 +1645,7 @@ function trade_korbit(_signal){
             total_krw : 0,
             total_btc : 0
           }
+          //탈출 로직 실행
           setTimeout(div_exit_korbit(korbit, obj, logger_korbit), 0);
           cb(null, data);
         }
@@ -1723,8 +1722,8 @@ function trade_bitmex(_signal, siteName){
               marginBalance : 0, //마진 밸런스
               availableMargin : 0, // 사용가능잔고
               ordInterval : 0,
-              leverage : 1, //setting값 
-              margin : 0.1, //setting값
+              leverage : 1, 
+              margin : 0.1, 
               openingQty : 0, // 들어가 있는 수량
               isSide : 'none', //비멕홈페이지 side// Sell or Buy
               pgSide : 'Exit', //봇이 기억하는 side // long or short or exit
@@ -1740,6 +1739,7 @@ function trade_bitmex(_signal, siteName){
             return;
           }
           
+          //설정값 저장
           data.url = res[0].url;
           data.symbol = res[0].symbol;
           data.apiKey = res[0].apiKey;
@@ -1756,7 +1756,7 @@ function trade_bitmex(_signal, siteName){
           else if(res[0].side2 === 'short') data.pgSide2 = 'Sell';
           data.side_num = res[0].side_num;
 
-
+          //스크립트번호 불일치면 로직종료
           if(res[0].scriptNo !== _signal.scriptNo){
             //console.log("비트멕스 스크립트넘버 불일치 -> 로직종료 : "+ _signal.scriptNo);
             return; 
@@ -1786,7 +1786,7 @@ function trade_bitmex(_signal, siteName){
                 }
             });
           }
-
+          //실행버튼 off면 로직 종료
           if(res[0].execFlag === false){
             //console.log("비트멕스 off");
             return;
@@ -1802,9 +1802,9 @@ function trade_bitmex(_signal, siteName){
             return;
           }
           if(json.length > 0){
-            data.script_data = new Object(json[0]); //스크립트 저장
+            data.script_data = new Object(json[0]); //스크립트정보가 있으면 저장
             cb(null, data);
-          }else{
+          }else{ //스크립트정보가 있으면 저장
             return;
           }
         });
@@ -1812,62 +1812,40 @@ function trade_bitmex(_signal, siteName){
       function ticker(data,cb){ //현재가 조회
           var requestOptions = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'GET','trade','symbol='+data.symbol+'&count=1'+'&reverse='+true);//'currency=XBt'
           request(requestOptions, function(error,response,body){
-              if(error) {
-                  console.log("error : " +error);
-                  //res.send(error);
-                  return;
+              if(error){
+                console.log("error : " +error);
+                //res.send(error);
+                return;
               }
               var json = JSON.parse(body);
-              //console.log(body);
-              data.ticker = json[0].price;
+              data.ticker = json[0].price; //현재가 저장
               cb(null, data);
           });
       },
-      function position(data, cb){ //실제 포지션, 실제 수량 조회
+      function position(data, cb){ //진입해 있는 실제 포지션과 수량을 조회
         var requestOptions = setRequestHeader(data.url, data.apiKey, data.secreteKey, 'GET','position','');//'currency=XBt'
         request(requestOptions, function(err,response,body){
-            if(err) {
-                console.log(err);
-                return;
+            if(err){
+              console.log(err);
+              return;
             }
-            //console.log(body);
+            
             var json = JSON.parse(body);
-            //console.log(json);
+          
             for(i=0; i<json.length; i++){
-                if(json[i].currentQty > 0 && json[i].symbol==='XBTUSD'){
-                    //console.log("매수");
-                    data.openingQty = json[i].currentQty;
-                    data.isSide = "Buy"; 
-                }else if(json[i].currentQty < 0 && json[i].symbol==='XBTUSD'){
-                    //console.log("매도");
-                    data.openingQty = json[i].currentQty;
-                    data.isSide = "Sell";
-                }
+              if(json[i].currentQty > 0 && json[i].symbol==='XBTUSD'){ 
+                  data.openingQty = json[i].currentQty; //진입되있는 실제수량 저장, ex)1200$
+                  data.isSide = "Buy"; //현재포지션 = Buy
+              }else if(json[i].currentQty < 0 && json[i].symbol==='XBTUSD'){
+                  data.openingQty = json[i].currentQty;  //진입되있는 실제수량 저장, ex) -1200$
+                  data.isSide = "Sell";  //현재포지션 = Sell
+              }
             }
             cb(null, data);
         });
       },
-      function change_pgside2(data, cb){ //pg 포지션2 상태값변경
-        // var isChange = decide_pgside2_change(_signal.type_log, data.pgSide2, _signal.side);
-        // if(isChange === true){
-        //   console.log("pg 포지션2 상태값변경");
-        //   settings.updateOne(
-        //     {site : data.site}, 
-        //     {
-        //       $set :
-        //       {
-        //         side2 : getType(_signal.side)
-        //       }
-        //     }, function(error, res){
-        //       if(error){
-        //         console.log(error);
-        //         return;
-        //       }
-        //   });
-        // }
-        cb(null, data);
-      },
-      function order1(data, cb){ //주문1
+
+      function order1(data, cb){
         
         if(data.isSide === _signal.side){ //실제포지션 === 요청포지션
           console.log("첫주문은 서로 다른 포지션이야 합니다."); //로직종료
@@ -1879,10 +1857,10 @@ function trade_bitmex(_signal, siteName){
         console.log("data.isSide : "+ data.isSide);
         console.log("_signal.side : "+ _signal.side);
 
-        //pg포지션 2개, 실제포지션, 신호를 바탕으로 행동(상태변경, 무시, 진입, 탈출, 스위칭 등)을 결정 
+        //프로그램 포지션 2개, 실제포지션1개, 신호1개를 바탕으로 행동(상태변경, 무시, 진입, 탈출, 스위칭 등)을 결정하고 action에 저장
         var action = bitmex_decide_action(_signal.type_log, data.pgSide, data.pgSide2, data.isSide, _signal.side);
 
-        // pg포지션1 상태변경
+        // 프로그램 포지션1번 상태변경
         if(action.isStatus === true){
           console.log("상태변경1");
           settings.updateOne(
@@ -1901,13 +1879,13 @@ function trade_bitmex(_signal, siteName){
         }
 
         
-        //신호무시 -> 로직종료
+        //신호무시 조건 true면
         if(action.isSkip === true){
           console.log("신호무시");
           return; //로직종료
         }
 
-        //탈출
+        //탈출조건 true면
         if(action.isExit === true){
           console.log("isExit");
           var start_time = new Date();
@@ -1940,11 +1918,11 @@ function trade_bitmex(_signal, siteName){
             //탈출시작
             setTimeout(div_exit_bitmex(obj, log_obj), 0);
 
-            //탈출시 미체결 내역 전부 취소 및 삭제
+            //미체결 내역 전부 취소 및 삭제
             setTimeout(all_cancel_unfilled_order(obj.site), 0);
         }
 
-        //진입
+        //진입조건 true면
         if(action.isEntry === true){
           console.log("진입");
           return cb(null, data);
@@ -1971,7 +1949,7 @@ function trade_bitmex(_signal, siteName){
       function order2(data, cb){ //진입
         var start_time = new Date();
         start_time = start_time.getTime() + (1000 * 60 * 60 * 9);
-        //진입주문
+        
         var obj = {
             site : data.site,
             idx : 1,
@@ -2006,11 +1984,11 @@ function trade_bitmex(_signal, siteName){
         //진입시 미체결 내역 전부 취소 및 삭제
         setTimeout(all_cancel_unfilled_order(obj.site), 1000);
 
-        //진입
+        //진입로직 실행
         var obj2= {};
         if(obj.site === 'bitmex1'){
           //obj2 = new Object(logger_bitmex1);
-          setTimeout(div_entry_bitmex(obj, logger_bitmex1), 0);
+          setTimeout(div_entry_bitmex(obj, logger_bitmex1), 0); 
         }else if(obj.site === 'bitmex2'){
           //obj2 = new Object(logger_bitmex2);
           setTimeout(div_entry_bitmex(obj, logger_bitmex2), 0);
@@ -2520,21 +2498,7 @@ function insert_trade_history(list, _signal){
       },
       function financeFuncOff(obj, cb){
         cb(null, obj);
-        // var options = {};
-        // if(obj.type === 'long'){ //long 완료시 재정거래 모든 거래소 on
-        //   options = getFinanceOffOption(true);
-          
-        // }else if(obj.type === 'exit'){ //exit 완료시 한번더 거래소 off(여기서 안해도 상관없음)
-        //   options = getFinanceOffOption(false);
-        // }
-        // request(options, function(error, response, body){
-        //   if(error){
-        //     console.log(error);
-        //     return;
-        //   }
-        //   console.log(body);
-        //   cb(null, obj);
-        // });
+        
       }
     ], function(error, results){
       if(error){
@@ -2547,46 +2511,7 @@ function insert_trade_history(list, _signal){
   }
 }
 
-// function insert_trade_history(list){
-//   return function(){
-//       var search_list = [];
-//       var order_list=[];
-//       for(i=0; i<list.length; i++){
-//           search_list.push({site : list[i].site});
-//       }
 
-//       for(i=0; i<search_list.length; i++){
-//           console.log(search_list[i]);
-//           orderDB.find(search_list[i]).sort({start_time : "desc"}).limit(1).exec(function(error,data){
-//               if(error){
-//                   console.log(error);
-//                   return;
-//               }
-//               console.log("주문데이터");
-//               console.log(data);
-//               console.log(data[0].start_time)
-//               console.log(typeof(data[0].start_time));
-//               console.log(data[0].start_time.getTime());
-//               if(data.length > 0){
-//                   order_list.push(data[0]);
-//               }
-  
-//               if(search_list.length === order_list.length){
-//                   var obj = create_history_data(order_list);
-                  
-//                   console.log(obj);
-//                   orderDB2.insertMany(obj, function(error, res){
-//                       if(error){
-//                           console.log(error);
-//                           return;
-//                       }
-//                       console.log(res);
-//                   });
-//               }
-//           });
-//       }
-//   }
-// }
 
 function create_history_data(order_list, _signal){
   var obj ={
