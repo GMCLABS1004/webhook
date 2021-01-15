@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"marginTrade.ticker"},{"v":2,"key":{"site":1,"site_type":1},"name":"site_1_site_type_1","ns":"marginTrade.ticker","background":true}],"uuid":"dd4864f52fcf4835b7aa5afbce16564f"}

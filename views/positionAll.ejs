@@ -144,17 +144,21 @@
                         console.log(json);
                         if(json){
                             var url = window.location.origin + '/orderHistoryTotalPage?site='
+                            var url2 = window.location.origin + '/choi?site='
+                            //var url = window.location.origin + '/choi?site='
                             var list = json.list;
                             var last_price = json.last_price;
                             var end_asset = 0;
                             var start_asset =0;
+                            var totalBenefit = json.totalBenefit
+                            var totalBenefitRate = json.totalBenefitRate
                             var unrealisedPnlSum =0;
                             $("#mytable > tbody:last").empty();
                             $("#last_price").html("");
                             $("#end_asset").html("");
                             $("#start_asset").html("");
-                            $("#totalBenefit").html("");
-                            $("#totalBenefitRate").html("");
+                            $("#totalBenefit").html(totalBenefit +"<br>");
+                            $("#totalBenefitRate").html(totalBenefitRate +"<br>");
                             $("#last_price").html(last_price +"<br>");
                             for(i=0; i<list.length; i++){
                                 end_asset += list[i].walletBalance;
@@ -196,8 +200,9 @@
                                     $("#mytable > tbody:last").append("</tr>");
 
                                     $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td colspan='2'></td>");
-                                    $("#mytable > tbody:last").append("<td><center>"+ ((list[i].isUnfilled === true)? '미체결' : '') + "</center></td>");
+                                    $("#mytable > tbody:last").append("<td>"+"</td>");
+                                    $("#mytable > tbody:last").append("<td><center>"+((list[i].isUnfilled === true)? '미체결' : '') + "</center></td>");
+                                    $("#mytable > tbody:last").append("<td style='min-width: 80px;' ><center><a class='____1_A63_Rectangle_5' href='"+(url2+list[i].site)+"'> <strong>"+ "거래내역" +"</strong> </a></td>");
                                     //$("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
                                     $("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_5' href='javascript:void(0);' onclick=limit_order('" + JSON.stringify({site : list[i].site}) + "')><strong>"+ "주문" +"</strong></a>" + "</td>");
                                     // $("#mytable > tbody:last").append("<td class='___3098'>" + "<a href='javascript:child_open()' class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
@@ -211,7 +216,8 @@
                                     $("#mytable > tbody:last").append("</tr>");
                                     
                                     $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>계정</span><span class='BITMEX01'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a></span></td>");
+                                        
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>계정</span><span class='BITMEX01'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a> </span></td>");
                                     $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
                                     $("#mytable > tbody:last").append("<td><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
                                     $("#mytable > tbody:last").append("<td><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
@@ -241,12 +247,10 @@
                                 $("#mytable > tbody:last").append("<tr>");
                             
                             }
-                            var totalBenefit = (end_asset - start_asset);
-                            var totalBenefitRate = ((totalBenefit/start_asset) *100);
                             $("#start_asset").html(asset_comma(start_asset, 'bitmex') +"<br>");
                             $("#end_asset").html(asset_comma(end_asset, 'bitmex') +"<br>");
-                            $("#totalBenefit").html( asset_comma(totalBenefit, 'bitmex')  +"<br>");
-                            $("#totalBenefitRate").html(benefit_comma(totalBenefitRate)  +" %<br>");
+                            $("#totalBenefit").html(asset_comma(totalBenefit, 'bitmex')  +"<br>");
+                            $("#totalBenefitRate").html(benefit_comma(totalBenefitRate, 'bitmex')  +" %<br>");
                             var unrealisedPnlSumPer = ((unrealisedPnlSum / end_asset ) * 100).toFixed(4); //
                             console.log("unrealisedPnlSumPer : "+ unrealisedPnlSumPer);
                             if(unrealisedPnlSumPer === NaN){
@@ -422,36 +426,37 @@
         <div class="positionTitle">
             <h2 class="bitmexTitle">비트맥스 포지션</h2>
             <a class="positionTitleButton_2" href="benefit_history_page"><strong>거래내역</strong></a>
+            <a class="positionTitleButton_2" href="choi_total"><strong>거래내역2</strong></a>
             <a class="positionTitleButton_1" href="manage"><strong>통합설정</strong></a>
         </div>
 
       <br>
   
-    <table class="head">
-        <tr>
-            <td style="width: 30px;">시작자산</td>
-            <td id="start_asset"></td>
-            <td>총수익</td>
+      <table class="head">
+        <!-- <tr>
+            <td>수익합계</td>
             <td id="totalBenefit"></td>
-        </tr>
-        <tr>
-            <td>최근자산</td>
-            <td id="end_asset"></td>
-            <td>총 수익률</td>
+            <td>수익률합계</td>
             <td id="totalBenefitRate"></td>
-        </tr>
-        <tr>
+        </tr> -->
+        <!-- <tr>
             <td></td>
             <td></td>
             <td><strong>현재가</strong></td>
             <td id="last_price"></td>
-        </tr>
+        </tr> -->
         <tr>
             <td style="background-color: rgba(199, 199, 199, 0.123);">총자산 합</td>
-            <td id="asset_sum" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>
+            <td id="asset_sum" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>	
             <td style="background-color: rgba(199, 199, 199, 0.123); white-space: nowrap;">미실현손익 합</td>
             <td id="unrealisedPnlSum" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>
-        </tr>
+	</tr>
+	<tr>
+            <td style="background-color: rgba(199, 199, 199, 0.123);"><strong>현재가</strong></td>
+            <td id="last_price" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>
+       	    <td style="background-color: rgba(199, 199, 199, 0.123);"><strong></strong></td>
+            <td id="" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>
+	</tr>
     </table>
       <!-- <div class="w-layout-grid grid">
         <div id="w-node-43b536c2223f-64777758">현재가 : </div>

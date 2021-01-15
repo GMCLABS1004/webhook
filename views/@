@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<!--  This site was created in Webflow. http://www.webflow.com  -->
+<!--  Last Published: Thu Nov 28 2019 01:05:16 GMT+0000 (Coordinated Universal Time)  -->
+<html data-wf-page="5db673445e46c15c64777758" data-wf-site="5db673445e46c1c077777757">
+<head>
+  <meta charset="utf-8">
+  <title>포지션</title>
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <meta content="Webflow" name="generator">
+  <!-- <link href="../Content/normalize.css" rel="stylesheet" type="text/css"> -->
+  <link href="../Content/webflow.css" rel="stylesheet" type="text/css">
+  <link href="../Content/position.css" rel="stylesheet" type="text/css">
+
+  <!-- [if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" type="text/javascript"></script><![endif] -->
+  <script type="text/javascript">!function(o,c){var n=c.documentElement,t=" w-mod-";n.className+=t+"js",("ontouchstart"in o||o.DocumentTouch&&c instanceof DocumentTouch)&&(n.className+=t+"touch")}(window,document);</script>
+  <link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+  <link href="images/webclip.png" rel="apple-touch-icon">
+  <link rel="stylesheet" type="text/css" href="../Content/lc_switch_position.css">
+  <script type="text/javascript" src="../Scripts/jquery-3.3.1.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+
+  <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
+    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script>
+        var popupWindow = null;
+        
+
+        function child_open(url) {
+
+        var _width = '700';
+        var _height = '600';
+        
+        var _left  = Math.ceil((document.body.offsetWidth - _width) /2);
+        var _top  = Math.ceil((document.body.offsetHeight - _height) /2);
+
+            if (popupWindow && !popupWindow.closed) {
+                popupWindow.focus();
+            }
+            else {
+                popupWindow = window.open(url, 'popup-test', 'width='+ _width +', height='+ _height +', left=' + _left + ', top='+ _top)
+            }
+        }
+        function parent_disable() {
+            if (popupWindow && !popupWindow.closed)
+                popupWindow.focus();
+        }
+    </script>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+
+        $('.lcs_check').lc_switch();
+        var finance_url = window.location.origin + ":3000/financialTradeSet";
+        $("#finance_tag").attr("href",finance_url);
+        $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+            
+            var askType = $(this).attr('name');
+            console.log("name : " +askType)
+            console.log("name : " +$(this).attr('id'));
+            if(askType === 'bot'){ //봇 on/off
+           
+                var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                console.log('field changed status: '+ status );
+                var obj = new Object();
+                obj["id"] = $(this).attr('id');
+                (status === "checked") ?  obj["flag"] = "start" : obj["flag"] = "stop";
+                $.ajax({
+                    type: "POST",
+                    url: "api/botOnOff",
+                    dataType: "json",
+                    data : obj,
+                    success: function(body) {
+                        if(body){
+                            console.log(body);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            }else if(askType === 'func'){ // 기능 on/off 
+                console.log("기능 On/Off");
+                var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                console.log('field changed status: '+ status );
+                var obj = new Object();
+                var arr = $(this).attr('id').split("_");
+                obj["site"] = arr[0]; //bitmex
+                (status === "checked") ?  obj["execFlag"] = 1 : obj["execFlag"] = 0;
+                console.log(JSON.stringify(obj));
+                $.ajax({
+                    type: "POST",
+                    url: "api/siteOnOff",
+                    dataType: "json",
+                    data : obj,
+                    success: function(body){
+                        if(body){
+                            console.log(body);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            }else if(askType === 'trailing'){ // 기능 on/off 
+                console.log("트레일링 On/Off");
+                var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                console.log('field changed status: '+ status );
+                var obj = new Object();
+                var arr = $(this).attr('id').split("_");
+                obj["site"] = arr[0]; //bitmex
+                (status === "checked") ?  obj["isTrailingStop"] = 1 : obj["isTrailingStop"] = 0;
+                console.log(JSON.stringify(obj));
+                $.ajax({
+                    type: "POST",
+                    url: "api/trailingOnOff",
+                    dataType: "json",
+                    data : obj,
+                    success: function(body){
+                        if(body){
+                            console.log(body);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+    <script>
+        setTimeout(positionAll(),0);
+        setInterval(positionAll(), 3000);
+        
+        function positionAll(){
+            return function(){
+                $.ajax({
+                    method : "GET",
+                    url : "api/positionAll",
+                    success: function(json){
+                        console.log(json);
+                        if(json){
+                            var url = window.location.origin + '/orderHistoryTotalPage?site='
+                            var url2 = window.location.origin + '/choi?site='
+                            //var url = window.location.origin + '/choi?site='
+                            var list = json.list;
+                            var last_price = json.last_price;
+                            var end_asset = 0;
+                            var start_asset =0;
+                            var totalBenefit = json.totalBenefit
+                            var totalBenefitRate = json.totalBenefitRate
+                            var unrealisedPnlSum =0;
+                            $("#mytable > tbody:last").empty();
+                            $("#last_price").html("");
+                            $("#end_asset").html("");
+                            $("#start_asset").html("");
+                            $("#totalBenefit").html(totalBenefit +"<br>");
+                            $("#totalBenefitRate").html(totalBenefitRate +"<br>");
+                            $("#last_price").html(last_price +"<br>");
+                            for(i=0; i<list.length; i++){
+                                end_asset += list[i].walletBalance;
+                                start_asset += list[i].walletBalance_before;
+                                unrealisedPnlSum += list[i].unrealisedPnl;
+                                var obj = {
+                                    site : list[i].site,
+                                    scriptNo : Number(list[i].scriptNo),
+                                    side_num : Number(list[i].side_num),
+                                    type_log : 'manual',
+                                    side : "",
+                                }
+                                
+                                  
+                                // obj["side"] = "Buy";
+                                // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
+                                // obj["side"] = "Sell";
+                                // //console.log(reverse_position(list[i].size));
+                                // obj["side"] = reverse_position(list[i].size);
+                                // obj["side_option"] = "Exit";
+                                // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
+                                //console.log(list[i].isTrailingStop);
+                                $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td></td>");
+                                    $("#mytable > tbody:last").append("<td class='___3102'>" + "<a class='____1_A63_Rectangle_4' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
+                                    $("#mytable > tbody:last").append("<td class='___3103'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
+                                    
+                                    $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID8_736_0'></span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+list[i].pgSide+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice1,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice2,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
+
+                                    $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td>"+"</td>");
+                                    $("#mytable > tbody:last").append("<td><center>"+((list[i].isUnfilled === true)? '미체결' : '') + "</center></td>");
+                                    $("#mytable > tbody:last").append("<td style='min-width: 80px;' ><center><a class='____1_A63_Rectangle_5' href='"+(url2+list[i].site)+"'> <strong>"+ "거래내역" +"</strong> </a></td>");
+                                    //$("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
+                                    $("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_5' href='javascript:void(0);' onclick=limit_order('" + JSON.stringify({site : list[i].site}) + "')><strong>"+ "주문" +"</strong></a>" + "</td>");
+                                    // $("#mytable > tbody:last").append("<td class='___3098'>" + "<a href='javascript:child_open()' class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
+                                    obj["side"] = "Buy";
+                                    $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매수" +"</strong></a>" + "</td>");
+                                    obj["side"] = "Sell";
+                                    $("#mytable > tbody:last").append("<td class='___3100'>" + "<a class='____1_A63_Rectangle_6' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매도" +"</strong></a>" + "</td>");
+                                    obj["side"] = reverse_position(list[i].size);
+                                    obj["side_option"] = "Exit";
+                                    $("#mytable > tbody:last").append("<td class='___3101'>" + "<a class='____1_A63_Rectangle_8' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "탈출" +"</strong></a>" + "</td>");
+                                    $("#mytable > tbody:last").append("</tr>");
+                                    
+                                    $("#mytable > tbody:last").append("<tr>");
+                                        
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>계정</span><span class='BITMEX01'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a> </span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
+                                    $("#mytable > tbody:last").append("<td><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
+                                    $("#mytable > tbody:last").append("<td><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + list[i].pgSide  + "</td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");                         
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
+                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
+                                        
+                                    $("#mytable > tbody:last").append("<tr>");
+                                    $("#mytable > tbody:last").append("<td class='margin'><span class='ID95_'>" + list[i].margin + "%</span></td>");
+                                    $("#mytable > tbody:last").append("<td class='leverage'><span class='ID2X'>" + list[i].leverage + "x</span></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>총자산</span><span class='ID1_31862731'>" + asset_comma(list[i].walletBalance, list[i].site) + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td><span class='_21_917'>"+amount_comma(list[i].size,list[i].site) +"</span></td>"); 
+                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>가치</span><span class='_2_5102'>" + value_comma(list[i].value, list[i].site) + "</span></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
+                                        
+                                    $("#mytable > tbody:last").append("<tr>");  
+                                    // $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' class='margin'><span class='ID95_2'>" + (list[i].marginUsedPcnt * 100).toFixed(0) + "%</span></td>");
+                                    $("#mytable > tbody:last").append("<td colspan='2' style='padding-bottom: 30px;' class='leverage'><span class='ID2X_2'>" +  list[i].marginLeverage.toFixed(2) + "X</span></td>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName'>스크립트</span><span class='ID6XMA_ALT_V01_____'>" + list[i].scriptName + "</span></td>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>버전</span><span class='ID6'>" + list[i].version + "<span></td>");
+                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName'>스크립트번호</span><span class='ID302'>" + list[i].scriptNo + "</span></td>");
+                                    $("#mytable > tbody:last").append("</tr>");
+                                        
+                                $("#mytable > tbody:last").append("<tr>");
+                            
+                            }
+                            $("#start_asset").html(asset_comma(start_asset, 'bitmex') +"<br>");
+                            $("#end_asset").html(asset_comma(end_asset, 'bitmex') +"<br>");
+                            $("#totalBenefit").html(asset_comma(totalBenefit, 'bitmex')  +"<br>");
+                            $("#totalBenefitRate").html(benefit_comma(totalBenefitRate, 'bitmex')  +" %<br>");
+                            var unrealisedPnlSumPer = ((unrealisedPnlSum / end_asset ) * 100).toFixed(4); //
+                            console.log("unrealisedPnlSumPer : "+ unrealisedPnlSumPer);
+                            if(unrealisedPnlSumPer === NaN){
+                                unrealisedPnlSumPer =0;
+                            }
+
+                            $("#asset_sum").html(asset_comma(end_asset, 'bitmex'));
+                            $("#unrealisedPnlSum").html(value_comma(unrealisedPnlSum, 'bitmex') +"(" + roePer_comma(unrealisedPnlSumPer)+"%)");
+                            $('.lcs_check').lc_switch();
+                        
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            }
+        }
+        function print_trail_price(trailPrice, isSide, pgSide){
+            if((isSide === 'long' && pgSide === 'long') && (isSide === 'short' && pgSide === 'short')){
+                return price_comma(trailPrice,'bitmex');
+            }else{
+                return '';
+            }
+        }
+        function print_rentry_price(rentryPrice, isSide, pgSide){
+            if((isSide === 'long' && pgSide === 'long') && (isSide === 'short' && pgSide === 'short')){
+                return price_comma(rentryPrice,'bitmex');
+            }else{
+                return '';
+            }
+        }
+        function manual_order(obj){
+            console.log("manual_order 호출");
+            console.log(obj)
+            if(confirm("수동거래를 진행합니다.")){
+                var data= JSON.parse(obj);
+                if(data["side"] !== "Exit" && data["side_option"] === "Exit"){
+                    data["side"] = data["side"] + " " + "Exit"
+                }
+                
+                $.ajax({
+                    type: "POST",
+                    url: "api/manual_order",
+                    dataType: "json",
+                    data : data,
+                    success: function(body) {
+                        if(body){
+                            console.log(JSON.stringify(body));
+                            alert(body.msg);
+                        }
+                    },
+                    error : function(request, status, error) {
+                        console.log("error : " + error);
+                    }
+                });
+            }
+            
+        }
+
+        function limit_order(body){
+            console.log("limit_order : "+body);
+            var json = JSON.parse(body);
+            console.log(json.site);
+            child_open(window.location.origin + '/order?site='+json.site);
+           // location = window.location.origin + '/order?site='+json.site;
+        }
+
+
+        function isPosition(size){
+            if(size > 0){
+                return "long"
+            }else if(size < 0){
+                return "short";
+            }else{
+                return "";
+            }
+        }
+
+        function reverse_position(size){
+            if(size > 0){
+                //console.log("Buy");
+                return 'Buy'
+            }else if(size < 0){
+               // console.log("Sell");
+                return 'Sell';
+            }else{
+                //console.log("Exit");
+                return 'none';
+            }
+        }
+
+        function asset_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+ 
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.00000000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function price_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' );
+            }
+        }
+
+        function amount_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var amt = Number(num);
+            if(site_type==='bitmex'){
+                return numeral(amt).format( '₩0,0' ); 
+            }else{
+                return numeral(amt).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }
+        }
+
+        function value_comma(num, site){
+            var site_type='';
+            if(site.indexOf("bitmex") !== -1){
+                site_type='bitmex';
+            }else{
+                site_type = site;
+            }
+
+            var coin = Number(num);
+            if(site_type === 'bitmex'){
+                return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+            }else{
+                return numeral(coin).format( '₩0,0' ); 
+            }
+        }
+
+        function benefit_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
+        }
+        function roePer_comma(num){
+            var coin = Number(num);
+            return numeral(coin).format( '₩0,0.00' ); // 1000.00000123 =>  1,000.00000123
+        }
+      </script>
+
+</head>
+<body onFocus="parent_disable();" onclick="parent_disable();">
+    
+
+  <div class="section-62">
+    <div class="w-container">
+        <div class="positionTitle">
+            <h2 class="bitmexTitle">비트맥스 포지션</h2>
+            <a class="positionTitleButton_2" href="benefit_history_page"><strong>거래내역</strong></a>
+            <a class="positionTitleButton_2" href="choi_total"><strong>거래내역2</strong></a>
+            <a class="positionTitleButton_1" href="manage"><strong>통합설정</strong></a>
+        </div>
+
+      <br>
+  
+      <table class="head">
+        <!-- <tr>
+            <td>수익합계</td>
+            <td id="totalBenefit"></td>
+            <td>수익률합계</td>
+            <td id="totalBenefitRate"></td>
+        </tr> -->
+        <!-- <tr>
+            <td></td>
+            <td></td>
+            <td><strong>현재가</strong></td>
+            <td id="last_price"></td>
+        </tr> -->
+        <tr>
+            <td style="background-color: rgba(199, 199, 199, 0.123);">총자산 합</td>
+            <td id="asset_sum" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>	
+            <td style="background-color: rgba(199, 199, 199, 0.123); white-space: nowrap;">미실현손익 합</td>
+            <td id="unrealisedPnlSum" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>
+	</tr>
+	<tr>
+            <td style="background-color: rgba(199, 199, 199, 0.123);"><strong>현재가</strong></td>
+            <td id="last_price" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>
+       	    <td style="background-color: rgba(199, 199, 199, 0.123);"><strong></strong></td>
+            <td id="" style="background-color: rgba(199, 199, 199, 0.123); font-weight: bold"></td>
+	</tr>
+    </table>
+      <!-- <div class="w-layout-grid grid">
+        <div id="w-node-43b536c2223f-64777758">현재가 : </div>
+        <div id="w-node-9f83951db51f-64777758">시작 자산 :</div>
+        <div id="w-node-46c995660799-64777758">최근 자산 :</div>
+        <div id="w-node-6e8dd4e35420-64777758">총수익 :</div>
+        <div id="w-node-c22241ca7a6a-64777758">총수익율 :</div>
+      </div> -->
+    </div>
+
+    <div class="w-container">
+      <div class="html-embed w-embed">
+        
+          <!--  01  -->
+          <div>
+            <div class="____1463">
+              <table style="padding-bottom: 20px;" id="mytable" >
+                    <tbody>
+                    
+                    </tbody>
+              </table>
+              
+            </div>
+            <div>
+        </div>
+      </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.4.1.min.220afd743d.js" type="text/javascript" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="js/webflow.js" type="text/javascript"></script> -->
+      <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
+
+       <script type="text/javascript">
+        $(document).ready(function (e) {
+
+            $('.lcs_check').lc_switch();
+            var finance_url = window.location.origin + ":3000/financialTradeSet";
+            $("#finance_tag").attr("href",finance_url);
+            $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
+                
+                var askType = $(this).attr('name');
+                console.log("name : " +askType)
+                console.log("name : " +$(this).attr('id'));
+                if(askType === 'bot'){ //봇 on/off
+               
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    obj["id"] = $(this).attr('id');
+                    (status === "checked") ?  obj["flag"] = "start" : obj["flag"] = "stop";
+                    $.ajax({
+                        type: "POST",
+                        url: "api/botOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body) {
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }else if(askType === 'func'){ // 기능 on/off 
+                    console.log("기능 On/Off");
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    var arr = $(this).attr('id').split("_");
+                    obj["site"] = arr[0]; //bitmex
+                    (status === "checked") ?  obj["execFlag"] = 1 : obj["execFlag"] = 0;
+                    console.log(JSON.stringify(obj));
+                    $.ajax({
+                        type: "POST",
+                        url: "api/siteOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body){
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }else if(askType === 'trailing'){ // 기능 on/off 
+                    console.log("트레일링 On/Off");
+                    var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
+                    console.log('field changed status: '+ status );
+                    var obj = new Object();
+                    var arr = $(this).attr('id').split("_");
+                    obj["site"] = arr[0]; //bitmex
+                    (status === "checked") ?  obj["isTrailingStop"] = 1 : obj["isTrailingStop"] = 0;
+                    console.log(JSON.stringify(obj));
+                    $.ajax({
+                        type: "POST",
+                        url: "api/trailingOnOff",
+                        dataType: "json",
+                        data : obj,
+                        success: function(body){
+                            if(body){
+                                console.log(body);
+                            }
+                        },
+                        error : function(request, status, error) {
+                            console.log("error : " + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    </body>
+</html>
