@@ -4,7 +4,7 @@
 <html data-wf-page="5db673445e46c15c64777758" data-wf-site="5db673445e46c1c077777757">
 <head>
   <meta charset="utf-8">
-  <title>포지션</title>
+  <title id="unrealisedPnlSum2"></title>
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
   <!-- <link href="../Content/normalize.css" rel="stylesheet" type="text/css"> -->
@@ -135,140 +135,6 @@
         setTimeout(positionAll(),0);
         setInterval(positionAll(), 3000);
         
-        function positionAll(){
-            return function(){
-                $.ajax({
-                    method : "GET",
-                    url : "api/positionAll",
-                    success: function(json){
-                        console.log(json);
-                        if(json){
-                            var url = window.location.origin + '/orderHistoryTotalPage?site='
-                            var url2 = window.location.origin + '/choi?site='
-                            //var url = window.location.origin + '/choi?site='
-                            var list = json.list;
-                            var last_price = json.last_price;
-                            var end_asset = 0;
-                            var start_asset =0;
-                            var totalBenefit = json.totalBenefit
-                            var totalBenefitRate = json.totalBenefitRate
-                            var unrealisedPnlSum =0;
-                            $("#mytable > tbody:last").empty();
-                            $("#last_price").html("");
-                            $("#end_asset").html("");
-                            $("#start_asset").html("");
-                            $("#totalBenefit").html(totalBenefit +"<br>");
-                            $("#totalBenefitRate").html(totalBenefitRate +"<br>");
-                            $("#last_price").html(last_price +"<br>");
-                            for(i=0; i<list.length; i++){
-                                end_asset += list[i].walletBalance;
-                                start_asset += list[i].walletBalance_before;
-                                unrealisedPnlSum += list[i].unrealisedPnl;
-                                var obj = {
-                                    site : list[i].site,
-                                    scriptNo : Number(list[i].scriptNo),
-                                    side_num : Number(list[i].side_num),
-                                    type_log : 'manual',
-                                    side : "",
-                                }
-                                
-                                  
-                                // obj["side"] = "Buy";
-                                // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
-                                // obj["side"] = "Sell";
-                                // //console.log(reverse_position(list[i].size));
-                                // obj["side"] = reverse_position(list[i].size);
-                                // obj["side_option"] = "Exit";
-                                // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
-                                //console.log(list[i].isTrailingStop);
-                                $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
-                                    $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td></td>");
-                                    $("#mytable > tbody:last").append("<td class='___3102'>" + "<a class='____1_A63_Rectangle_4' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
-                                    $("#mytable > tbody:last").append("<td class='___3103'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
-                                    $("#mytable > tbody:last").append("</tr>");
-                                    
-                                    $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID8_736_0'></span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+list[i].pgSide+"</span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice1,'bitmex')+"</span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice2,'bitmex')+"</span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
-                                    $("#mytable > tbody:last").append("</tr>");
-
-                                    $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td>"+"</td>");
-                                    $("#mytable > tbody:last").append("<td><center>"+((list[i].isUnfilled === true)? '미체결' : '') + "</center></td>");
-                                    $("#mytable > tbody:last").append("<td style='min-width: 80px;' ><center><a class='____1_A63_Rectangle_5' href='"+(url2+list[i].site)+"'> <strong>"+ "거래내역" +"</strong> </a></td>");
-                                    //$("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
-                                    $("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_5' href='javascript:void(0);' onclick=limit_order('" + JSON.stringify({site : list[i].site}) + "')><strong>"+ "주문" +"</strong></a>" + "</td>");
-                                    // $("#mytable > tbody:last").append("<td class='___3098'>" + "<a href='javascript:child_open()' class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
-                                    obj["side"] = "Buy";
-                                    $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매수" +"</strong></a>" + "</td>");
-                                    obj["side"] = "Sell";
-                                    $("#mytable > tbody:last").append("<td class='___3100'>" + "<a class='____1_A63_Rectangle_6' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매도" +"</strong></a>" + "</td>");
-                                    obj["side"] = reverse_position(list[i].size);
-                                    obj["side_option"] = "Exit";
-                                    $("#mytable > tbody:last").append("<td class='___3101'>" + "<a class='____1_A63_Rectangle_8' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "탈출" +"</strong></a>" + "</td>");
-                                    $("#mytable > tbody:last").append("</tr>");
-                                    
-                                    $("#mytable > tbody:last").append("<tr>");
-                                        
-                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>계정</span><span class='BITMEX01'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a> </span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");  
-                                    $("#mytable > tbody:last").append("<td><span class='position'>"+isPosition(list[i].size)+"</span></td>"); 
-                                    $("#mytable > tbody:last").append("<td><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
-                                    // $("#mytable > tbody:last").append("<td align='center'>" + list[i].pgSide  + "</td>");
-                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");                         
-                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
-                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
-                                    // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
-                                    $("#mytable > tbody:last").append("</tr>");
-                                        
-                                    $("#mytable > tbody:last").append("<tr>");
-                                    $("#mytable > tbody:last").append("<td class='margin'><span class='ID95_'>" + list[i].margin + "%</span></td>");
-                                    $("#mytable > tbody:last").append("<td class='leverage'><span class='ID2X'>" + list[i].leverage + "x</span></td>");
-                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>총자산</span><span class='ID1_31862731'>" + asset_comma(list[i].walletBalance, list[i].site) + "</span></td>");
-                                    $("#mytable > tbody:last").append("<td><span class='_21_917'>"+amount_comma(list[i].size,list[i].site) +"</span></td>"); 
-                                    $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>가치</span><span class='_2_5102'>" + value_comma(list[i].value, list[i].site) + "</span></td>");
-                                    $("#mytable > tbody:last").append("</tr>");
-                                        
-                                    $("#mytable > tbody:last").append("<tr>");  
-                                    // $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' class='margin'><span class='ID95_2'>" + (list[i].marginUsedPcnt * 100).toFixed(0) + "%</span></td>");
-                                    $("#mytable > tbody:last").append("<td colspan='2' style='padding-bottom: 30px;' class='leverage'><span class='ID2X_2'>" +  list[i].marginLeverage.toFixed(2) + "X</span></td>");
-                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName'>스크립트</span><span class='ID6XMA_ALT_V01_____'>" + list[i].scriptName + "</span></td>");
-                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>버전</span><span class='ID6'>" + list[i].version + "<span></td>");
-                                    $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName'>스크립트번호</span><span class='ID302'>" + list[i].scriptNo + "</span></td>");
-                                    $("#mytable > tbody:last").append("</tr>");
-                                        
-                                $("#mytable > tbody:last").append("<tr>");
-                            
-                            }
-                            $("#start_asset").html(asset_comma(start_asset, 'bitmex') +"<br>");
-                            $("#end_asset").html(asset_comma(end_asset, 'bitmex') +"<br>");
-                            $("#totalBenefit").html(asset_comma(totalBenefit, 'bitmex')  +"<br>");
-                            $("#totalBenefitRate").html(benefit_comma(totalBenefitRate, 'bitmex')  +" %<br>");
-                            var unrealisedPnlSumPer = ((unrealisedPnlSum / end_asset ) * 100).toFixed(4); //
-                            console.log("unrealisedPnlSumPer : "+ unrealisedPnlSumPer);
-                            if(unrealisedPnlSumPer === NaN){
-                                unrealisedPnlSumPer =0;
-                            }
-
-                            $("#asset_sum").html(asset_comma(end_asset, 'bitmex'));
-                            $("#unrealisedPnlSum").html(value_comma(unrealisedPnlSum, 'bitmex') +"(" + roePer_comma(unrealisedPnlSumPer)+"%)");
-                            $('.lcs_check').lc_switch();
-                        
-                        }
-                    },
-                    error : function(request, status, error) {
-                        console.log("error : " + error);
-                    }
-                });
-            }
-        }
         function print_trail_price(trailPrice, isSide, pgSide){
             if((isSide === 'long' && pgSide === 'long') && (isSide === 'short' && pgSide === 'short')){
                 return price_comma(trailPrice,'bitmex');
@@ -276,6 +142,141 @@
                 return '';
             }
         }
+        function positionAll(){
+        return function(){
+        $.ajax({
+        method : "GET",
+        url : "api/positionAll",
+        success: function(json){
+        console.log(json);
+        if(json){
+        var url = window.location.origin + '/orderHistoryTotalPage?site='
+        var url2 = window.location.origin + '/choi?site='
+        //var url = window.location.origin + '/choi?site='
+        var list = json.list;
+        var last_price = json.last_price;
+        var end_asset = 0;
+        var start_asset =0;
+        var totalBenefit = json.totalBenefit
+        var totalBenefitRate = json.totalBenefitRate
+        var unrealisedPnlSum =0;
+        $("#mytable > tbody:last").empty();
+        $("#last_price").html("");
+        $("#end_asset").html("");
+        $("#start_asset").html("");
+        $("#totalBenefit").html(totalBenefit +"<br>");
+        $("#totalBenefitRate").html(totalBenefitRate +"<br>");
+        $("#last_price").html(last_price +"<br>");
+        for(i=0; i<list.length; i++){
+        end_asset += list[i].walletBalance;
+        start_asset += list[i].walletBalance_before;
+        unrealisedPnlSum += list[i].unrealisedPnl;
+        var obj = {
+        site : list[i].site,
+        scriptNo : Number(list[i].scriptNo),
+        side_num : Number(list[i].side_num),
+        type_log : 'manual',
+        side : "",
+    }
+
+
+        // obj["side"] = "Buy";
+        // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
+        // obj["side"] = "Sell";
+        // //console.log(reverse_position(list[i].size));
+        // obj["side"] = reverse_position(list[i].size);
+        // obj["side_option"] = "Exit";
+        // //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "탈출" +"</a>" + "</td>");
+        //console.log(list[i].isTrailingStop);
+        $("#mytable > tbody:last").append("<tr>");
+        $("#mytable > tbody:last").append("<td colspan='2'><span class='ID01'>0" + (i+1) + "</span></td>");
+        $("#mytable > tbody:last").append("<td></td>");
+        $("#mytable > tbody:last").append("<td></td>");
+        $("#mytable > tbody:last").append("<td></td>");
+        $("#mytable > tbody:last").append("<td class='___3102'>" + "<a class='____1_A63_Rectangle_4' href='setting_trailing?site="+list[i].site+"'><strong>"+ "TS설정" +"</strong></a>" + "</td>");
+        $("#mytable > tbody:last").append("<td class='___3103'><input type='checkbox' id='"+list[i].site+"_isTrailingStop' name='trailing' class='lcs_check'"+ list[i].isTrailingStop+" /></td>");
+        $("#mytable > tbody:last").append("</tr>");
+
+        $("#mytable > tbody:last").append("<tr>");
+        $("#mytable > tbody:last").append("<td colspan='2'><span class='ID8_736_0'></span></td>");
+        $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+list[i].pgSide+"</span></td>");
+        $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice1,'bitmex')+"</span></td>");
+        $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].trailPrice2,'bitmex')+"</span></td>");
+        $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
+        $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>"+price_comma(list[i].rentryPrice1,'bitmex')+"</span></td>");
+        $("#mytable > tbody:last").append("</tr>");
+
+        $("#mytable > tbody:last").append("<tr>");
+        $("#mytable > tbody:last").append("<td>"+"</td>");
+        $("#mytable > tbody:last").append("<td><center>"+((list[i].isUnfilled === true)? '미체결' : '') + "</center></td>");
+        $("#mytable > tbody:last").append("<td style='min-width: 80px;' ><center><a class='____1_A63_Rectangle_5' href='"+(url2+list[i].site)+"'> <strong>"+ "거래내역" +"</strong> </a></td>");
+        //$("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
+        $("#mytable > tbody:last").append("<td class='___3098'>" + "<a class='____1_A63_Rectangle_5' href='javascript:void(0);' onclick=limit_order('" + JSON.stringify({site : list[i].site}) + "')><strong>"+ "주문" +"</strong></a>" + "</td>");
+        // $("#mytable > tbody:last").append("<td class='___3098'>" + "<a href='javascript:child_open()' class='____1_A63_Rectangle_7' ><strong>"+ "주문" +"</strong></a>" + "</td>");
+        obj["side"] = "Buy";
+        $("#mytable > tbody:last").append("<td class='___3099'>" + "<a class='____1_A63_Rectangle_7' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매수" +"</strong></a>" + "</td>");
+        obj["side"] = "Sell";
+        $("#mytable > tbody:last").append("<td class='___3100'>" + "<a class='____1_A63_Rectangle_6' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "매도" +"</strong></a>" + "</td>");
+        obj["side"] = reverse_position(list[i].size);
+        obj["side_option"] = "Exit";
+        $("#mytable > tbody:last").append("<td class='___3101'>" + "<a class='____1_A63_Rectangle_8' href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')><strong>"+ "탈출" +"</strong></a>" + "</td>");
+        $("#mytable > tbody:last").append("</tr>");
+
+        $("#mytable > tbody:last").append("<tr>");
+
+        $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>계정</span><span class='BITMEX01'><a href='"+(url+list[i].site)+"'>" + list[i].site + "</a> </span></td>");
+        $("#mytable > tbody:last").append("<td><span class='ID8_736_0'>" + price_comma(list[i].avgEntryPrice, list[i].site) + "</span></td>");
+        $("#mytable > tbody:last").append("<td><span class='position'>"+isPosition(list[i].size)+"</span></td>");
+        $("#mytable > tbody:last").append("<td><span class='bitmexName'>S/N</span><span class='ID1'>" + list[i].side_num + "</span></td>");
+        // $("#mytable > tbody:last").append("<td align='center'>" + list[i].pgSide  + "</td>");
+        $("#mytable > tbody:last").append("<td colspan='2'><span class='ID0_0018_0_07__'>" + value_comma(list[i].unrealisedPnl.toFixed(4), list[i].site) +"(" + roePer_comma(list[i].unrealisedRoePcnt)+"%)" + "</span></td>");
+        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Buy" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매수</a></td>");
+        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=Sell" + "&side_num="+ list[i].side_num + "&type_log=manual'>" + "매도</a></td>");
+        // $("#mytable > tbody:last").append("<td align='center'>" + "<a href='/api/manual_order?scriptNo="+list[i].scriptNo + "&side=" + reverse_position(list[i].size)  + "&side_num="+ list[i].side_num  + "&type_log=manual'>" + "탈출</a></td>");
+        $("#mytable > tbody:last").append("</tr>");
+
+        $("#mytable > tbody:last").append("<tr>");
+        $("#mytable > tbody:last").append("<td class='margin'><span class='ID95_'>" + list[i].margin + "%</span></td>");
+        $("#mytable > tbody:last").append("<td class='leverage'><span class='ID2X'>" + list[i].leverage + "x</span></td>");
+        $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>총자산</span><span class='ID1_31862731'>" + asset_comma(list[i].walletBalance, list[i].site) + "</span></td>");
+        $("#mytable > tbody:last").append("<td><span class='_21_917'>"+amount_comma(list[i].size,list[i].site) +"</span></td>");
+        $("#mytable > tbody:last").append("<td colspan='2'><span class='bitmexName'>가치</span><span class='_2_5102'>" + value_comma(list[i].value, list[i].site) + "</span></td>");
+        $("#mytable > tbody:last").append("</tr>");
+
+        $("#mytable > tbody:last").append("<tr>");
+        // $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' class='margin'><span class='ID95_2'>" + (list[i].marginUsedPcnt * 100).toFixed(0) + "%</span></td>");
+        $("#mytable > tbody:last").append("<td colspan='2' style='padding-bottom: 30px;' class='leverage'><span class='ID2X_2'>" +  list[i].marginLeverage.toFixed(2) + "X</span></td>");
+        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName'>스크립트</span><span class='ID6XMA_ALT_V01_____'>" + list[i].scriptName + "</span></td>");
+        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;'><span class='bitmexName'>버전</span><span class='ID6'>" + list[i].version + "<span></td>");
+        $("#mytable > tbody:last").append("<td style='padding-bottom: 30px;' colspan='2'><span class='bitmexName'>스크립트번호</span><span class='ID302'>" + list[i].scriptNo + "</span></td>");
+        $("#mytable > tbody:last").append("</tr>");
+
+        $("#mytable > tbody:last").append("<tr>");
+
+    }
+        $("#start_asset").html(asset_comma(start_asset, 'bitmex') +"<br>");
+        $("#end_asset").html(asset_comma(end_asset, 'bitmex') +"<br>");
+        $("#totalBenefit").html(asset_comma(totalBenefit, 'bitmex')  +"<br>");
+        $("#totalBenefitRate").html(benefit_comma(totalBenefitRate, 'bitmex')  +" %<br>");
+        var unrealisedPnlSumPer = ((unrealisedPnlSum / end_asset ) * 100).toFixed(4); //
+        console.log("unrealisedPnlSumPer : "+ unrealisedPnlSumPer);
+        if(unrealisedPnlSumPer === NaN){
+        unrealisedPnlSumPer =0;
+    }
+
+        $("#asset_sum").html(asset_comma(end_asset, 'bitmex'));
+        $("#unrealisedPnlSum").html(value_comma(unrealisedPnlSum, 'bitmex') +"(" + roePer_comma(unrealisedPnlSumPer)+"%)");
+        $("#unrealisedPnlSum2").html(value_comma(unrealisedPnlSum, 'bitmex') +"(" + roePer_comma(unrealisedPnlSumPer)+"%)");
+        $('.lcs_check').lc_switch();
+
+    }
+    },
+        error : function(request, status, error) {
+        console.log("error : " + error);
+    }
+    });
+    }
+    }
         function print_rentry_price(rentryPrice, isSide, pgSide){
             if((isSide === 'long' && pgSide === 'long') && (isSide === 'short' && pgSide === 'short')){
                 return price_comma(rentryPrice,'bitmex');
