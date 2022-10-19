@@ -1857,6 +1857,18 @@ function trade_bitmex(_signal, siteName){
         console.log("data.isSide : "+ data.isSide);
         console.log("_signal.side : "+ _signal.side);
 
+                //탈출신호일때 사이드 넘버 비교
+        if(_signal.side === "Sell Exit" || _signal.side === "Buy Exit"){
+          var bitmex_exit = is_exit(data.script_data, data.isSide, data.side_num, _signal.side_num)
+          if(bitmex_exit === false){
+            console.log('사이드넘버 틀림');
+            console.log('로직 종료');
+            return;
+          }
+        }
+
+
+
         //프로그램 포지션 2개, 실제포지션1개, 신호1개를 바탕으로 행동(상태변경, 무시, 진입, 탈출, 스위칭 등)을 결정하고 action에 저장
         var action = bitmex_decide_action(_signal.type_log, data.pgSide, data.pgSide2, data.isSide, _signal.side);
 

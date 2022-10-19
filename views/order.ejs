@@ -18,7 +18,7 @@
                     var price = $("#price").val();
                     var orderQty = Math.abs(Number($("#orderQty").val()));
                     var side = "Buy";
-                    
+
                     order(site, side, price, orderQty)
                 }
             });
@@ -29,14 +29,14 @@
                     var price = $("#price").val();
                     var orderQty = Math.abs(Number($("#orderQty").val()));
                     var side = "Sell";
-                    
+
                     order(site, side, price, orderQty)
                 }
             });
             $("#half").click(function(){
                 console.log("0.5x");
                 let size = Number($("#size").val());
-                size = Math.floor(size / 2);
+                size = Math.floor(size / 2 / 100)*100;
                 $("#orderQty").val(size);
             });
             $("#all").click(function(){
@@ -48,7 +48,7 @@
             $("#default").click(function(){
                 console.log("default");
                 var price = Number($("#price").val());
-                console.log("price : "+price);
+                console.log("price : "+ price);
                 if(isNaN(price)){
                     alert("주문가격을 올바르게 입력하세요. 특수기호 입력불가");
                     return;
@@ -60,7 +60,8 @@
                 var availableMargin = Number($("#availableMargin").val());
                 var leverage = Number($("#leverage").val());
                 var margin = Number($("#margin").val()) * 0.01;
-                var size = Math.floor(((availableMargin * margin) * leverage) * price);
+                var size = Math.floor(((availableMargin * margin) * leverage) * price / 100)*100;
+                console.log('size : ' + size)
                 $("#orderQty").val(size);
             });
         });
@@ -69,7 +70,7 @@
             var arr = str.split(".");
             if(arr.length>1){
                 var str2 = arr[1].slice(0,1);
-                return Number(arr[0] + '.' + str2);	
+                return Number(arr[0] + '.' + str2);
             }
             return Number(arr[0]);
         }
@@ -78,7 +79,7 @@
             var arr = str.split(".");
             if(arr.length>1){
                     var str2 = arr[1].slice(0,4);
-                return Number(arr[0] + '.' + str2);	
+                return Number(arr[0] + '.' + str2);
             }
             return Number(arr[0])
         }
@@ -108,7 +109,7 @@
 
             var amt = Number(num);
             if(site_type==='bitmex'){
-                return numeral(amt).format( '₩0,0' ); 
+                return numeral(amt).format( '₩0,0' );
             }else{
                 return numeral(amt).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
             }
@@ -125,7 +126,7 @@
             if(site_type === 'bitmex'){
                 return numeral(coin).format( '₩0,0.0000' ); // 1000.00000123 =>  1,000.00000123
             }else{
-                return numeral(coin).format( '₩0,0' ); 
+                return numeral(coin).format( '₩0,0' );
             }
         }
         function get_order_info(){
@@ -165,20 +166,20 @@
                             for(i=0; i<json.length; i++){
                                 var time1 = json[i].timestamp.split("T")[1].split(":");
                                 $("#mytable > tbody:last").append("<tr>");
-                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>");  
+                                        $("#mytable > tbody:last").append("<td align='center'>" + (i+1) + "</td>");
                                         $("#mytable > tbody:last").append("<td align='center'>" + json[i].timestamp.split("T")[0] + "</td>");
-                                    
-                                        $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>"); 
-                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");  
-                                        $("#mytable > tbody:last").append("<td align='center'>" + price_comma(json[i].price,'bitmex') + "</td>");  
-                                        $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(json[i].orderQty,'bitmex')+ "</td>"); 
+
+                                        $("#mytable > tbody:last").append("<td align='center'>" + time1[0] + ":" + time1[1] + ":" + time1[2].split(".")[0] + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + json[i].side + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='center'>" + price_comma(json[i].price,'bitmex') + "</td>");
+                                        $("#mytable > tbody:last").append("<td align='right'>" + amount_comma(json[i].orderQty,'bitmex')+ "</td>");
                                         $("#mytable > tbody:last").append("<td align='right'>" + value_comma(fixed4(json[i].orderQty/json[i].price),'bitmex') + "</td>");
-                                        // $("#mytable > tbody:last").append("<td align='right'>" + json[i].leavesQty+ "</td>"); 
+                                        // $("#mytable > tbody:last").append("<td align='right'>" + json[i].leavesQty+ "</td>");
                                         var obj = {
                                             site : json[i].site,
                                             orderID : json[i].orderID
                                         }
-                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=orderCancel('" + JSON.stringify(obj) + "')>"+ "취소" +"</a>" + "</td>");            
+                                        $("#mytable > tbody:last").append("<td align='center'>" + "<a href='javascript:void(0);' onclick=orderCancel('" + JSON.stringify(obj) + "')>"+ "취소" +"</a>" + "</td>");
                                         //console.log("<td align='center'>" + "<a href='javascript:void(0);' onclick=manual_order('" + JSON.stringify(obj) + "')>"+ "매수" +"</a>" + "</td>");
 
                                 $("#mytable > tbody:last").append("<tr>");
@@ -219,7 +220,7 @@
             if(confirm("취소하시겠습니까?")){
                 var json = JSON.parse(obj);
                 console.log(json);
-            
+
                 $.ajax({
                     method : 'POST',
                     url : '/api/orderCancel',
@@ -249,9 +250,9 @@
     <div id="avgEntryPrice">현재진입가격 : </div>
     <div id="size_text"">현재수량 : </div>
     <!-- <div id="availableMargin_text"">이용가능수량 : </div> -->
-    
+
     주문가격 <input type="text" id="price" value=""><br>
-    주문수량 <input type="text" id="orderQty" value="" readonly>
+    주문수량 <input type="text" id="orderQty" value="">
     <input type="button" id="half" value="0.5x"/>
     <input type="button" id="all" value="1.0x"/>
     <input type="button" id="default" value="default"/><br>

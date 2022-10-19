@@ -4,7 +4,7 @@
 <html data-wf-page="5db673445e46c15c64777758" data-wf-site="5db673445e46c1c077777757">
 <head>
   <meta charset="utf-8">
-  <title id="unrealisedPnlSum2"></title>
+  <title>mainnet</title>
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Webflow" name="generator">
   <!-- <link href="../Content/normalize.css" rel="stylesheet" type="text/css"> -->
@@ -21,18 +21,18 @@
 
 
   <script type="text/javascript" src="../Scripts/lc_switch.js"></script>
-    
+
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+
     <script>
         var popupWindow = null;
-        
+
 
         function child_open(url) {
 
         var _width = '700';
         var _height = '600';
-        
+
         var _left  = Math.ceil((document.body.offsetWidth - _width) /2);
         var _top  = Math.ceil((document.body.offsetHeight - _height) /2);
 
@@ -56,12 +56,12 @@
         var finance_url = window.location.origin + ":3000/financialTradeSet";
         $("#finance_tag").attr("href",finance_url);
         $('body').delegate('.lcs_check', 'lcs-statuschange', function() {
-            
+
             var askType = $(this).attr('name');
             console.log("name : " +askType)
             console.log("name : " +$(this).attr('id'));
             if(askType === 'bot'){ //봇 on/off
-           
+
                 var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                 console.log('field changed status: '+ status );
                 var obj = new Object();
@@ -81,7 +81,7 @@
                         console.log("error : " + error);
                     }
                 });
-            }else if(askType === 'func'){ // 기능 on/off 
+            }else if(askType === 'func'){ // 기능 on/off
                 console.log("기능 On/Off");
                 var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                 console.log('field changed status: '+ status );
@@ -104,7 +104,7 @@
                         console.log("error : " + error);
                     }
                 });
-            }else if(askType === 'trailing'){ // 기능 on/off 
+            }else if(askType === 'trailing'){ // 기능 on/off
                 console.log("트레일링 On/Off");
                 var status = ($(this).is(':checked')) ? 'checked' : 'unchecked';
                 console.log('field changed status: '+ status );
@@ -134,7 +134,7 @@
     <script>
         setTimeout(positionAll(),0);
         setInterval(positionAll(), 3000);
-        
+
         function print_trail_price(trailPrice, isSide, pgSide){
             if((isSide === 'long' && pgSide === 'long') && (isSide === 'short' && pgSide === 'short')){
                 return price_comma(trailPrice,'bitmex');
@@ -266,7 +266,7 @@
 
         $("#asset_sum").html(asset_comma(end_asset, 'bitmex'));
         $("#unrealisedPnlSum").html(value_comma(unrealisedPnlSum, 'bitmex') +"(" + roePer_comma(unrealisedPnlSumPer)+"%)");
-        $("#unrealisedPnlSum2").html(value_comma(unrealisedPnlSum, 'bitmex') +"(" + roePer_comma(unrealisedPnlSumPer)+"%)");
+        $("#unrealisedPnlSum2").html(value_comma(unrealisedPnlSum, 'bitmex') +"(" + roePer_comma(unrealisedPnlSumPer)+"%)" + "_mainnet");
         $('.lcs_check').lc_switch();
 
     }
@@ -425,7 +425,7 @@
   <div class="section-62">
     <div class="w-container">
         <div class="positionTitle">
-            <h2 class="bitmexTitle">비트맥스 포지션</h2>
+            <h2 class="bitmexTitle">시리우스 포지션</h2>
             <a class="positionTitleButton_2" href="benefit_history_page"><strong>거래내역</strong></a>
             <a class="positionTitleButton_2" href="choi_total"><strong>거래내역2</strong></a>
             <a class="positionTitleButton_1" href="manage"><strong>통합설정</strong></a>

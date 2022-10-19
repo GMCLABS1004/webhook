@@ -580,43 +580,41 @@ function bitmex_position_parse(site, obj){
 
     if(typeof(obj.symbol) !== "undefined" && obj.symbol !== null)
         posObj["symbol"] = obj.symbol;
-    
-    if(typeof(obj.currentQty) !== "undefined" && obj.currentQty !== null) 
+
+    if(typeof(obj.currentQty) !== "undefined" && obj.currentQty !== null)
         posObj["size"] = obj.currentQty;
-    
-    if(typeof(obj.homeNotional) !== "undefined" && obj.homeNotional !== null) 
+
+    if(typeof(obj.homeNotional) !== "undefined" && obj.homeNotional !== null)
         posObj["value"] = obj.homeNotional;
-  
+
     if(typeof(obj.avgEntryPrice) !== "undefined" && obj.avgEntryPrice !== null){
       posObj["avgEntryPrice"] = obj.avgEntryPrice;
     }
     // else{
     //   posObj["avgEntryPrice"] = 0;
     // }
-        
-  
-    if(typeof(obj.markPrice) !== "undefined" && obj.markPrice !== null) 
+
+    if(typeof(obj.markPrice) !== "undefined" && obj.markPrice !== null)
         posObj["markPrice"] = obj.markPrice;
-  
-    if(typeof(obj.liquidationPrice) !== "undefined" && obj.liquidationPrice !== null) 
+
+    if(typeof(obj.liquidationPrice) !== "undefined" && obj.liquidationPrice !== null)
         posObj["liquidationPrice"] = obj.liquidationPrice;
-  
-    if(typeof(obj.maintMargin) !== "undefined" && obj.maintMargin !== null) 
+
+    if(typeof(obj.maintMargin) !== "undefined" && obj.maintMargin !== null)
         posObj["margin"] = obj.maintMargin;
-  
+
     if(typeof(obj.leverage) !== "undefined" && obj.leverage !== null)
         posObj["leverage"] = obj.leverage;
-  
-    if(typeof(obj.unrealisedPnl) !== "undefined" && obj.unrealisedPnl !== null) 
+
+    if(typeof(obj.unrealisedPnl) !== "undefined" && obj.unrealisedPnl !== null)
         posObj["unrealisedPnl"] =  obj.unrealisedPnl * 0.00000001;
-    
-    if(typeof(obj.unrealisedRoePcnt) !== "undefined" && obj.unrealisedRoePcnt !== null) 
-        posObj["unrealisedRoePcnt"] = obj.unrealisedRoePcnt;
-  
-    if(typeof(obj.realisedPnl) !== "undefined" && obj.realisedPnl !== null) 
+    if(typeof(obj.unrealisedRoePcnt) !== "undefined" && obj.unrealisedRoePcnt !== null)
+        posObj["unrealisedRoePcnt"] = obj.unrealisedRoePcnt*100// * (100/obj.leverage);
+
+    if(typeof(obj.realisedPnl) !== "undefined" && obj.realisedPnl !== null)
         posObj["realisedPnl"] = obj.realisedPnl * 0.0000000001;
-    
-    
+
+
     
 
     return posObj;

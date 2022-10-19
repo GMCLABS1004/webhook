@@ -3510,7 +3510,9 @@ router.post('/api/order', isAuthenticated, function(req,res){
         text : "limit order"
       }
       var requestHeader = setRequestHeader(url, apiKey, secreteKey, 'POST','order', obj);
-      
+      console.log('----------------------')
+      console.log(requestHeader)
+
       request(requestHeader, function(error, response, body){
         if(error){
           res.send(error);
